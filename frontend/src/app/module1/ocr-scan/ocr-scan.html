@@ -1,0 +1,148 @@
+<div class="ocr-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="images/logo.png" alt="CertiUni" class="hero-logo" />
+      <div>
+        <div class="sidebar-title">CertiUni</div>
+        <div class="sidebar-subtitle">INSTITUTIONAL PORTAL</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" (click)="goToVerify()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>
+        </svg>
+        Verify Document
+      </button>
+      <button class="nav-item" (click)="goToBulk()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 14.9A5 5 0 0 1 6 5.1 6.5 6.5 0 0 1 18.9 8H19a4 4 0 0 1 0 8"/>
+          <polyline points="12 12 12 21"/><polyline points="9 15 12 12 15 15"/>
+        </svg>
+        Bulk Upload
+      </button>
+      <button class="nav-item" (click)="goToHistory()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/>
+        </svg>
+        Scan History
+      </button>
+      <button class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </button>
+    </nav>
+
+    <button class="new-verification-btn" (click)="goToNewVerification()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Verification
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Support
+      </button>
+      <button class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="ocr-main">
+    <header class="top-bar">
+      <nav class="top-nav">
+        <a href="#">Home</a>
+        <a href="#" class="active">Scanner</a>
+        <a href="#">History</a>
+      </nav>
+      <span class="institutional-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2">
+          <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>
+        </svg>
+        Institutional Access
+      </span>
+    </header>
+
+    <div class="session-banner">
+      <span class="lock-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </span>
+      Secure Institutional Verification Session
+    </div>
+
+    <div class="content-area">
+      <div class="ocr-card">
+        <div class="card-header">
+          <h3>Scanner IA OCR</h3>
+          <div class="header-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+        </div>
+
+        <div
+          class="drop-zone"
+          [class.dragging]="isDragging()"
+          [class.scanning]="isScanning()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          @if (!isScanning()) {
+            <div class="upload-icon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/>
+              </svg>
+            </div>
+            <p class="drop-title">Glissez la photo ou le scan du diplôme ici</p>
+            <p class="drop-hint">Formats acceptés : PNG, JPEG, PDF jusqu'à 10 Mo</p>
+          } @else {
+            <div class="scan-progress">
+              <div class="scan-beam"></div>
+              <p>Analyse en cours par l'IA...</p>
+            </div>
+          }
+        </div>
+
+        <input #fileInput type="file" accept=".png,.jpg,.jpeg,.pdf" (change)="onFileSelected($event)" style="display:none;" />
+        <button class="browse-btn" (click)="fileInput.click()" [disabled]="isScanning()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          PARCOURIR LE FICHIER
+        </button>
+
+        <div class="divider">
+          <span></span>
+          <p>ou</p>
+          <span></span>
+        </div>
+
+        <button class="cancel-link" (click)="onCancel()">Annuler et Revenir</button>
+      </div>
+    </div>
+  </div>
+</div>

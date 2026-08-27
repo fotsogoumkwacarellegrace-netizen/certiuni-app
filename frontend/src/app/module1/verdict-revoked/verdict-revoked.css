@@ -1,0 +1,212 @@
+.verdict-container {
+  min-height: 100vh;
+  background: #F8FAFC;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.verdict-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #EEF0F3;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #2563EB;
+}
+
+/* ===== BODY ===== */
+.verdict-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 3rem;
+}
+
+.back-link {
+  align-self: flex-start;
+  margin-left: calc(50% - 220px);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  color: #374151;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.back-link:hover {
+  background: #F9FAFB;
+}
+
+/* ===== BANNIÈRE ROUGE ===== */
+.danger-banner {
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(135deg, #DC2626, #B91C1C);
+  border-radius: 12px 12px 0 0;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.25);
+  z-index: 2;
+  position: relative;
+}
+
+.banner-text {
+  color: white;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+/* ===== CARTE ===== */
+.revoked-card {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  border: 1px solid #FCA5A5;
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  margin-top: -4px;
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+.revoked-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.institution-info {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.institution-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.institution-text.blurred {
+  filter: blur(3px);
+  user-select: none;
+}
+
+.institution-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 0.2rem;
+}
+
+.course-name {
+  font-size: 0.8rem;
+  color: #6B7280;
+  margin: 0 0 0.2rem;
+}
+
+.doc-id {
+  font-size: 0.7rem;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.banned-icon {
+  flex-shrink: 0;
+}
+
+.revoked-card-body {
+  padding: 0 1.5rem 1.25rem;
+}
+
+.revoked-card-body.blurred {
+  filter: blur(4px);
+  user-select: none;
+}
+
+.student-name-blur {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 0.75rem;
+}
+
+.fake-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fake-lines span {
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+}
+
+.fake-lines span:nth-child(1) { width: 85%; }
+.fake-lines span:nth-child(2) { width: 65%; }
+.fake-lines span:nth-child(3) { width: 75%; }
+
+/* ===== BOÎTE DE RAISON ===== */
+.reason-box {
+  background: #FEF2F2;
+  border-top: 1px solid #FEE2E2;
+  padding: 1rem 1.5rem;
+}
+
+.reason-box p {
+  font-size: 0.8rem;
+  color: #991B1B;
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+/* ===== BOUTON CONTACT ===== */
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #DC2626;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contact-btn:hover {
+  background: #B91C1C;
+}

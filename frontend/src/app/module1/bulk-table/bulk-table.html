@@ -1,0 +1,159 @@
+<div class="bulk-layout">
+
+  <!-- SIDEBAR (identique à l'écran 3) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+        <polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/>
+      </svg>
+      <div>
+        <div class="sidebar-title">CertiUni</div>
+        <div class="sidebar-subtitle">INSTITUTIONAL PORTAL</div>
+      </div>
+    </div>
+
+    <button class="new-verification-btn" (click)="goToNewVerification()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Verification
+    </button>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" (click)="goToVerify()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>
+        </svg>
+        Verify Document
+      </button>
+      <button class="nav-item active" (click)="goToBulk()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 14.9A5 5 0 0 1 6 5.1 6.5 6.5 0 0 1 18.9 8H19a4 4 0 0 1 0 8"/>
+          <polyline points="12 12 12 21"/><polyline points="9 15 12 12 15 15"/>
+        </svg>
+        Bulk Upload
+      </button>
+      <button class="nav-item" (click)="goToHistory()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/>
+        </svg>
+        Scan History
+      </button>
+      <button class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Support
+      </button>
+      <button class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="bulk-main">
+    <header class="top-bar">
+      <nav class="top-nav">
+        <a href="#">Bulk Upload</a>
+        <a href="#">Verify Document</a>
+        <a href="#">Scan History</a>
+        <a href="#">Settings</a>
+      </nav>
+      <button class="institutional-badge">Institutional Access</button>
+    </header>
+
+    <div class="content-area">
+      <div class="table-toolbar">
+        <button class="back-link" (click)="onNewList()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Consulter une nouvelle liste
+        </button>
+
+        <div class="toolbar-title">
+          <h2>Rapport de Vérification en Masse</h2>
+          <span class="toolbar-subtitle">{{ candidates().length }} CV analysés · Lot #9802-A</span>
+        </div>
+
+        <button class="export-btn" (click)="exportReport()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exporter le Rapport Final
+        </button>
+      </div>
+
+      <div class="table-card">
+        <table class="candidates-table">
+          <thead>
+            <tr>
+              <th>ID DOCUMENT (UUID)</th>
+              <th>NOM DU CANDIDAT</th>
+              <th>INSTITUTION DÉCLARÉE</th>
+              <th>DATE D'OBTENTION</th>
+              <th>STATUT DE VÉRIFICATION</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (candidate of pagedCandidates(); track candidate.uuid) {
+              <tr (click)="onRowClick(candidate)">
+                <td class="uuid-cell">{{ candidate.uuid | slice:0:8 }}...</td>
+                <td class="name-cell">{{ candidate.name }}</td>
+                <td>{{ candidate.diploma }}</td>
+                <td>—</td>
+                <td>
+                  <span class="status-badge" [class]="candidate.status.toLowerCase()">
+                    @if (candidate.status === 'VALID') {
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M20 6L9 17l-5-5"/>
+                      </svg>
+                    } @else if (candidate.status === 'REVOKED') {
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    } @else {
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                    }
+                    {{ statusLabel(candidate.status) }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <div class="table-footer">
+          <span class="footer-count">Affichage 1 à {{ pagedCandidates().length }} sur {{ candidates().length }} résultats</span>
+          <div class="pagination">
+            <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">Précédent</button>
+            @for (page of [1, 2, 3]; track page) {
+              <button [class.active]="currentPage() === page" (click)="goToPage(page)">{{ page }}</button>
+            }
+            <span>...</span>
+            <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">Suivant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,211 @@
+.verdict-container {
+  min-height: 100vh;
+  background: #F8FAFC;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+.verdict-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #EEF0F3;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #2563EB;
+}
+
+.institutional-label {
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* ===== BANNIÈRE VERTE ===== */
+.success-banner {
+  background: #10B981;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+/* ===== BODY ===== */
+.verdict-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 3rem;
+}
+
+.back-link {
+  align-self: flex-start;
+  margin-left: calc(50% - 220px);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  color: #2563EB;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+.loading-state {
+  color: #6B7280;
+  font-size: 0.95rem;
+  padding: 3rem;
+}
+
+/* ===== CARTE DIPLÔME ===== */
+.diploma-card {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  border: 2px solid #1E3A8A;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(30, 58, 138, 0.08);
+  margin-bottom: 2rem;
+}
+
+.diploma-inner {
+  position: relative;
+  padding: 2.5rem 2rem 1.5rem;
+  text-align: center;
+}
+
+.corner-badge {
+  position: absolute;
+  top: 1rem;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corner-badge.top-left { left: 1rem; }
+.corner-badge.top-right { right: 1rem; }
+
+.country-label {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  color: #9CA3AF;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.certify-text {
+  font-size: 0.85rem;
+  color: #374151;
+  margin: 0.5rem 0;
+}
+
+.student-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #1E3A8A;
+  margin: 0.25rem 0;
+}
+
+.course-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1E3A8A;
+  margin: 0.25rem 0 1.25rem;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #D1FAE5;
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 1.75rem;
+}
+
+.diploma-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 1rem;
+  text-align: left;
+}
+
+.ref-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ref-label {
+  font-size: 0.6rem;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+}
+
+.ref-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.qr-placeholder {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== BOUTON TÉLÉCHARGER ===== */
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background: #152C6B;
+}

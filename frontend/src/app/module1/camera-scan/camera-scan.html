@@ -1,0 +1,60 @@
+<div class="scan-container">
+
+  <!-- HEADER -->
+  <header class="scan-header">
+    
+    <img src="images/logo.png" alt="CertiUni" class="hero-logo" />
+    <span class="screen-title">Scan Caméra</span>
+    <button class="close-btn" (click)="onClose()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ZONE CAMÉRA -->
+  <div class="camera-view">
+    @if (cameraAvailable()) {
+      <video #videoElement autoplay playsinline muted class="video-feed"></video>
+    } @else {
+      <!-- Mode simulation si pas de caméra disponible -->
+      <div class="fallback-bg"></div>
+    }
+
+    <!-- Grille de fond -->
+    <div class="grid-overlay">
+      <div class="grid-line horizontal" style="top: 33.33%"></div>
+      <div class="grid-line horizontal" style="top: 66.66%"></div>
+      <div class="grid-line vertical" style="left: 33.33%"></div>
+      <div class="grid-line vertical" style="left: 66.66%"></div>
+    </div>
+
+    <!-- Texte d'instruction -->
+    <div class="instruction-text">
+      <h2>Align Document</h2>
+      <p>Position barcode within the frame</p>
+    </div>
+
+    <!-- Cadre de visée avec coins -->
+    <div class="viewfinder" [class.capturing]="isCapturing()">
+      <span class="corner top-left"></span>
+      <span class="corner top-right"></span>
+      <span class="corner bottom-left"></span>
+      <span class="corner bottom-right"></span>
+    </div>
+
+    @if (isCapturing()) {
+      <div class="scan-line"></div>
+    }
+  </div>
+
+  <!-- CONTRÔLES -->
+  <div class="scan-controls">
+    <button class="capture-btn" (click)="onCapture()" [disabled]="isCapturing()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </button>
+  </div>
+</div>
