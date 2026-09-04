@@ -1,0 +1,97 @@
+<div class="page">
+  <div class="filters-bar">
+    <div class="search-box">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input
+        type="search"
+        placeholder="Rechercher par nom, matricule ou n° diplôme…"
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+
+    <select [value]="typeFiltre()" (change)="typeFiltre.set($any($event.target).value)">
+      <option value="">Type de diplôme</option>
+      @for (type of types(); track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+
+    <select [value]="promotionFiltre()" (change)="promotionFiltre.set($any($event.target).value)">
+      <option value="">Promotion</option>
+      @for (promotion of promotions(); track promotion) {
+        <option [value]="promotion">{{ promotion }}</option>
+      }
+    </select>
+
+    <select [value]="statutFiltre()" (change)="statutFiltre.set($any($event.target).value)">
+      <option value="">Statut</option>
+      <option value="Actif">Actif</option>
+      <option value="Révoqué">Révoqué</option>
+    </select>
+  </div>
+
+  <div class="table-card">
+    <table class="diplomes-table">
+      <thead>
+        <tr>
+          <th>N° Diplôme</th>
+          <th>Diplômé</th>
+          <th>Type</th>
+          <th>Promotion</th>
+          <th>Date d'émission</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (diplome of diplomesFiltres(); track diplome.id) {
+          <tr>
+            <td>{{ diplome.numero }}</td>
+            <td>
+              <span class="titulaire-nom">{{ diplome.titulaireNom }}</span>
+              <span class="titulaire-matricule">Matricule : {{ diplome.matricule }}</span>
+            </td>
+            <td>
+              <span class="type-nom">{{ diplome.type }}</span>
+              <span class="type-filiere">{{ diplome.filiere }}</span>
+            </td>
+            <td>{{ diplome.promotion }}</td>
+            <td>{{ diplome.dateEmission }}</td>
+            <td>
+              <span class="status-badge" [class.is-revoked]="diplome.statut === 'Révoqué'">
+                {{ diplome.statut }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="voirDiplome(diplome.id)"
+                [attr.aria-label]="'Voir le diplôme de ' + diplome.titulaireNom"
+              >
+                <span class="material-icons" aria-hidden="true">visibility</span>
+              </button>
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="telechargerPdf(diplome.id)"
+                [attr.aria-label]="'Télécharger le PDF de ' + diplome.titulaireNom"
+              >
+                <span class="material-icons" aria-hidden="true">download</span>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-row">Aucun diplôme ne correspond à ces filtres.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      1-{{ diplomesFiltres().length }} sur {{ diplomes().length }}
+    </div>
+  </div>
+</div>

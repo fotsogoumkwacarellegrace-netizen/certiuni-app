@@ -1,0 +1,60 @@
+<div class="wizard-page">
+  <h1>Importer les diplômes (étape 2)</h1>
+
+    <ol class="stepper">
+    <li class="stepper-item is-done">
+      <span class="stepper-dot"><span class="material-icons">check_circle</span></span> Choisir le type
+    </li>
+    <li class="stepper-item is-active">
+      <span class="stepper-dot">2</span> Importer CSV
+    </li>
+    <li class="stepper-item">
+      <span class="stepper-dot">3</span> Prévisualiser &amp; Générer
+    </li>
+  </ol>
+
+  <div class="form-card">
+    <div class="selected-template">
+      <div>
+        <span class="label">Modèle sélectionné</span>
+        <strong>{{ selectedTemplate()?.intitule }} – {{ selectedTemplate()?.filiere }} ({{ selectedTemplate()?.version }})</strong>
+      </div>
+      <a routerLink="/admin/creer-diplomes">Changer</a>
+    </div>
+
+    <h2 class="section-title">Importer le fichier CSV</h2>
+    <p class="section-hint">
+      Votre fichier doit contenir les colonnes suivantes :
+      <strong>{{ requiredColumns.join(', ') }}</strong>
+    </p>
+
+    <div
+      class="dropzone"
+      [class.has-error]="!!fileError()"
+      (drop)="onFileDropped($event)"
+      (dragover)="onDragOver($event)"
+    >
+      @if (!fileName()) {
+        <span class="dropzone-icon" aria-hidden="true"><span class="material-icons">cloud_upload</span></span>
+        <p>Glissez votre fichier CSV ici</p>
+        <p class="dropzone-hint">ou</p>
+        <label class="btn-secondary">
+          Parcourir votre ordinateur
+          <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden />
+        </label>
+      } @else {
+        <span class="file-chip"><span class="material-icons">description</span> {{ fileName() }}</span>
+      }
+      <p class="dropzone-format">Fichier accepté : .csv (taille max 10Mo)</p>
+    </div>
+
+    @if (fileError()) {
+      <span class="field-error">{{ fileError() }}</span>
+    }
+
+    <div class="form-footer">
+      <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
+      <button type="button" class="btn-primary" (click)="suivant()">Suivant</button>
+    </div>
+  </div>
+</div>

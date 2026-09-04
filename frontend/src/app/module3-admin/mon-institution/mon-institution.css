@@ -1,0 +1,620 @@
+:host {
+  display: block;
+}
+
+.institution-page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
+  color: #1f2937;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #17202a;
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+
+/* =========================
+   BUTTON MODIFIER
+========================= */
+
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 38px;
+  padding: 0 16px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+  border-color: #007a5e;
+  color: #007a5e;
+}
+
+.btn-edit .material-icons {
+  font-size: 17px;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.institution-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.card-title {
+  padding: 16px 20px;
+  border-bottom: 1px solid #edf0f2;
+}
+
+.card-title h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #263238;
+}
+
+
+/* =========================
+   INFORMATIONS GENERALES
+========================= */
+
+.general-content {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 32px;
+  padding: 22px;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.institution-logo {
+  width: 108px;
+  height: 108px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dce5e1;
+  border-radius: 8px;
+  background: #f7faf9;
+
+  color: #1f2937;
+}
+
+.institution-logo .material-icons {
+  font-size: 52px;
+}
+
+.change-logo {
+  margin-top: 10px;
+
+  padding: 7px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+
+  background: #ffffff;
+  color: #4b5563;
+
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.change-logo:hover {
+  border-color: #007a5e;
+  color: #007a5e;
+}
+
+
+/* =========================
+   INFO ROWS
+========================= */
+
+.general-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+
+  min-height: 38px;
+  align-items: center;
+}
+
+.info-label,
+.detail-label {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.info-value,
+.detail-value {
+  color: #263238;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-badge {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 9px;
+
+  border-radius: 20px;
+  background: #e7f5ef;
+  color: #007a5e;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-badge .material-icons {
+  font-size: 15px;
+}
+
+
+/* =========================
+   TWO COLUMNS
+========================= */
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.two-columns .institution-card {
+  margin-bottom: 18px;
+}
+
+
+/* =========================
+   DETAILS
+========================= */
+
+.details-list {
+  padding: 12px 20px 18px;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 14px;
+
+  min-height: 38px;
+}
+
+.detail-value-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #263238;
+  font-size: 13px;
+}
+
+.verified-badge {
+  padding: 3px 7px;
+
+  border-radius: 12px;
+  background: #e7f5ef;
+  color: #007a5e;
+
+  font-size: 9px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   SIGNATURE
+========================= */
+
+.signature-button {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 6px 10px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.signature-button:hover {
+  border-color: #007a5e;
+  color: #007a5e;
+}
+
+.signature-button .material-icons {
+  font-size: 15px;
+}
+
+
+/* =========================
+   DOCUMENTS
+========================= */
+
+.documents-card {
+  margin-bottom: 0;
+}
+
+.documents-list {
+  width: 100%;
+}
+
+.document-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 180px 80px;
+  align-items: center;
+  gap: 18px;
+
+  padding: 15px 20px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.document-row:last-child {
+  border-bottom: none;
+}
+
+.document-information {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.document-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 6px;
+  background: #e7f5ef;
+  color: #007a5e;
+}
+
+.document-icon .material-icons {
+  font-size: 19px;
+}
+
+.document-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.document-title {
+  color: #263238;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.document-file {
+  margin-top: 3px;
+
+  color: #9ca3af;
+  font-size: 10px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.document-date {
+  color: #8b949e;
+  font-size: 10px;
+}
+
+.document-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.icon-button {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 5px;
+
+  background: transparent;
+  color: #68737d;
+
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: #e7f5ef;
+  color: #007a5e;
+}
+
+.icon-button .material-icons {
+  font-size: 18px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.page-navigation {
+  margin-top: 20px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #007a5e;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.back-link .material-icons {
+  font-size: 18px;
+}
+
+
+/* =========================
+   TABLETTE
+========================= */
+
+@media (max-width: 850px) {
+
+  .institution-page {
+    padding: 24px;
+  }
+
+  .general-content {
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+  }
+
+  .info-row {
+    grid-template-columns: 145px 1fr;
+  }
+
+  .two-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .document-row {
+    grid-template-columns: minmax(220px, 1fr) 150px 70px;
+    gap: 10px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .institution-page {
+    padding: 18px 14px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .page-header p {
+    max-width: 230px;
+    line-height: 1.5;
+  }
+
+  .btn-edit {
+    padding: 0 11px;
+  }
+
+  .btn-edit span:last-child {
+    display: none;
+  }
+
+
+  /* Informations générales */
+
+  .general-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .logo-section {
+    align-items: flex-start;
+  }
+
+  .institution-logo {
+    width: 90px;
+    height: 90px;
+  }
+
+  .institution-logo .material-icons {
+    font-size: 44px;
+  }
+
+  .general-info {
+    width: 100%;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 7px 0;
+  }
+
+
+  /* Coordonnées */
+
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 7px 0;
+  }
+
+  .detail-value-with-badge {
+    flex-wrap: wrap;
+  }
+
+
+  /* Documents */
+
+  .document-row {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .document-date {
+    display: none;
+  }
+
+  .document-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .document-information {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .document-title {
+    line-height: 1.4;
+  }
+
+  .document-file {
+    max-width: 160px;
+  }
+
+  .card-title {
+    padding: 14px 16px;
+  }
+
+  .card-title h2 {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================
+   PETIT MOBILE
+========================= */
+
+@media (max-width: 380px) {
+
+  .institution-page {
+    padding: 14px 10px;
+  }
+
+  .page-header {
+    gap: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .institution-card {
+    border-radius: 8px;
+  }
+
+  .document-actions {
+    gap: 0;
+  }
+
+  .icon-button {
+    width: 28px;
+    height: 28px;
+  }
+}

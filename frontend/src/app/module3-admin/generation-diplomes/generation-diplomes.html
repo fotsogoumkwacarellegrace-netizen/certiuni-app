@@ -1,0 +1,37 @@
+<div class="generation-page">
+  <a class="back-link" routerLink="/admin/creer-diplomes/validation-csv">← Retour</a>
+
+  <div class="generation-card">
+    <h1>Génération des diplômes</h1>
+    <p class="status-text">
+      {{ terminee() ? 'Génération terminée.' : 'Génération en cours…' }}
+    </p>
+
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="progression()"></div>
+    </div>
+    <div class="progress-meta">
+      <span>{{ diplomesGeneres() }} / {{ totalLignes }} diplômes générés</span>
+      <span>{{ progression() }}%</span>
+    </div>
+
+    <ul class="etapes-list">
+      @for (etape of etapes(); track etape.label) {
+        <li [class.is-done]="etape.fait">
+          <span class="check" aria-hidden="true"><span class="material-icons">{{ etape.fait ? 'check_circle' : 'radio_button_unchecked' }}</span></span>
+          {{ etape.label }}
+        </li>
+      }
+    </ul>
+
+    <div class="form-footer">
+      @if (!terminee()) {
+        <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
+      } @else {
+        <button type="button" class="btn-primary" (click)="voirResultats()">
+          Voir les résultats →
+        </button>
+      }
+    </div>
+  </div>
+</div>
