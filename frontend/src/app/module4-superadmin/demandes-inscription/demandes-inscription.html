@@ -1,0 +1,82 @@
+<div class="page">
+  <h1>Demandes d'inscription</h1>
+
+  <div class="tabs">
+    @for (onglet of onglets; track onglet) {
+      <button
+        type="button"
+        class="tab"
+        [class.is-active]="ongletActif() === onglet"
+        (click)="selectionnerOnglet(onglet)"
+      >
+        {{ onglet }} ({{ compteurs()[onglet] }})
+      </button>
+    }
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input
+        type="search"
+        placeholder="Rechercher une institution…"
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+    <button type="button" class="btn-secondary">
+      <span class="material-icons" aria-hidden="true">filter_list</span> Filtrer
+    </button>
+  </div>
+
+  <div class="table-card">
+    <table class="demandes-table">
+      <thead>
+        <tr>
+          <th>Institution</th>
+          <th>Type</th>
+          <th>Date de demande</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (demande of demandesFiltrees(); track demande.id) {
+          <tr>
+            <td>{{ demande.institution }}</td>
+            <td>{{ demande.type }}</td>
+            <td>{{ demande.dateDemande }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [class.is-pending]="demande.statut === 'En attente'"
+                [class.is-validated]="demande.statut === 'Validée'"
+                [class.is-rejected]="demande.statut === 'Rejetée'"
+              >
+                {{ demande.statut }}
+              </span>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="consulter(demande.id)"
+                [attr.aria-label]="'Consulter ' + demande.institution"
+              >
+                <span class="material-icons" aria-hidden="true">visibility</span>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-row">Aucune demande ne correspond à votre recherche.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      1-{{ demandesFiltrees().length }} sur {{ demandes().length }}
+    </div>
+  </div>
+</div>
