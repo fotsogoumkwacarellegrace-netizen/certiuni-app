@@ -1,0 +1,139 @@
+<a class="back-link" routerLink="/superadmin/demandes-inscription">
+  <span class="material-icons" aria-hidden="true">arrow_back</span> Retour à la liste
+</a>
+
+<div class="page" [class.is-blurred]="identifiantsGeneres()">
+  @if (demande; as d) {
+    <div class="page-header">
+      <h1>{{ d.institution }}</h1>
+      <div class="status-row">
+        <span class="status-label">Statut</span>
+        <span
+          class="status-badge"
+          [class.is-pending]="d.statut === 'En attente'"
+          [class.is-validated]="d.statut === 'Validée'"
+          [class.is-rejected]="d.statut === 'Rejetée'"
+        >
+          {{ d.statut }}
+        </span>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="left-column">
+        <div class="panel">
+          <h2>Informations générales</h2>
+          <dl class="info-list">
+            <div>
+              <dt>Type d'établissement</dt>
+              <dd>{{ d.type }}</dd>
+            </div>
+            <div>
+              <dt>Domaine DNS</dt>
+              <dd>{{ d.domaineDns }}</dd>
+            </div>
+            <div>
+              <dt>Adresse</dt>
+              <dd>{{ d.adresse }}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{{ d.email }}</dd>
+            </div>
+            <div>
+              <dt>Téléphone</dt>
+              <dd>{{ d.telephone }}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="panel">
+          <h2>Représentant légal</h2>
+          <p class="representant-nom">{{ d.representantLegal.nom }}</p>
+          <p class="representant-fonction">Fonction : {{ d.representantLegal.fonction }}</p>
+
+          <div class="signature-row">
+            <span class="signature-label">Signature numérique</span>
+            <button type="button" class="link-btn">Voir la signature</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <div class="panel">
+          <h2>Documents</h2>
+          <ul class="documents-list">
+            <li>
+              <span class="doc-name">
+                <span class="material-icons" aria-hidden="true">description</span>
+                {{ d.decretFichier }}
+              </span>
+              <span class="doc-size">Taille : {{ d.decretTaille }}</span>
+              <div class="doc-actions">
+                <button type="button" class="icon-btn" aria-label="Voir le décret">
+                  <span class="material-icons" aria-hidden="true">visibility</span>
+                </button>
+                <button type="button" class="icon-btn" aria-label="Télécharger le décret">
+                  <span class="material-icons" aria-hidden="true">download</span>
+                </button>
+              </div>
+            </li>
+            <li>
+              <span class="doc-name">
+                <span class="material-icons" aria-hidden="true">description</span>
+                {{ d.signatureFichier }}
+              </span>
+              <span class="doc-size">Taille : {{ d.signatureTaille }}</span>
+              <div class="doc-actions">
+                <button type="button" class="icon-btn" aria-label="Voir la signature">
+                  <span class="material-icons" aria-hidden="true">visibility</span>
+                </button>
+                <button type="button" class="icon-btn" aria-label="Télécharger la signature">
+                  <span class="material-icons" aria-hidden="true">download</span>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    @if (d.statut === 'En attente') {
+      <div class="form-footer">
+        <button type="button" class="btn-danger" (click)="rejeterLaDemande()">Rejeter la demande</button>
+        <button type="button" class="btn-primary" (click)="validerInstitution()">Valider l'institution</button>
+      </div>
+    }
+  } @else {
+    <p class="empty-state">Cette demande n'a pas été trouvée.</p>
+  }
+</div>
+
+@if (identifiantsGeneres(); as creds) {
+  <div class="validation-overlay">
+    <div class="validation-dialog">
+      <span class="dialog-icon material-icons" aria-hidden="true">check_circle</span>
+      <h2>Institution validée avec succès !</h2>
+      <p class="dialog-institution">{{ creds.institution }}</p>
+
+      <dl class="credentials-list">
+        <div>
+          <dt>Identifiant unique</dt>
+          <dd>{{ creds.identifiantUnique }}</dd>
+        </div>
+        <div>
+          <dt>Mot de passe généré</dt>
+          <dd>{{ creds.motDePasse }}</dd>
+        </div>
+      </dl>
+
+      <p class="dialog-warning">
+        <span class="material-icons" aria-hidden="true">warning</span>
+        Ces identifiants permettront à l'institution de se connecter. Communiquez-les uniquement
+        à un responsable autorisé.
+      </p>
+
+      <button type="button" class="btn-primary" (click)="fermerDialogValidation()">Fermer</button>
+    </div>
+  </div>
+}

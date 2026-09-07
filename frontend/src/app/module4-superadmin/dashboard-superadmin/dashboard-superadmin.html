@@ -1,0 +1,59 @@
+<div class="dashboard-page">
+  <h1>Vue nationale</h1>
+
+  <div class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <span class="stat-label">{{ stat.label }}</span>
+        <span class="stat-value">{{ stat.value }}</span>
+        @if (stat.delta) {
+          <span class="stat-delta">{{ stat.delta }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="chart-card">
+    <h2>Vérifications totales de la plateforme</h2>
+    <p class="chart-subtitle">Évolution sur les 12 derniers mois</p>
+
+    <svg class="chart-svg" viewBox="0 0 640 160" preserveAspectRatio="none">
+      <path [attr.d]="areaPath()" class="chart-area"></path>
+      <polyline [attr.points]="polylinePoints()" class="chart-line"></polyline>
+      @for (point of points(); track point.mois) {
+        <circle [attr.cx]="point.x" [attr.cy]="point.y" r="3" class="chart-dot">
+          <title>{{ point.mois }} : {{ point.total }}</title>
+        </circle>
+      }
+    </svg>
+
+    <div class="chart-labels">
+      @for (point of points(); track point.mois) {
+        <span>{{ point.mois }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="alert-card">
+      <h2>Alertes &amp; Anomalies</h2>
+      <div class="alert-metric">
+        <span class="alert-label">Vérifications suspectes</span>
+        <span class="alert-value">{{ verificationsSuspectes }}</span>
+      </div>
+      <a class="alert-link" routerLink="/superadmin/audit">Voir détails</a>
+    </div>
+
+    <div class="activity-card">
+      <h2>Activité récente</h2>
+      <ul class="activity-list">
+        @for (item of activiteRecente; track item.description) {
+          <li class="activity-row">
+            <span class="activity-time">{{ item.date }} {{ item.heure }}</span>
+            <span class="activity-description">{{ item.description }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

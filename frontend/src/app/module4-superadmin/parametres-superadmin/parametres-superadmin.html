@@ -1,0 +1,107 @@
+<div class="page">
+  <h1><span class="material-icons" aria-hidden="true">settings</span> Paramètres</h1>
+
+  <div class="settings-card">
+    <div class="setting-row">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">notifications</span>
+        <span>Notifications</span>
+      </div>
+      <button
+        type="button"
+        class="toggle"
+        [class.is-on]="notificationsActivees()"
+        (click)="toggleNotifications()"
+        [attr.aria-pressed]="notificationsActivees()"
+        aria-label="Activer ou désactiver les notifications"
+      >
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">devices</span>
+        <span>Appareils connectés</span>
+      </div>
+      <span class="setting-value">{{ appareilsConnectes }} appareils</span>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">lock</span>
+        <span>Authentification à deux facteurs</span>
+      </div>
+      <button
+        type="button"
+        class="toggle"
+        [class.is-on]="authDeuxFacteurs()"
+        (click)="toggleAuthDeuxFacteurs()"
+        [attr.aria-pressed]="authDeuxFacteurs()"
+        aria-label="Activer ou désactiver l'authentification à deux facteurs"
+      >
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">palette</span>
+        <span>Mode clair / sombre</span>
+      </div>
+      <button
+        type="button"
+        class="toggle"
+        [class.is-on]="modeSombre()"
+        (click)="toggleModeSombre()"
+        [attr.aria-pressed]="modeSombre()"
+        aria-label="Basculer entre le mode clair et le mode sombre"
+      >
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
+
+    <button type="button" class="setting-row is-clickable" (click)="ouvrirAide()">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">help</span>
+        <span>Aide</span>
+      </div>
+      <span class="material-icons chevron" aria-hidden="true">chevron_right</span>
+    </button>
+
+    <button type="button" class="setting-row is-clickable is-last" (click)="ouvrirAPropos()">
+      <div class="setting-label">
+        <span class="material-icons" aria-hidden="true">info</span>
+        <span>À propos de CertiUni</span>
+      </div>
+      <span class="material-icons chevron" aria-hidden="true">chevron_right</span>
+    </button>
+  </div>
+</div>
+
+@if (showAide()) {
+  <div class="overlay" (click)="fermerAide()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <h2><span class="material-icons" aria-hidden="true">help</span> Aide</h2>
+      <p>
+        Pour toute question sur l'utilisation de CertiUni, contactez le support technique à
+        <strong>support&#64;certiuni.cm</strong> ou consultez la documentation interne de votre institution.
+      </p>
+      <button type="button" class="btn-primary" (click)="fermerAide()">Fermer</button>
+    </div>
+  </div>
+}
+
+@if (showAPropos()) {
+  <div class="overlay" (click)="fermerAPropos()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <h2><span class="material-icons" aria-hidden="true">info</span> À propos de CertiUni</h2>
+      <p>
+        CertiUni est la plateforme nationale de gestion et de validation des diplômes universitaires,
+        opérée sous l'autorité du MINESUP.
+      </p>
+      <p class="version">Version 1.0.0</p>
+      <button type="button" class="btn-primary" (click)="fermerAPropos()">Fermer</button>
+    </div>
+  </div>
+}
