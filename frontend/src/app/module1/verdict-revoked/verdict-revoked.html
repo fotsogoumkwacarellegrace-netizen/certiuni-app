@@ -1,76 +1,107 @@
-<div class="verdict-container">
+<div class="page">
 
   <!-- HEADER -->
-  <header class="verdict-header">
-    <div class="logo-container">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
-        <polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/>
-      </svg>
-      <span class="logo-text">CertiUni</span>
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-container">
+        <img src="images/logo1.png" alt="CertiUni Logo" class="certiuni-logo" />
+      </div>
+      <div class="brand-text">CertiUni</div>
     </div>
+    <button class="close-btn" (click)="onBackToHome()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
   </header>
 
-  <div class="verdict-body">
-    <button class="back-link" (click)="onBackToHome()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
-      </svg>
-      Retour à l'accueil
-    </button>
+  <!-- BODY -->
+  <main class="body">
 
-    <!-- BANNIÈRE ROUGE -->
-    <div class="danger-banner">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      <div class="banner-text">
-        ATTENTION : CE DOCUMENT A ÉTÉ<br>
-        OFFICIELLEMENT ANNULÉ PAR<br>
-        L'UNIVERSITÉ
+    @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Vérification en cours...</p>
+    </div>
+    } @else {
+
+    <!-- CARTE STATUT -->
+    <div class="status-card">
+      <div class="status-circle">
+        <span class="material-symbols-outlined">block</span>
       </div>
+      <h1 class="status-title">Document révoqué</h1>
+      <p class="status-text">
+        Ce diplôme n'est plus valide. Il a été <strong>officiellement annulé</strong>
+        par l'établissement émetteur et ne peut plus être utilisé comme preuve d'authenticité.
+      </p>
     </div>
 
-    <!-- CARTE FLOUTÉE -->
-    <div class="revoked-card">
-      <div class="revoked-card-header">
-        <div class="institution-info">
-          <div class="institution-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5">
-              <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>
-            </svg>
-          </div>
-          <div class="institution-text blurred">
-            <p class="institution-name">Université Virtuelle de Yaoundé</p>
-            <p class="course-name">Master en Cybersécurité et Réseaux</p>
-            <p class="doc-id">ID: DOC-2023-998-KEY</p>
-          </div>
+    <!-- CARTE ATTESTATION -->
+    <div class="attestation-card">
+
+      <div class="attestation-header">
+        <div class="status-label">
+          Attestation Numérique d'État
         </div>
-        <div class="banned-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/>
-          </svg>
+        <span class="revoked-pill">
+          <span class="material-symbols-outlined">block</span>
+          Diplôme Révoqué
+        </span>
+      </div>
+
+      <!-- section titulaire, remplace le bloc holder-section existant -->
+      <div class="holder-section">
+        <span class="holder-icon">
+          <span class="material-symbols-outlined">account_balance</span>
+        </span>
+        <div class="holder-text">
+          <span class="holder-label">Titulaire du diplôme</span>
+          <h2 class="holder-name">{{ studentName() }}</h2>
+          <span class="holder-diploma">
+            <span class="dot-sep"></span>
+            {{ diplomaLine() }}
+          </span>
         </div>
       </div>
 
-      <div class="revoked-card-body blurred">
-        <p class="student-name-blur">{{ studentName() }}</p>
-        <div class="fake-lines">
-          <span></span><span></span><span></span>
+      <div class="info-grid">
+        <div class="info-tile">
+          <span class="info-tile-label">Référence document</span>
+          <span class="info-tile-value">{{ documentRef() }}</span>
+        </div>
+        <div class="info-tile">
+          <span class="info-tile-label">Statut</span>
+          <span class="info-tile-value">Révoqué</span>
         </div>
       </div>
 
       <div class="reason-box">
+        <span class="reason-label">
+          <span class="material-symbols-outlined">info</span>
+          Motif de révocation
+        </span>
         <p>{{ revocationReason() }}</p>
       </div>
+
     </div>
 
-    <button class="contact-btn" (click)="onContactSecretariat()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-        <polyline points="22 6 12 13 2 6"/>
-      </svg>
+    <!-- Sécurité -->
+    <div class="security-notice">
+      <span class="material-symbols-outlined">shield</span>
+      <span>Les données nominatives de ce document sont verrouillées par mesure de sécurité.</span>
+    </div>
+
+    <!-- ACTIONS -->
+    <button class="btn-contact" (click)="onContactSecretariat()">
+      <span class="material-symbols-outlined">mail</span>
       Contacter le Secrétariat Émetteur
     </button>
-  </div>
+
+    <button class="btn-new-verif" (click)="onBackToHome()">
+      Nouvelle vérification
+    </button>
+
+    }
+
+  </main>
+
 </div>

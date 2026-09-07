@@ -1,3 +1,4 @@
+// src/app/module1/module1.routes.ts
 import { Routes } from '@angular/router';
 
 export const MODULE1_ROUTES: Routes = [
@@ -6,8 +7,13 @@ export const MODULE1_ROUTES: Routes = [
     loadComponent: () =>
       import('./module1.component').then(m => m.Module1Component),
     children: [
-      { path: '', redirectTo: 'accueil', pathMatch: 'full' },
+      { path: '', redirectTo: 'landing', pathMatch: 'full' },
 
+      {
+        path: 'landing',
+        loadComponent: () =>
+          import('./landing/landing').then(m => m.Landing)
+      },
       {
         path: 'accueil',
         loadComponent: () =>
@@ -22,6 +28,11 @@ export const MODULE1_ROUTES: Routes = [
         path: 'ocr-scan',
         loadComponent: () =>
           import('./ocr-scan/ocr-scan').then(m => m.OcrScan)
+      },
+      {
+        path: 'bulk-upload',
+        loadComponent: () =>
+          import('./bulk-upload/bulk-upload').then(m => m.BulkUpload)
       },
       {
         path: 'bulk-table',
@@ -57,6 +68,17 @@ export const MODULE1_ROUTES: Routes = [
         path: 'pdf-viewer/:id',
         loadComponent: () =>
           import('./pdf-viewer/pdf-viewer').then(m => m.PdfViewer)
+      },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./login/login').then(m => m.Login)
+      },
+      // Route Paramètres
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./settings/settings').then(m => m.Settings)
       }
     ]
   }

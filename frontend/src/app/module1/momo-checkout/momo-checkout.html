@@ -1,77 +1,171 @@
-<div class="backdrop" (click)="onBackdropClick($event)">
-  <div class="momo-card">
-    <div class="card-top-border"></div>
+<div class="checkout-page">
+  <!-- HEADER -->
+  <header class="checkout-header">
+    <div class="header-inner">
+      <button class="back-btn" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <div class="logo-container">
+        <span class="material-symbols-outlined logo-icon">verified</span>
+        <span class="logo-title">CertiUni</span>
+      </div>
+      <div class="header-spacer"></div>
+    </div>
+  </header>
 
-    <div class="card-content">
-      <div class="shield-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 2l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V5z"/>
-        </svg>
+  <!-- MAIN CONTENT -->
+  <main class="checkout-body">
+    <div class="checkout-card">
+      <!-- Card Status Bar -->
+      <div class="card-status-bar"></div>
+
+      <!-- Card Header -->
+      <div class="card-header-section">
+        <div class="security-badge">
+          <span class="material-symbols-outlined">lock</span>
+          Paiement sécurisé
+        </div>
+        <span class="amount-badge">{{ amount }} FCFA</span>
       </div>
 
-      <h2 class="card-title">Sécurisation de la Requête Manuelle</h2>
-      <p class="card-amount">
-        Montant fixe de facturation d'audit : <strong>{{ auditAmount | number:'1.0-0':'fr' }} FCFA</strong>
-      </p>
+      <!-- Card Body -->
+      <div class="card-body-section">
+        <!-- Icon -->
+        <div class="payment-icon-wrapper">
+          <span class="material-symbols-outlined">payments</span>
+        </div>
 
-      @if (!requestSent()) {
-        <div class="form-section">
-          <label class="phone-label">Numéro de téléphone Mobile Money</label>
+        <!-- Title -->
+        <h1 class="payment-title">Vérification Manuelle</h1>
+        <p class="payment-subtitle">
+          Sécurisation de la requête manuelle par Mobile Money
+        </p>
 
+        <!-- Amount Display -->
+        <div class="amount-display">
+          <span class="amount-label">Montant fixe de facturation d'audit</span>
+          <span class="amount-value">{{ amount }} FCFA</span>
+        </div>
+
+        <!-- Operator Selection -->
+        <div class="operator-section">
+          <p class="operator-label">Choisissez votre opérateur</p>
+          <div class="operator-grid">
+            <button 
+              class="operator-btn" 
+              [class.active]="selectedOperator() === 'mtn'"
+              (click)="selectOperator('mtn')"
+            >
+              <span class="operator-icon material-symbols-outlined">phone_android</span>
+              <span class="operator-name">MTN MoMo</span>
+              <span class="operator-check" *ngIf="selectedOperator() === 'mtn'">
+                <span class="material-symbols-outlined">check_circle</span>
+              </span>
+            </button>
+            <button 
+              class="operator-btn" 
+              [class.active]="selectedOperator() === 'orange'"
+              (click)="selectOperator('orange')"
+            >
+              <span class="operator-icon material-symbols-outlined">phone_android</span>
+              <span class="operator-name">Orange Money</span>
+              <span class="operator-check" *ngIf="selectedOperator() === 'orange'">
+                <span class="material-symbols-outlined">check_circle</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Phone Input -->
+        <div class="phone-section">
+          <p class="phone-label">Numéro de téléphone</p>
           <div class="phone-input-wrapper">
-            <span class="country-code">CM +237</span>
-            <input
-              type="tel"
-              placeholder="6XX XX XX XX"
+            <span class="phone-prefix">+237</span>
+            <input 
+              type="tel" 
+              class="phone-input" 
+              placeholder="6 XX XX XX XX"
               [(ngModel)]="phoneNumber"
+              [disabled]="isProcessing() || isSuccess()"
               maxlength="9"
-              [disabled]="isProcessing()"
             />
           </div>
+        </div>
 
-          <div class="encryption-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            Transaction chiffrée de bout en bout
+        <!-- OTP Section -->
+        @if (showOTP()) {
+          <div class="otp-section">
+            <div class="otp-header">
+              <span class="material-symbols-outlined">sms</span>
+              <span>Code de confirmation</span>
+            </div>
+            <div class="otp-input-wrapper">
+              <input 
+                type="text" 
+                class="otp-input" 
+                placeholder="Code OTP"
+                [(ngModel)]="otpCode"
+                maxlength="6"
+                [disabled]="isProcessing() || isSuccess()"
+              />
+              <button class="resend-btn" (click)="resendOTP()" [disabled]="countdown() > 10">
+                Renvoyer
+                @if (countdown() > 0) {
+                  <span class="countdown-badge">{{ countdown() }}s</span>
+                }
+              </button>
+            </div>
+            <p class="otp-hint">
+              <span class="material-symbols-outlined">info</span>
+              Un code vous a été envoyé par SMS
+            </p>
           </div>
+        }
 
-          <div class="operator-select">
-            <button
-              class="operator-btn mtn"
-              [class.selected]="selectedOperator() === 'MTN'"
-              (click)="selectOperator('MTN')"
-            >
-              MTN Mobile Money
-            </button>
-            <button
-              class="operator-btn orange"
-              [class.selected]="selectedOperator() === 'ORANGE'"
-              (click)="selectOperator('ORANGE')"
-            >
-              Orange Money
-            </button>
-          </div>
-
-          <button
-            class="submit-btn"
-            (click)="onSubmit()"
-            [disabled]="isProcessing() || phoneNumber().length < 9 || !selectedOperator()"
+        <!-- Action Button -->
+        @if (!isSuccess()) {
+          <button 
+            class="pay-btn" 
+            (click)="onPay()" 
+            [disabled]="isProcessing()"
           >
-            {{ isProcessing() ? 'Envoi en cours...' : 'Confirmer la demande' }}
+            @if (isProcessing()) {
+              <span class="spinner"></span>
+              Traitement en cours...
+            } @else {
+              <span class="material-symbols-outlined">lock</span>
+              Payer {{ amount }} FCFA
+            }
           </button>
+        } @else {
+          <div class="success-section">
+            <div class="success-icon">
+              <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <h2 class="success-title">Paiement confirmé !</h2>
+            <p class="success-desc">Votre demande de vérification manuelle a été enregistrée avec succès.</p>
+            <div class="success-ref">
+              <span>Référence :</span>
+              <strong>{{ transactionRef() }}</strong>
+            </div>
+            <button class="success-btn" (click)="goHome()">
+              <span class="material-symbols-outlined">home</span>
+              Retour à l'accueil
+            </button>
+          </div>
+        }
 
-          <button class="cancel-btn" (click)="onClose()">Annuler</button>
+        <!-- Footer Info -->
+        <div class="secure-footer">
+          <span class="material-symbols-outlined">shield</span>
+          <span>Transaction sécurisée par cryptage SSL</span>
         </div>
-      } @else {
-        <div class="success-state">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>
-          </svg>
-          <p>Demande enregistrée</p>
-          <span>Notre équipe vous contactera sous 48 heures.</span>
-        </div>
-      }
+      </div>
     </div>
-  </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="checkout-footer">
+    <p>© 2026 CertiUni Cameroun — Portail sécurisé de vérification</p>
+  </footer>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockDataService } from '../../core/services/mock-data.service';
 
@@ -15,6 +15,8 @@ export class VerdictRevoked implements OnInit {
   private mockService = inject(MockDataService);
 
   studentName = signal('Étudiant Inconnu');
+  diplomaLine = signal('Master en Cybersécurité et Réseaux');
+  institutionName = signal('Université Virtuelle de Yaoundé');
   documentRef = signal('');
   revocationReason = signal(
     "Document révoqué par l'autorité académique pour motif d'erreur administrative, mise à jour de parcours ou sanction disciplinaire. Les données nominatives sont verrouillées."
@@ -25,10 +27,20 @@ export class VerdictRevoked implements OnInit {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.documentRef.set(`DOC-2026-${id.slice(0, 8).toUpperCase()}`);
 
+    // Récupère les infos réelles (étudiant + certificat) si disponibles,
+    // même si le certificat est marqué révoqué côté vérification.
+    const full = this.mockService.getCertificateWithStudent(id);
+    if (full) {
+      this.diplomaLine.set(full.certificate.course_title);
+      this.institutionName.set(full.certificate.university_name);
+    }
+
     this.mockService.verifyCertificate(id).subscribe(result => {
       this.isLoading.set(false);
       if (result.studentName) {
         this.studentName.set(result.studentName);
+      } else if (full) {
+        this.studentName.set(`${full.student.first_name} ${full.student.last_name}`);
       }
     });
   }

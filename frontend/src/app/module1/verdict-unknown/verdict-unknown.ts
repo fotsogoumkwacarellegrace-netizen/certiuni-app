@@ -1,10 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-verdict-unknown',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './verdict-unknown.html',
   styleUrl: './verdict-unknown.css'
 })
@@ -14,6 +15,7 @@ export class VerdictUnknown implements OnInit {
 
   searchedCode = signal('');
   lang = signal<'FR' | 'EN'>('FR');
+  isCopied = signal(false);
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
@@ -24,15 +26,22 @@ export class VerdictUnknown implements OnInit {
     this.router.navigate(['/public/accueil']);
   }
 
-  onClose() {
-    this.router.navigate(['/public/accueil']);
-  }
-
   setLang(l: 'FR' | 'EN') {
     this.lang.set(l);
   }
 
   onManualVerification() {
+    const currentUrl = this.router.url;
+    localStorage.setItem('returnUrl', currentUrl);
     this.router.navigate(['/public/momo-checkout']);
+  }
+
+  copyCode() {
+    const code = this.searchedCode();
+    if (!code) return;
+    navigator.clipboard?.writeText(code).then(() => {
+      this.isCopied.set(true);
+      setTimeout(() => this.isCopied.set(false), 1800);
+    });
   }
 }

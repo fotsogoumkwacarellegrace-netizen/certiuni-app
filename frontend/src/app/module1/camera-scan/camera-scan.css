@@ -20,6 +20,21 @@
   right: 0;
   z-index: 10;
 }
+.header-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.logo-container { display: flex; align-items: center; justify-content: center; }
+
+.certiuni-logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.certiuni-logo:hover {
+  transform: scale(1.05);
+}
+.brand-text { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.5px; color: #19764A; }
+
 
 .logo-mini {
   color: #60A5FA;

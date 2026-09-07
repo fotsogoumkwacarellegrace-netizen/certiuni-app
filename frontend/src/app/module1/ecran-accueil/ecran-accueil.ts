@@ -1,28 +1,135 @@
 // src/app/module1/ecran-accueil/ecran-accueil.ts
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { MockDataService } from '../../core/services/mock-data.service';
+import { DarkModeService } from '../../services/dark-mode';
+import { DarkModeDirective } from '../../directives/dark-mode.directive';
+import { ScrollToTopDirective } from '../../directives/scroll-to-top';
 
 @Component({
   selector: 'app-ecran-accueil',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    DarkModeDirective,
+    ScrollToTopDirective
+  ],
   templateUrl: './ecran-accueil.html',
   styleUrl: './ecran-accueil.css'
 })
-export class EcranAccueil {
+export class EcranAccueil implements OnInit, OnDestroy {
   private router = inject(Router);
   private mockService = inject(MockDataService);
+  private darkModeService = inject(DarkModeService);
+  private darkModeSubscription: Subscription = new Subscription();
 
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  // Signaux pour l'état de l'interface
   searchQuery = signal('');
   lang = signal<'FR' | 'EN'>('FR');
-  isDragging = signal(false);
+  isDarkMode = signal(false);
+  isMenuOpen = signal(false);
   isProcessing = signal(false);
-  showBulkResult = signal(false);
 
-  onSearchSubmit() {
+  /**
+   * Initialisation du composant
+   * Récupère l'état du dark mode depuis le service
+   */
+  ngOnInit() {
+    this.isDarkMode.set(this.darkModeService.isDarkMode$);
+    
+    this.darkModeSubscription = this.darkModeService.getDarkModeObservable().subscribe(
+      (isDark: boolean) => {
+        this.isDarkMode.set(isDark);
+        if (isDark) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
+        }
+      }
+    );
+  }
+
+  /**
+   * Nettoyage du composant
+   */
+  ngOnDestroy() {
+    this.darkModeSubscription.unsubscribe();
+  }
+
+  // ============================================
+  // GESTION DU DARK MODE
+  // ============================================
+
+  /**
+   * Bascule entre le mode clair et le mode sombre
+   */
+  toggleDarkMode(): void {
+    this.darkModeService.toggleDarkMode();
+  }
+
+  // ============================================
+  // GESTION DU MENU BURGER
+  // ============================================
+
+  /**
+   * Ouvre ou ferme le menu burger
+   * Bloquer le scroll quand le menu est ouvert
+   */
+  toggleMenu(): void {
+    this.isMenuOpen.set(!this.isMenuOpen());
+    if (this.isMenuOpen()) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Ferme le menu burger
+   * Réactive le scroll
+   */
+  closeMenu(): void {
+    this.isMenuOpen.set(false);
+    document.body.style.overflow = '';
+  }
+
+  /**
+   * Ferme le menu avec la touche Echap
+   */
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.closeMenu();
+  }
+
+  // ============================================
+  // GESTION DE LA LANGUE
+  // ============================================
+
+  /**
+   * Change la langue de l'interface
+   * @param l - 'FR' ou 'EN'
+   */
+  setLang(l: 'FR' | 'EN'): void {
+    this.lang.set(l);
+  }
+
+  // ============================================
+  // GESTION DE LA RECHERCHE
+  // ============================================
+
+  /**
+   * Soumet la recherche d'un certificat
+   * Vérifie le certificat via le service mock
+   * Redirige vers la page appropriée selon le résultat
+   */
+  onSearchSubmit(): void {
     const query = this.searchQuery().trim();
     if (!query || this.isProcessing()) return;
 
@@ -50,60 +157,100 @@ export class EcranAccueil {
     });
   }
 
-  setLang(l: 'FR' | 'EN') {
-    this.lang.set(l);
-  }
+  // ============================================
+  // NAVIGATION — CARTES DE LA PAGE
+  // ============================================
 
-  openCameraScan() {
+  /**
+   * Ouvre la page de scan par caméra
+   * Ferme le menu si ouvert
+   */
+  openCameraScan(): void {
+    this.closeMenu();
     this.router.navigate(['/public/camera-scan']);
   }
 
-  openOCRScan() {
+  /**
+   * Ouvre la page de scan OCR
+   * Ferme le menu si ouvert
+   */
+  openOCRScan(): void {
+    this.closeMenu();
     this.router.navigate(['/public/ocr-scan']);
   }
 
-  navigateToBulk() {
-    this.router.navigate(['/public/bulk-table']);
+  /**
+   * Navigue vers la page de vérification par lot
+   * Ferme le menu si ouvert
+   */
+  navigateToBulk(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/bulk-upload']);
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(true);
+  // ============================================
+  // NAVIGATION — NAVBAR
+  // ============================================
+
+  /**
+   * Lien "Accueil" — mène vers la page landing
+   */
+  goToLanding(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/landing']);
   }
 
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(false);
+  /**
+   * Lien "Institutions"
+   */
+  goToInstitutions(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/accueil']);
   }
 
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(false);
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.processBulkFile(files[0]);
+  /**
+   * Lien "Étudiants"
+   */
+  goToEtudiants(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/accueil']);
+  }
+
+  /**
+   * Lien "Recruteurs" — reste sur la page accueil
+   */
+  goToRecruteurs(): void {
+    this.closeMenu();
+    // Reste sur la page actuelle (ecran-accueil)
+  }
+
+  // ============================================
+  // MÉTHODES UTILITAIRES
+  // ============================================
+
+  /**
+   * Obtient la couleur du statut d'un certificat
+   * @param status - Le statut du certificat
+   * @returns La classe CSS correspondante
+   */
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'VALID': return 'bg-emerald-100 text-emerald-700';
+      case 'REVOKED': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
     }
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.processBulkFile(input.files[0]);
+  /**
+   * Obtient la couleur du point de statut
+   * @param status - Le statut du certificat
+   * @returns La classe CSS correspondante
+   */
+  getStatusDot(status: string): string {
+    switch (status) {
+      case 'VALID': return 'bg-emerald-500';
+      case 'REVOKED': return 'bg-red-500';
+      default: return 'bg-gray-400';
     }
-  }
-
-  processBulkFile(file: File) {
-    this.isProcessing.set(true);
-    this.mockService.processBulkFile(file).subscribe({
-      next: () => {
-        this.isProcessing.set(false);
-        this.showBulkResult.set(true);
-        setTimeout(() => this.navigateToBulk(), 1500);
-      },
-      error: () => {
-        this.isProcessing.set(false);
-        alert('Erreur lors du traitement du fichier');
-      }
-    });
   }
 }

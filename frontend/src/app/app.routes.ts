@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   // Redirection par défaut vers l'accueil public (chemin RELATIF, pas '/public/accueil')
-  { path: '', redirectTo: 'public/accueil', pathMatch: 'full' },
+   { path: '', redirectTo: 'public/landing', pathMatch: 'full' },
 
   // Module 1 : Portail public
   {
