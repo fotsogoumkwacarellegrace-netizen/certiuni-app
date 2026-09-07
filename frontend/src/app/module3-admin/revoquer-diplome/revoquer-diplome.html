@@ -1,0 +1,94 @@
+<div class="page">
+  <a class="back-link" routerLink="/admin/diplomes-emis">
+    <span class="material-icons" aria-hidden="true">arrow_back</span> Retour à la liste
+  </a>
+
+  @if (diplome; as d) {
+    <div class="revoke-card">
+      <h1>Révoquer le diplôme {{ d.numero }}</h1>
+
+      <div class="warning-banner">
+        <span class="material-icons" aria-hidden="true">warning</span>
+        <div>
+          <strong>Vous êtes sur le point de révoquer ce diplôme.</strong>
+          <p>Cette action est irréversible et sera visible lors des vérifications.</p>
+        </div>
+      </div>
+
+      <dl class="info-list">
+        <div>
+          <dt>Diplômé</dt>
+          <dd>{{ d.titulaireNom }}</dd>
+        </div>
+        <div>
+          <dt>Type de diplôme</dt>
+          <dd>{{ d.type }} — {{ d.filiere }}</dd>
+        </div>
+        <div>
+          <dt>Date d'émission</dt>
+          <dd>{{ d.dateEmission }}</dd>
+        </div>
+        <div>
+          <dt>Statut actuel</dt>
+          <dd><span class="status-badge">{{ d.statut }}</span></dd>
+        </div>
+      </dl>
+
+      <div class="form-field">
+        <label for="motif">Motif de révocation *</label>
+        <select
+          id="motif"
+          [value]="motif()"
+          (change)="motif.set($any($event.target).value); motifError.set(null)"
+          [class.has-error]="!!motifError()"
+        >
+          <option value="" disabled>Sélectionner un motif</option>
+          @for (m of motifs; track m) {
+            <option [value]="m">{{ m }}</option>
+          }
+        </select>
+        @if (motifError()) {
+          <span class="field-error">{{ motifError() }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="commentaire">Commentaire supplémentaire (optionnel)</label>
+        <textarea
+          id="commentaire"
+          rows="4"
+          [value]="commentaire()"
+          (input)="onCommentaireChange($any($event.target).value)"
+        ></textarea>
+        <span class="char-count">{{ commentaire().length }} / 300</span>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
+        <button type="button" class="btn-primary" [disabled]="submitting()" (click)="confirmerLaRevocation()">
+          {{ submitting() ? 'Révocation en cours…' : 'Confirmer la révocation' }}
+        </button>
+      </div>
+
+      <div class="after-revoke">
+        <h2>Après révocation :</h2>
+        <ul>
+          <li>
+            <span class="material-icons" aria-hidden="true">check</span>
+            Le diplôme sera marqué comme révoqué
+          </li>
+          <li>
+            <span class="material-icons" aria-hidden="true">check</span>
+            Le PDF existant restera consultable mais avec la mention « RÉVOQUÉ »
+          </li>
+          <li>
+            <span class="material-icons" aria-hidden="true">check</span>
+            Toute vérification affichera le statut Révoqué
+          </li>
+        </ul>
+      </div>
+    </div>
+  } @else {
+    <p class="empty-state">Ce diplôme n'a pas été trouvé.</p>
+  }
+</div>

@@ -1,0 +1,115 @@
+<div class="auth-page">
+  <header class="auth-header">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
+      <span class="brand-name">CertiUni</span>
+    </a>
+    <a class="help-link" href="#" aria-label="Besoin d'aide ?">
+      Besoin d'aide ?
+    </a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <div class="auth-intro">
+        <span class="shield-icon" aria-hidden="true"><span class="material-icons">security</span></span>
+        <h1>Bienvenue sur CertiUni</h1>
+        <p>
+          Veuillez vous connecter avec les informations qui vous ont été
+          attribuées par le MINESUP.
+        </p>
+      </div>
+
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <h2 class="form-title">Connexion institution</h2>
+        <p class="form-subtitle">
+          
+        </p>
+
+        @if (errorMessage()) {
+          <div class="form-alert" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <div class="form-field">
+          <label for="identifiant">Identifiant unique *</label>
+          <input
+            id="identifiant"
+            type="text"
+            formControlName="identifiant"
+            placeholder="Entrez votre identifiant unique"
+            [class.has-error]="isInvalid('identifiant')"
+          />
+          @if (isInvalid('identifiant')) {
+            <span class="field-error">L'identifiant unique est requis.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email institutionnel *</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Entrez votre email institutionnel"
+            [class.has-error]="isInvalid('email')"
+          />
+          @if (isInvalid('email')) {
+            <span class="field-error">Un email institutionnel valide est requis.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="motDePasse">Mot de passe généré par le MINESUP *</label>
+          <div class="password-wrapper">
+            <input
+              id="motDePasse"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="motDePasse"
+              placeholder="Entrez votre mot de passe"
+              [class.has-error]="isInvalid('motDePasse')"
+            />
+              <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+            >
+              <span class="material-icons">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+          @if (isInvalid('motDePasse')) {
+            <span class="field-error">Le mot de passe est requis.</span>
+          }
+        </div>
+
+        <a class="forgot-link" href="#">Mot de passe oublié ?</a>
+
+        <button type="submit" class="btn-primary" [disabled]="submitting()">
+          
+          {{ submitting() ? 'Connexion en cours…' : 'Se connecter' }}
+        </button>
+      </form>
+
+      <div class="security-note">
+        <span class="lock-icon" aria-hidden="true"><span class="material-icons">lock</span></span>
+        <div>
+          <strong>Sécurité et confidentialité</strong>
+          <p>
+            Vos informations sont protégées et utilisées uniquement
+            dans le cadre du processus d'enregistrement et de validation
+            par le MINESUP.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="auth-footer">
+    <span>© 2026 CertiUni - Tous droits réservés</span>
+    <nav>
+      <a href="#">Aide</a>
+      <a href="#">Contact</a>
+      <a href="#">Confidentialité</a>
+    </nav>
+  </footer>
+</div>

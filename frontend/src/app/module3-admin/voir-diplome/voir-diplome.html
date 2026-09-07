@@ -1,0 +1,121 @@
+<div class="page">
+  <a class="back-link" routerLink="/admin/diplomes-emis">
+    <span class="material-icons" aria-hidden="true">arrow_back</span> Retour à la liste
+  </a>
+
+  @if (diplome; as d) {
+    <div class="page-header">
+      <h1>Détail du diplôme</h1>
+      @if (d.statut === 'Actif') {
+        <button type="button" class="btn-danger" (click)="revoquerCeDiplome()">
+          <span class="material-icons" aria-hidden="true">block</span>
+          Révoquer ce diplôme
+        </button>
+      }
+    </div>
+
+    <div class="diploma-preview">
+      <div class="preview-top">
+        <span class="preview-emblem" aria-hidden="true">🇨🇲</span>
+        <div>
+          <p class="preview-country">RÉPUBLIQUE DU CAMEROUN</p>
+          <p class="preview-motto">Paix - Travail - Patrie</p>
+        </div>
+        <span class="preview-emblem" aria-hidden="true">🎓</span>
+      </div>
+
+      <p class="preview-university">UNIVERSITÉ DE YAOUNDÉ I</p>
+      <h2>DIPLÔME DE {{ d.type.toUpperCase() }}</h2>
+      <h2>{{ d.filiere.toUpperCase() }}</h2>
+
+      <p class="preview-decerne">
+        Décerné à<br />
+        <strong>{{ d.titulaireNom }}</strong>
+      </p>
+      <p class="preview-meta">Né(e) le {{ d.dateNaissance }} à {{ d.lieuNaissance }}</p>
+      <p class="preview-meta">Mention : {{ d.mention }}</p>
+      <p class="preview-meta">Année académique : {{ d.anneeAcademique }}</p>
+
+      <div class="preview-signatures">
+        <span>Le Recteur<br />(signature)</span>
+        <span>Le Doyen<br />(signature)</span>
+      </div>
+
+      <span class="preview-qr" aria-hidden="true">▦</span>
+    </div>
+
+    <div class="content-grid">
+      <div class="panel">
+        <h2>Informations du diplôme</h2>
+        <dl class="info-list">
+          <div>
+            <dt>Numéro du diplôme</dt>
+            <dd>{{ d.numero }}</dd>
+          </div>
+          <div>
+            <dt>Statut</dt>
+            <dd>
+              <span class="status-badge" [class.is-revoked]="d.statut === 'Révoqué'">{{ d.statut }}</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Type de diplôme</dt>
+            <dd>{{ d.type }} — {{ d.filiere }}</dd>
+          </div>
+          <div>
+            <dt>Fichier PDF</dt>
+            <dd>{{ d.fichierPdf }}</dd>
+          </div>
+          <div>
+            <dt>Promotion</dt>
+            <dd>{{ d.promotion }}</dd>
+          </div>
+          <div>
+            <dt>Hash du document</dt>
+            <dd class="mono">{{ d.hashDocument }}</dd>
+          </div>
+          <div>
+            <dt>Date d'émission</dt>
+            <dd>{{ d.dateEmission }}</dd>
+          </div>
+          <div>
+            <dt>ID CertUni</dt>
+            <dd class="mono">{{ d.idCertUni }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="panel">
+        <h2>Informations du bénéficiaire</h2>
+        <dl class="info-list">
+          <div>
+            <dt>Nom complet</dt>
+            <dd>{{ d.titulaireNom }}</dd>
+          </div>
+          <div>
+            <dt>Lieu de naissance</dt>
+            <dd>{{ d.lieuNaissance }}</dd>
+          </div>
+          <div>
+            <dt>Matricule</dt>
+            <dd>{{ d.matricule }}</dd>
+          </div>
+          <div>
+            <dt>Filière</dt>
+            <dd>{{ d.filiere }}</dd>
+          </div>
+          <div>
+            <dt>Date de naissance</dt>
+            <dd>{{ d.dateNaissance }}</dd>
+          </div>
+          <div>
+            <dt>Mention</dt>
+            <dd>{{ d.mention }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  } @else {
+    <p class="empty-state">Ce diplôme n'a pas été trouvé.</p>
+  }
+</div>

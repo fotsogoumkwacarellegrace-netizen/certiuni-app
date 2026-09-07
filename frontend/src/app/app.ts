@@ -1,9 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import {AdminLogin} from './module3-admin/admin-login/admin-login';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, AdminLogin],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
