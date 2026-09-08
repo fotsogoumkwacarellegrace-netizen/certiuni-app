@@ -5,7 +5,7 @@ import {AdminLogin} from './module3-admin/admin-login/admin-login';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AdminLogin],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

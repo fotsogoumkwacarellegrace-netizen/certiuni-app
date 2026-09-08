@@ -2,15 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {
-  VerifyCertificateResponse,
-  GetWalletResponse,
-  PaymentInitResponse,
-  PaymentStatusResponse,
-  MagicLinkResponse,
-  BatchImportResponse,
-  CyberRadarResponse,
-} from '../models/certificate.model';
+import { BatchImportResponse, CyberRadarResponse, GetWalletResponse, MagicLinkResponse, PaymentInitResponse, PaymentStatusResponse, VerifyCertificateResponse } from '../../models/certificate.model';
 
 /**
  * Service officiel d'accès à l'API CertiUni.

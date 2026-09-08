@@ -15,8 +15,11 @@ import { GenerationDiplomes } from './module3-admin/generation-diplomes/generati
 import { ValidationEmission } from './module3-admin/validation-emission/validation-emission';
 
 export const routes: Routes = [
- 
-  { path: 'institution-registration', component: InstitutionRegistration },
+    {
+       path: 'institution-registration', 
+       component: InstitutionRegistration 
+    },
+
   // { path: 'admin-login', component: AdminLogin }, // remplace l'ancien "login"
 
   // --- Back-office (layout partagé avec sidebar + topbar) ---
