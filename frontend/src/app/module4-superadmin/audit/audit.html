@@ -1,0 +1,77 @@
+<div class="page">
+  <h1>Audit &amp; Traçabilité</h1>
+
+  <div class="filters-bar">
+    <div class="search-box">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input
+        type="search"
+        placeholder="Rechercher…"
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+
+    <select [value]="institutionFiltre()" (change)="institutionFiltre.set($any($event.target).value)">
+      <option value="">Institution</option>
+      @for (institution of institutions(); track institution) {
+        <option [value]="institution">{{ institution }}</option>
+      }
+    </select>
+
+    <select [value]="utilisateurFiltre()" (change)="utilisateurFiltre.set($any($event.target).value)">
+      <option value="">Utilisateur</option>
+      @for (utilisateur of utilisateurs(); track utilisateur) {
+        <option [value]="utilisateur">{{ utilisateur }}</option>
+      }
+    </select>
+
+    <select [value]="actionFiltre()" (change)="actionFiltre.set($any($event.target).value)">
+      <option value="">Action</option>
+      @for (action of actions(); track action) {
+        <option [value]="action">{{ action }}</option>
+      }
+    </select>
+
+    <div class="date-range">
+      <input type="date" [value]="dateDebut()" (change)="dateDebut.set($any($event.target).value)" />
+      <span>Au</span>
+      <input type="date" [value]="dateFin()" (change)="dateFin.set($any($event.target).value)" />
+    </div>
+
+    <button type="button" class="btn-primary">Filtrer</button>
+  </div>
+
+  <div class="table-card">
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Date / Heure</th>
+          <th>Utilisateur</th>
+          <th>Institution</th>
+          <th>Action</th>
+          <th>Détails</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logsFiltres(); track log.date + log.heure + log.action) {
+          <tr>
+            <td>{{ log.date }} {{ log.heure }}</td>
+            <td>{{ log.utilisateur }}</td>
+            <td>{{ log.institution }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.details }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-row">Aucun événement ne correspond à ces filtres.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      1-{{ logsFiltres().length }} sur {{ logs.length }}
+    </div>
+  </div>
+</div>

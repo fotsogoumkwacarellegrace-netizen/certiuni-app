@@ -1,0 +1,57 @@
+<div class="emission-page">
+  <a class="back-link" routerLink="/admin/creer-diplomes/generation"><span class="material-icons">arrow_back</span> Retour</a>
+
+  <div class="status-banner">
+    <span class="status-icon" aria-hidden="true"><span class="material-icons">check_circle</span></span>
+    Génération terminée — {{ diplomesGeneres }} diplômes générés avec succès
+  </div>
+
+  <div class="content-grid">
+    <div class="panel">
+      <h2>Contrôle qualité</h2>
+      <ul class="quality-list">
+        <li>
+          <span>Fichiers générés</span>
+          <strong>{{ controleQualite.fichiersGeneres.valeur }}</strong>
+          <span class="pct">{{ controleQualite.fichiersGeneres.pourcentage }}%</span>
+        </li>
+        <li>
+          <span>QR Codes générés</span>
+          <strong>{{ controleQualite.qrCodes.valeur }}</strong>
+          <span class="pct">{{ controleQualite.qrCodes.pourcentage }}%</span>
+        </li>
+        <li>
+          <span>Signatures numériques</span>
+          <strong>{{ controleQualite.signatures.valeur }}</strong>
+          <span class="pct">{{ controleQualite.signatures.pourcentage }}%</span>
+        </li>
+        <li>
+          <span>Erreurs détectées</span>
+          <strong>{{ controleQualite.erreursDetectees.valeur }}</strong>
+          <span class="pct">{{ controleQualite.erreursDetectees.pourcentage }}%</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Aperçu échantillon (5 diplômes)</h2>
+        <a routerLink="/admin/diplomes-emis">Voir plus</a>
+      </div>
+      <ul class="sample-list">
+        @for (diplome of echantillon; track diplome.reference) {
+          <li>
+            <span>{{ diplome.nom }}</span>
+            <span class="reference">{{ diplome.reference }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="button" class="btn-primary" (click)="validerEtEmettre()" [disabled]="emitting()">
+      {{ emitting() ? 'Émission en cours…' : 'Valider et émettre les diplômes' }}
+    </button>
+  </div>
+</div>

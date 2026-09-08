@@ -1,0 +1,61 @@
+<div class="superadmin-shell">
+  <aside class="sidebar">
+
+    
+    <div class="sidebar-brand">
+      <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
+      <span>CertiUni</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/superadmin/dashboard" routerLinkActive="is-active">
+        <span class="material-icons" aria-hidden="true">dashboard</span> Dashboard
+      </a>
+      <a class="nav-item" routerLink="/superadmin/demandes-inscription" routerLinkActive="is-active">
+        <span class="material-icons" aria-hidden="true">inbox</span> Demandes d'inscription
+      </a>
+      <a class="nav-item" routerLink="/superadmin/institutions" routerLinkActive="is-active">
+        <span class="material-icons" aria-hidden="true">account_balance</span> Institutions
+      </a>
+      <a class="nav-item" routerLink="/superadmin/audit" routerLinkActive="is-active">
+        <span class="material-icons" aria-hidden="true">receipt_long</span> Audit
+      </a>
+      <a class="nav-item" routerLink="/superadmin/parametres" routerLinkActive="is-active">
+        <span class="material-icons" aria-hidden="true">settings</span> Paramètres
+      </a>
+    </nav>
+
+    <button type="button" class="logout-btn" (click)="demanderDeconnexion()">
+      <span class="material-icons" aria-hidden="true">exit_to_app</span> Déconnexion
+    </button>
+  </aside>
+
+  <div class="main-column" [class.is-blurred]="showLogoutConfirm()">
+    <header class="topbar">
+      <div></div>
+      <div class="topbar-user">
+        <span class="bell"><span class="material-icons" aria-hidden="true">notifications</span></span>
+        <span class="user-name">{{ superadmin.nom }}</span>
+        <span class="material-icons" aria-hidden="true">arrow_drop_down</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  @if (showLogoutConfirm()) {
+    <div class="logout-overlay">
+      <div class="logout-dialog">
+        <span class="logout-icon" aria-hidden="true"><span class="material-icons">exit_to_app</span></span>
+        <h2>Se déconnecter ?</h2>
+        <p>Vous allez être redirigé vers la page de connexion Super Admin.</p>
+        <div class="logout-actions">
+          <button type="button" class="btn-secondary" (click)="annulerDeconnexion()">Annuler</button>
+          <button type="button" class="btn-danger" (click)="confirmerDeconnexion()">Se déconnecter</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

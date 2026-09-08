@@ -1,0 +1,37 @@
+<div class="dashboard-page">
+  <h1>Bonjour, {{ institution.nom }}</h1>
+  <p class="subtitle">Voici un aperçu de votre activité</p>
+
+  <div class="stats-grid">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <span class="stat-label">{{ stat.label }}</span>
+        <span class="stat-value">{{ stat.value }}</span>
+        <span class="stat-delta">{{ stat.delta }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="activity-card">
+    <div class="activity-header">
+      <h2>Activité récente</h2>
+      <a routerLink="/admin/logs-verification">Voir tout</a>
+    </div>
+
+    <ul class="activity-list">
+      @for (item of activiteRecente; track item.description) {
+        <li class="activity-row">
+          <span class="activity-time">{{ item.date }} {{ item.heure }}</span>
+          <span class="activity-description">{{ item.description }}</span>
+          <span
+            class="activity-badge"
+            [class.is-success]="item.statut === 'success'"
+            [class.is-suspect]="item.statut === 'suspect'"
+          >
+            {{ item.actionLabel }}
+          </span>
+        </li>
+      }
+    </ul>
+  </div>
+</div>
