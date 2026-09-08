@@ -1,1 +1,0 @@
-{"version":3,"file":"batchUpload.dto.js","sourceRoot":"","sources":["../../src/dtos/batchUpload.dto.ts"],"names":[],"mappings":";;;;AAAA,6BAAwB;AAEX,QAAA,iBAAiB,GAAG,OAAC,CAAC,MAAM,CAAC;IACtC,YAAY,EAAE,OAAC,CAAC,MAAM,EAAE,CAAC,IAAI,CAAC,wBAAwB,CAAC;IACvD,QAAQ,EAAE,OAAC,CAAC,MAAM,EAAE;CACvB,CAAC,CAAC"}

@@ -1,4 +1,0 @@
-import Redis from 'ioredis';
-declare const redisClient: Redis;
-export { redisClient };
-export default redisClient;
