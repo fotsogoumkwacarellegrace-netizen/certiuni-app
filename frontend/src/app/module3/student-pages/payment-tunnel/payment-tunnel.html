@@ -1,0 +1,223 @@
+<div class="tunnel-container">
+
+  @if (step() === 'form') {
+
+    <!-- Écran 15 : Mobile Money / Orange Money -->
+    @if (isMobileMoney && !showOtpStep()) {
+      <div class="tunnel-card">
+
+        <button class="close-btn" (click)="cancel()" aria-label="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="tunnel-logo">
+          <img src="assets/logos/logo.png" alt="CertiUni" />
+          <span class="logo-text">CertiUni</span>
+        </div>
+
+        <div class="method-title">
+          <div class="method-icon"><mat-icon>smartphone</mat-icon></div>
+          <h2>{{ operatorLabel }}</h2>
+        </div>
+
+        <p class="subtitle">
+          Entrez votre numéro Mobile Money<br />
+          pour lancer le prélèvement
+        </p>
+        <div class="title-divider"></div>
+
+        <label>Numéro de téléphone</label>
+        <div class="phone-input">
+          <span class="prefix">
+            🇨🇲 +237
+            <mat-icon class="chevron-icon">expand_more</mat-icon>
+          </span>
+          <input
+            type="tel"
+            placeholder="6xx xx xx xx"
+            [ngModel]="phoneNumber()"
+            (ngModelChange)="phoneNumber.set($event)"
+            maxlength="9"
+          />
+        </div>
+
+        <button class="btn-primary" (click)="submitPhone()">
+          Annuler
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <button class="btn-back" (click)="back()">
+          <mat-icon>arrow_back</mat-icon>
+          Retour
+        </button>
+
+        <div class="secure-banner">
+          <mat-icon>lock</mat-icon>
+          Paiement sécurisé et chiffré de bout en bout
+        </div>
+      </div>
+    }
+
+    <!-- Écran 16 : Carte Bancaire -->
+    @if (data.method === 'card' && !showOtpStep()) {
+      <div class="tunnel-card">
+
+        <button class="close-btn" (click)="cancel()" aria-label="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="tunnel-logo">
+          <img src="assets/logos/logo3.png" alt="CertiUni" />
+          <span class="logo-text">CertiUni</span>
+        </div>
+
+        <div class="card-header">
+          <span class="lock-icon"><mat-icon>lock</mat-icon></span>
+          <div>
+            <h2>Paiement par Carte Sécurisé</h2>
+            <p class="subtitle-inline">Chiffrement SSL</p>
+          </div>
+        </div>
+
+        <div class="amount-row">
+          <span>Montant à régler</span>
+          <strong>{{ amount }} FCFA</strong>
+        </div>
+
+        <label>Numéro de carte</label>
+        <input
+          type="text"
+          placeholder="0000 0000 0000 0000"
+          [ngModel]="cardNumber()"
+          (ngModelChange)="cardNumber.set($event)"
+          maxlength="19"
+        />
+
+        <div class="card-row">
+          <div>
+            <label>Expiration</label>
+            <input
+              type="text"
+              placeholder="MM/AA"
+              [ngModel]="cardExpiry()"
+              (ngModelChange)="cardExpiry.set($event)"
+              maxlength="5"
+            />
+          </div>
+          <div>
+            <label>CVV</label>
+            <input
+              type="text"
+              placeholder="•••"
+              [ngModel]="cardCvv()"
+              (ngModelChange)="cardCvv.set($event)"
+              maxlength="3"
+            />
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn-cancel" (click)="cancel()">
+            <mat-icon>arrow_back</mat-icon> Revenir aux choix
+          </button>
+          <button class="btn-primary-dark" (click)="submitCard()">
+            <mat-icon>lock</mat-icon> Payer en toute sécurité ({{ amount }} FCFA)
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Écran 18 : OTP 3D Secure -->
+    @if (data.method === 'card' && showOtpStep()) {
+      <div class="tunnel-card">
+
+        <button class="close-btn" (click)="cancel()" aria-label="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <div class="shield-icon"><mat-icon>shield</mat-icon></div>
+        <h2>Authentification Requise</h2>
+
+        <div class="amount-box">
+          <span>Montant de la transaction</span>
+          <strong>{{ amount }} FCFA</strong>
+          <span class="merchant"><mat-icon>storefront</mat-icon> Marchand : CertiUni</span>
+        </div>
+
+        <p class="subtitle">
+          Pour sécuriser votre transaction, un code de validation unique (OTP)
+          vous a été envoyé par SMS par votre banque.
+        </p>
+
+        <input
+          type="text"
+          class="otp-input"
+          placeholder="# # # # # #"
+          [ngModel]="otpCode()"
+          (ngModelChange)="otpCode.set($event)"
+          maxlength="6"
+        />
+
+        <div class="card-actions">
+          <button class="btn-cancel" (click)="cancel()">Annuler</button>
+          <button class="btn-primary-dark" (click)="submitOtp()">
+            <mat-icon>lock</mat-icon> Valider
+          </button>
+        </div>
+
+        <p class="secure-hint">Sécurisé par CertiUni Secure</p>
+      </div>
+    }
+  }
+
+  <!-- Écran 17 : Processing USSD -->
+  @if (step() === 'processing') {
+    <div class="tunnel-card processing-card">
+      <div class="spinner"></div>
+      <h2>Autorisation USSD</h2>
+      <div class="countdown">{{ countdown() }}s</div>
+      <p class="subtitle">
+        Une demande d'autorisation de prélèvement de <strong>{{ amount }} FCFA</strong>
+        a été envoyée sur votre carte SIM.<br />
+        Veuillez patienter et saisir votre code PIN secret sur le menu pop-up
+        de votre téléphone pour valider...
+      </p>
+      <p class="secure-hint"><mat-icon>lock</mat-icon> Connexion cryptée et sécurisée</p>
+    </div>
+  }
+
+  <!-- Écran 19 : Reçu -->
+  @if (step() === 'receipt') {
+    <div class="tunnel-card receipt-card">
+      <div class="receipt-header">
+        <span>Reçu de Paiement Officiel</span>
+        <span class="paid-badge"><mat-icon>check</mat-icon> PAYÉ</span>
+      </div>
+
+      <div class="receipt-body">
+        <p class="receipt-label">Motif du paiement</p>
+        <p class="receipt-value">Frais de Délivrance — {{ data.certificate.course_title }}</p>
+
+        <div class="receipt-amount">{{ amount }} FCFA</div>
+
+        <div class="receipt-details">
+          <div class="detail-row">
+            <span>Référence de transaction</span>
+            <strong>{{ transactionRef() }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Méthode de paiement</span>
+            <strong>{{ isMobileMoney ? operatorLabel : 'Carte Bancaire' }}</strong>
+          </div>
+        </div>
+
+        <div class="watermark">PAYÉ</div>
+      </div>
+
+      <button class="btn-primary" (click)="closeAndConfirm()">
+        <mat-icon>check</mat-icon> Accéder à mon document débloqué
+      </button>
+    </div>
+  }
+
+</div>

@@ -1,0 +1,150 @@
+<div class="dashboard-page">
+
+  <button class="mobile-toggle" (click)="toggleSidebar()" aria-label="Menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  @if (isSidebarOpen()) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <div class="body-layout">
+
+    <!-- ===== SIDEBAR VERTE ===== -->
+    <aside class="sidebar" [class.sidebar-open]="isSidebarOpen()">
+      <div class="sidebar-logo-box">
+        <img src="assets/logos/logo2.png" alt="CertiUni" class="brand-logo-sm" />
+        <span class="brand-text">CertiUni</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" (click)="onSidebarLinkClick('overview'); closeSidebar()">
+          <mat-icon class="nav-icon">grid_view</mat-icon> Overview
+        </button>
+        <button class="nav-item active" (click)="closeSidebar()">
+          <mat-icon class="nav-icon">school</mat-icon> My Diplomas
+        </button>
+        <button class="nav-item" (click)="goToArchive(); closeSidebar()">
+          <mat-icon class="nav-icon">receipt_long</mat-icon> Transaction History
+        </button>
+        <button class="nav-item" (click)="onSidebarLinkClick('identity'); closeSidebar()">
+          <mat-icon class="nav-icon">verified_user</mat-icon> Identity Verification
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item nav-support" (click)="onSidebarLinkClick('support'); closeSidebar()">
+          <mat-icon class="nav-icon">help_outline</mat-icon>
+          <span class="nav-support-text">
+            <strong>Help Support</strong>
+            <small>Besoin d'aide ?</small>
+          </span>
+        </button>
+        <button class="btn-add-credential" (click)="onSidebarLinkClick('add-credential'); closeSidebar()">
+          <mat-icon>add</mat-icon> Ajouter un certificat
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="dashboard-main">
+      <div class="main-content">
+
+        <!-- Barre du haut : retour + logo -->
+        <div class="page-topbar">
+          <button class="back-link" (click)="goToArchive()">
+            <mat-icon>arrow_back</mat-icon> Retour au portefeuille
+          </button>
+          <div class="topbar-right">
+           <!----<div class="topbar-logo">
+              <img src="assets/logos/logo.png" alt="CertiUni" class="topbar-logo-img" />
+              <span>CertiUni</span>
+            </div>-->
+            <button class="profile-btn" (click)="logout()" title="Déconnexion">
+              <mat-icon>account_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Carte de bienvenue -->
+        @if (studentService.currentStudent(); as student) {
+          <div class="welcome-card">
+            <div class="welcome-left">
+              <div class="avatar"><mat-icon>person</mat-icon></div>
+              <div class="greeting">
+                <span class="greeting-name">Bonjour, {{ student.first_name }} {{ student.last_name }}</span>
+                <span class="greeting-sub">
+                  <mat-icon class="check-icon">check_circle</mat-icon>
+                  {{ student.certificates.length }} Titres sécurisés
+                </span>
+              </div>
+            </div>
+            <button class="btn-message">
+              <mat-icon>mail</mat-icon>
+              Message {{ student.first_name }}{{ student.last_name }}
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        }
+
+        <div class="section-title">
+          <mat-icon class="section-icon">school</mat-icon>
+          <h1>Vos Diplômes</h1>
+        </div>
+
+        <!-- Liste des diplômes -->
+        <div class="diplomas-list">
+          @for (cert of studentService.currentStudent()?.certificates; track cert.id) {
+            <div
+              class="diploma-card"
+              [class.locked]="cert.payment_state === 'PENDING'"
+              [class.in-progress]="cert.payment_state === 'IN_PROGRESS'"
+            >
+              <div class="diploma-icon">
+                @if (cert.payment_state === 'PENDING') {
+                  <mat-icon>lock</mat-icon>
+                } @else {
+                  <mat-icon>school</mat-icon>
+                }
+              </div>
+
+              <div class="diploma-info">
+                <h3>{{ cert.course_title }}</h3>
+                <p class="diploma-meta"><mat-icon>account_balance</mat-icon> {{ cert.university_name }}</p>
+                <p class="diploma-meta"><mat-icon>event</mat-icon> {{ cert.final_grade }}</p>
+
+                @if (cert.payment_state === 'PENDING') {
+                  <p class="diploma-hint"><mat-icon>hourglass_empty</mat-icon> En attente de paiement des frais de scolarité</p>
+                }
+                @if (cert.payment_state === 'IN_PROGRESS') {
+                  <p class="diploma-hint"><mat-icon>school</mat-icon> En cours de délivrance</p>
+                }
+              </div>
+
+              <div class="diploma-actions">
+                @if (cert.payment_state === 'PAID' || cert.payment_state === 'EXEMPTED') {
+                  <span class="badge badge-valid"><mat-icon>check</mat-icon> Certificat valide</span>
+                  <div class="action-buttons-row">
+                    <button class="btn-share" (click)="onShareLinkedIn(cert)" title="Partager sur LinkedIn">
+                      <mat-icon>share</mat-icon> LinkedIn
+                    </button>
+                    <button class="btn-download" (click)="onDownloadClick(cert)">
+                      <mat-icon>download</mat-icon> Télécharger PDF
+                    </button>
+                  </div>
+                } @else if (cert.payment_state === 'PENDING') {
+                  <button class="btn-access" (click)="onUnlockClick(cert)">
+                    <mat-icon>visibility</mat-icon> Période d'accès
+                  </button>
+                } @else {
+                  <span class="badge badge-locked"><mat-icon>lock</mat-icon> Actions indisponibles</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
