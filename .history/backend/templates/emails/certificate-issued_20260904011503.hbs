@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Émission de votre diplôme - {{universityName}}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111827;
+        }
+        .details-box {
+            background-color: #f8fafc;
+            border-left: 4px solid #1e3a8a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .details-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .details-item:last-child {
+            margin-bottom: 0;
+        }
+        .details-label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 30px 0 20px 0;
+        }
+        .btn {
+            background-color: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-block;
+        }
+        .hash-code {
+            font-family: monospace;
+            background-color: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .footer {
+            background-color: #f3f4f6;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>{{universityName}}</h1>
+            <p>Plateforme Officielle d'Attestation et de Certification</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">Bonjour {{firstName}} {{lastName}},</div>
+            <p>
+                Nous avons le plaisir de vous informer que votre document académique officiel a été émis avec succès et certifié numériquement sur la plateforme CertiUni.
+            </p>
+
+            <!-- Document Details -->
+            <div class="details-box">
+                <div class="details-item">
+                    <span class="details-label">Intitulé du Diplôme :</span> {{degreeTitle}}
+                </div>
+                {{#if speciality}}
+                <div class="details-item">
+                    <span class="details-label">Spécialité :</span> {{speciality}}
+                </div>
+                {{/if}}
+                <div class="details-item">
+                    <span class="details-label">Numéro de Document :</span> {{documentNumber}}
+                </div>
+                <div class="details-item">
+                    <span class="details-label">Date d'Émission :</span> {{issueDate}}
+                </div>
+                <div class="details-item">
+                    <span class="details-label">Empreinte numérique (SHA-256) :</span><br>
+                    <span class="hash-code">{{digitalHash}}</span>
+                </div>
+            </div>
+
+            <p>
+                Ce document est muni d'une signature numérique et d'un QR Code permettant sa vérification instantanée par des tiers (employeurs, institutions, ambassades).
+            </p>
+
+            <!-- CTA -->
+            <div class="cta-container">
+                <a href="{{verificationUrl}}" class="btn" target="_blank">Consulter & Vérifier le Diplôme</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Cet e-mail a été généré automatiquement par CertiUni pour le compte de <strong>{{universityName}}</strong>.</p>
+            <p>Si vous pensez avoir reçu ce message par erreur, veuillez contacter l'administration de votre établissement.</p>
+        </div>
+    </div>
+</body>
+</html>

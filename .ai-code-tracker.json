@@ -1,0 +1,15 @@
+{
+  "version": 6,
+  "branches": {
+    "dev-front": {
+      "rangeTracking": {
+        "backend/src/controllers/payment.controller.ts": {"ai":[],"paste":[],"manual":[[3,3]]},
+        "backend/src/controllers/security.controller.ts": {"ai":[[3,3],[5,5],[47,47],[102,102]],"paste":[],"manual":[]}
+      }
+    },
+    "default": {
+      "rangeTracking": {
+      }
+    }
+  }
+}

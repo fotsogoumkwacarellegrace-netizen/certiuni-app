@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # 1. Service Base de données PostgreSQL
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: certiuni-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: certiuni_user
+      POSTGRES_PASSWORD: certiuni_password_2026
+      POSTGRES_DB: certiuni_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U certiuni_user -d certiuni_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - certiuni-network
+
+  # -------------------------------------------------------------
+  # 2. Service Cache & File de messages Redis
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: certiuni-redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - certiuni-network
+
+  # -------------------------------------------------------------
+  # 3. Service Backend Express (TypeScript)
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: certiuni-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://certiuni_user:certiuni_password_2026@postgres:5432/certiuni_db?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      JWT_SECRET: "super_secret_certiuni_key_2026_prod"
+      FRONTEND_URL: "http://localhost:5173"
+      PUBLIC_VERIFY_URL: "http://localhost:5173/verify"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - certiuni-network
+
+# -------------------------------------------------------------
+# Volumes persistants & Réseaux
+# -------------------------------------------------------------
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  certiuni-network:
+    driver: bridge

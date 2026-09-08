@@ -1,0 +1,9 @@
+{
+  "version": 6,
+  "branches": {
+    "dev-front": {
+      "rangeTracking": {
+      }
+    }
+  }
+}

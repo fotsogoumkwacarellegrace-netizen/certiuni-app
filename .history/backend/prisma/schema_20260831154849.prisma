@@ -1,0 +1,183 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum UserRole {
+  SUPER_ADMIN
+  UNIV_ADMIN
+  ISSUER
+  VERIFIER
+}
+
+enum CertificateStatus {
+  PENDING
+  ISSUED
+  FAILED
+  REVOKED
+}
+
+enum AuditAction {
+  USER_LOGIN
+  USER_LOGOUT
+  USER_CREATED
+  USER_UPDATED
+  UNIVERSITY_CREATED
+  UNIVERSITY_UPDATED
+  CERTIFICATE_ISSUED
+  CERTIFICATE_REVOKED
+  VERIFICATION_SUCCESS
+  VERIFICATION_FAILED
+}
+
+// ==========================================
+// MODÈLES PRINCIPAUX
+// ==========================================
+
+/// Établissements d'enseignement (Multi-Tenancy)
+model University {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String   @db.VarChar(255)
+  code       String   @unique @db.VarChar(50) // Code institutionnel unique (ex: U-DOUALA-01)
+  logoUrl    String?  @db.VarChar(1024)
+  website    String?  @db.VarChar(255)
+  isVerified Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  users        User[]
+  certificates Certificate[]
+  auditLogs    AuditLog[]
+
+  @@map("universities")
+}
+
+/// Utilisateurs de la plateforme
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @db.VarChar(255)
+  firstName    String   @db.VarChar(100)
+  lastName     String   @db.VarChar(100)
+  role         UserRole @default(ISSUER)
+  isActive     Boolean  @default(true)
+
+  // Authentification Double Facteur (MFA/TOTP)
+  isMfaEnabled Boolean @default(false)
+  mfaSecret    String? @db.VarChar(255)
+
+  // Tenant facultatif (SuperAdmin n'a pas d'université rattachée)
+  universityId String?     @db.Uuid
+  university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  issuedCertificates Certificate[] @relation("IssuedBy")
+  auditLogs          AuditLog[]
+
+  @@index([email])
+  @@index([universityId])
+  @@map("users")
+}
+
+/// Diplômes et Certificats numériques
+model Certificate {
+  id           String   @id @default(uuid())
+  // ... vos autres champs
+  paymentState String   @default("UNPAID")
+  id               String @id @default(uuid()) @db.Uuid
+  publicIdentifier String @unique @db.VarChar(100) // Ex: CERT-1724838400-4821
+  canonicalHash    String @unique @db.VarChar(64) // Empreinte SHA-256 canonique
+
+  // Données de l'étudiant
+  studentIdentifier String @db.VarChar(50) // Matricule/NIF
+  studentFirstName  String @db.VarChar(100)
+  studentLastName   String @db.VarChar(100)
+  studentEmail      String @db.VarChar(255)
+
+  // Mentions académiques
+  degreeTitle  String   @db.VarChar(255)
+  fieldOfStudy String   @db.VarChar(200)
+  grade        String?  @db.VarChar(50)
+  issueDate    DateTime
+
+  // Fichier PDF & Statut
+  pdfUrl String?           @db.VarChar(1024)
+  pdfKey String?           @db.VarChar(512) // Clef d'objet S3
+  status CertificateStatus @default(PENDING)
+
+  // Métadonnées de révocation
+  revokedAt        DateTime?
+  revocationReason String?   @db.Text
+
+  // Traçabilité Tenant & Émetteur
+  universityId String     @db.Uuid
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  issuedById String @db.Uuid
+  issuedBy   User   @relation("IssuedBy", fields: [issuedById], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([publicIdentifier])
+  @@index([canonicalHash])
+  @@index([studentIdentifier])
+  @@index([universityId])
+  @@map("certificates")
+}
+
+/// Registre d'audit immutable de sécurité
+model AuditLog {
+  id        String      @id @default(uuid()) @db.Uuid
+  action    AuditAction
+  ipAddress String?     @db.VarChar(45)
+  userAgent String?     @db.VarChar(512)
+  metadata  Json? // Données contextuelles (IDs impactés, filtres...)
+
+  // Relations
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  universityId String?     @db.Uuid
+  university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([universityId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  certificateId String
+  amount        Float
+  status        String   @default("PENDING")
+  transactionId String?  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
