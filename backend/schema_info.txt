@@ -1,0 +1,88 @@
+MODELS: Role, Permission, RolePermission, UserRoleLink, UserUniversity, User, University, Program, AcademicLevel, AcademicYear, Student, Enrollment, DocumentType, Document, Certificate, File, Service, Pricing, Request, VerificationLog, AuditLog, Notification, Payment, CertificateTemplate
+=== model Student ===
+id        String  @id @default(uuid()) @db.Uuid
+matricule String  @db.VarChar(50)
+firstName String  @db.VarChar(100)
+lastName  String  @db.VarChar(100)
+email     String? @db.VarChar(255)
+phone     String? @db.VarChar(50)
+userId String? @unique @db.Uuid
+user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+universityId String     @db.Uuid
+university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+programId String?  @db.Uuid
+program   Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+levelId       String?        @db.Uuid
+academicLevel AcademicLevel? @relation(fields: [levelId], references: [id], onDelete: SetNull)
+yearId       String?       @db.Uuid
+academicYear AcademicYear? @relation(fields: [yearId], references: [id], onDelete: SetNull)
+certificates Certificate[]
+requests     Request[]
+payments     Payment[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@unique([matricule, universityId])
+@@index([universityId])
+@@index([programId])
+@@map("students")
+enrollments Enrollment[]
+=== model Program ===
+id           String     @id @default(uuid()) @db.Uuid
+code         String     @db.VarChar(50)
+name         String     @db.VarChar(255)
+description  String?    @db.Text
+universityId String     @db.Uuid
+university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+students     Student[]
+certificates Certificate[]
+enrollments Enrollment[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@unique([code, universityId])
+@@map("programs")
+=== model Enrollment ===
+id              String        @id @default(uuid()) @db.Uuid
+status          String        @default("PENDING") @db.VarChar(50) // Ex: PENDING, ACTIVE, COMPLETED, CANCELLED
+createdAt       DateTime      @default(now())
+updatedAt       DateTime      @updatedAt
+templateId String? @db.Uuid
+template   CertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+studentId       String        @db.Uuid
+student         Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+programId       String        @db.Uuid
+program         Program       @relation(fields: [programId], references: [id], onDelete: Restrict)
+academicLevelId String        @db.Uuid
+academicLevel   AcademicLevel @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
+academicYearId  String        @db.Uuid
+academicYear    AcademicYear  @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+@@unique([studentId, academicYearId])
+@@map("enrollments")
+=== model User ===
+id           String   @id @default(uuid()) @db.Uuid
+email        String   @unique @db.VarChar(255)
+passwordHash String   @db.VarChar(255)
+firstName    String   @db.VarChar(100)
+lastName     String   @db.VarChar(100)
+role         UserRole @default(ISSUER)
+isActive     Boolean  @default(true)
+isMfaEnabled Boolean @default(false)
+mfaSecret    String? @db.VarChar(255)
+universityId String?     @db.Uuid
+university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+issuedCertificates Certificate[]    @relation("IssuedBy")
+auditLogs          AuditLog[]
+userRoles          UserRoleLink[]
+userUniversities   UserUniversity[]
+handledRequests    Request[]        @relation("HandledRequests")
+studentProfile     Student?
+notifications      Notification[]
+@@index([email])
+@@index([universityId])
+@@map("users")
+=== model Document ===
+id        String   @id @default(uuid())
+hash      String   @unique
+qrData    String?
+createdAt DateTime @default(now())

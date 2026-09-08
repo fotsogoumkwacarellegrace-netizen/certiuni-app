@@ -1,0 +1,55 @@
+  error TS2322 Type 'Browser' is not assignable to type 'null'.
+  error TS18047 'browser' is possibly 'null'.
+  error TS2339 Property 'close' does not exist on type 'never'.
+=== src/jobs/queues/pdf.queue.ts (3) ===
+  error TS2307 Cannot find module '../../config/redis' or its corresponding type declarations.
+  error TS2304 Cannot find name 'PdfJobPayload'.
+  error TS2304 Cannot find name 'PdfJobPayload'.
+=== src/lib/jwt.ts (1) ===
+  error TS2305 Module '"@prisma/client"' has no exported member 'RoleEnum'.
+=== src/middlewares/rateLimit.middleware.ts (1) ===
+  error TS2307 Cannot find module '../config/redis' or its corresponding type declarations.
+=== src/modules/batch/batch.controller.ts (1) ===
+  error TS2307 Cannot find module '../config/database' or its corresponding type declarations.
+=== src/modules/batch/batch.service.ts (1) ===
+  error TS18046 'error' is of type 'unknown'.
+=== src/modules/certificates/certificates.service.ts (4) ===
+  error TS2322 Type 'string | undefined' is not assignable to type 'string'.
+  error TS2551 Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: strin
+  error TS2551 Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: strin
+  error TS2551 Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: strin
+=== src/modules/documents/documents.service.ts (1) ===
+  error TS2322 Type '{ publicIdentifier: string; studentId: string; typeId: string; issuedById: string; universityId: string;
+=== src/modules/enrollments/dto/update-enrollment-status.dto.ts (1) ===
+  error TS2305 Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+=== src/modules/integrations/integrations.module.ts (1) ===
+  error TS2307 Cannot find module './providers/storage/r2-s3.service' or its corresponding type declarations.
+=== src/modules/organization/organization.service.ts (9) ===
+  error TS2339 Property 'institution' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+  error TS2339 Property 'organization' does not exist on type 'PrismaService'.
+=== src/modules/payments/payments.service.ts (4) ===
+  error TS2339 Property 'serviceRequest' does not exist on type 'PrismaService'.
+  error TS2322 Type 'PaymentProvider' is not assignable to type 'PaymentMethod'.
+  error TS2339 Property 'serviceRequest' does not exist on type 'PrismaService'.
+  error TS18047 'payment.request.student.user' is possibly 'null'.
+=== src/modules/programs/programs.service.ts (1) ===
+  error TS2353 Object literal may only specify known properties, and 'isActive' does not exist in type 'Without<ProgramCreate
+=== src/modules/requests/requests.controller.ts (2) ===
+  error TS2304 Cannot find name 'CurrentUser'.
+  error TS2304 Cannot find name 'CurrentUser'.
+=== src/modules/requests/requests.service.ts (5) ===
+  error TS2339 Property 'verificationRequest' does not exist on type 'PrismaService'.
+  error TS2339 Property 'verificationRequest' does not exist on type 'PrismaService'.
+  error TS2339 Property 'verificationRequest' does not exist on type 'PrismaService'.
+  error TS2339 Property 'verificationRequest' does not exist on type 'PrismaService'.
+  error TS2339 Property 'verificationRequest' does not exist on type 'PrismaService'.
+=== src/modules/service-requests/service-requests.controller.ts (1) ===
+  error TS2307 Cannot find module './service-requests.service' or its corresponding type declarations.
+=== src/modules/service-requests/service-requests.module.ts (1) ===

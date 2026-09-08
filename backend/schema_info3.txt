@@ -1,0 +1,81 @@
+=== model Certificate ===
+id               String @id @default(uuid()) @db.Uuid
+publicIdentifier String @unique @db.VarChar(100)
+canonicalHash    String @unique @db.VarChar(64)
+paymentState String @default("UNPAID") @db.VarChar(50)
+metadataJson Json?
+studentIdentifier String @db.VarChar(50)
+studentFirstName  String @db.VarChar(100)
+studentLastName   String @db.VarChar(100)
+studentEmail      String @db.VarChar(255)
+degreeTitle  String   @db.VarChar(255)
+fieldOfStudy String   @db.VarChar(200)
+grade        String?  @db.VarChar(50)
+issueDate    DateTime
+pdfUrl String?           @db.VarChar(1024)
+pdfKey String?           @db.VarChar(512)
+status CertificateStatus @default(PENDING)
+revokedAt        DateTime?
+revocationReason String?   @db.Text
+universityId String     @db.Uuid
+university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+issuedById String @db.Uuid
+issuedBy   User   @relation("IssuedBy", fields: [issuedById], references: [id], onDelete: Restrict)
+typeId       String?       @db.Uuid
+documentType DocumentType? @relation(fields: [typeId], references: [id], onDelete: SetNull)
+studentId String?  @db.Uuid
+student   Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+programId String?  @db.Uuid
+program   Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+levelId       String?        @db.Uuid
+academicLevel AcademicLevel? @relation(fields: [levelId], references: [id], onDelete: SetNull)
+yearId       String?       @db.Uuid
+academicYear AcademicYear? @relation(fields: [yearId], references: [id], onDelete: SetNull)
+templateId String?              @db.Uuid
+template   CertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+files            File[]
+verificationLogs VerificationLog[]
+payments         Payment[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@index([publicIdentifier])
+@@index([canonicalHash])
+@@index([studentIdentifier])
+@@index([universityId])
+@@index([studentId])
+@@map("certificates")
+
+=== model User ===
+id           String   @id @default(uuid()) @db.Uuid
+email        String   @unique @db.VarChar(255)
+passwordHash String   @db.VarChar(255)
+firstName    String   @db.VarChar(100)
+lastName     String   @db.VarChar(100)
+role         UserRole @default(ISSUER)
+isActive     Boolean  @default(true)
+isMfaEnabled Boolean @default(false)
+mfaSecret    String? @db.VarChar(255)
+universityId String?     @db.Uuid
+university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+issuedCertificates Certificate[]    @relation("IssuedBy")
+auditLogs          AuditLog[]
+userRoles          UserRoleLink[]
+userUniversities   UserUniversity[]
+handledRequests    Request[]        @relation("HandledRequests")
+studentProfile     Student?
+notifications      Notification[]
+@@index([email])
+@@index([universityId])
+@@map("users")
+
+enum PaymentMethod { STRIPE, PAYPAL, ORANGE_MONEY, MTN_MOMO, BANK_TRANSFER, CASH, FREE }
+
+enum PaymentStatus { PENDING, SUCCESSFUL, FAILED, REFUNDED, FREE, UNPAID }
+
+enum RequestStatus { PENDING, IN_PROGRESS, APPROVED, REJECTED, COMPLETED }
+
+enum UserRole { SUPER_ADMIN, UNIV_ADMIN, ISSUER, VERIFIER, STUDENT }
+
+enum CertificateStatus { PENDING, ISSUED, FAILED, REVOKED }

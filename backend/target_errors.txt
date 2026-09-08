@@ -1,0 +1,38 @@
+src/common/utils/logger.util.ts(2,21): error TS2307: Cannot find module './config/env' or its corresponding type declarations.
+src/controllers/batch.controller.ts(5,28): error TS2307: Cannot find module '../utils/catchAsync' or its corresponding type declarations.
+src/controllers/batch.controller.ts(161,45): error TS2339: Property 'documentNumber' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: string; publicIdentifier: string; canonicalHash: string; paymentState: string; metadataJson: JsonValue; ... 19 more ...; templateId: string | null; }'.
+src/lib/jwt.ts(2,10): error TS2305: Module '"@prisma/client"' has no exported member 'RoleEnum'.
+src/modules/batch/batch.controller.ts(29,20): error TS2307: Cannot find module '../config/database' or its corresponding type declarations.
+src/modules/batch/batch.service.ts(36,85): error TS18046: 'error' is of type 'unknown'.
+src/modules/certificates/certificates.service.ts(112,11): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/modules/certificates/certificates.service.ts(136,46): error TS2551: Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: string; publicIdentifier: string; canonicalHash: string; paymentState: string; metadataJson: JsonValue; ... 19 more ...; templateId: string | null; }'. Did you mean 'studentId'?
+src/modules/certificates/certificates.service.ts(137,26): error TS2551: Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: string; publicIdentifier: string; canonicalHash: string; paymentState: string; metadataJson: JsonValue; ... 19 more ...; templateId: string | null; }'. Did you mean 'studentId'?
+src/modules/certificates/certificates.service.ts(137,59): error TS2551: Property 'student' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; universityId: string; publicIdentifier: string; canonicalHash: string; paymentState: string; metadataJson: JsonValue; ... 19 more ...; templateId: string | null; }'. Did you mean 'studentId'?
+src/modules/documents/documents.service.ts(93,7): error TS2322: Type '{ publicIdentifier: string; studentId: string; typeId: string; issuedById: string; universityId: string; studentFirstName: string; studentLastName: string; studentIdentifier: string; studentEmail: string; ... 5 more ...; metadataJson: { ...; }; }' is not assignable to type '(Without<CertificateCreateInput, CertificateUncheckedCreateInput> & CertificateUncheckedCreateInput) | (Without<...> & CertificateCreateInput)'.
+src/modules/enrollments/dto/update-enrollment-status.dto.ts(2,10): error TS2305: Module '"@prisma/client"' has no exported member 'EnrollmentStatus'.
+src/modules/integrations/integrations.module.ts(4,36): error TS2307: Cannot find module './providers/storage/r2-s3.service' or its corresponding type declarations.
+src/modules/organization/organization.service.ts(34,53): error TS2339: Property 'institution' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(42,46): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(51,52): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(59,28): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(73,28): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(83,48): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(99,50): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(107,28): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/organization/organization.service.ts(124,28): error TS2339: Property 'organization' does not exist on type 'PrismaService'.
+src/modules/payments/payments.service.ts(32,50): error TS2339: Property 'serviceRequest' does not exist on type 'PrismaService'.
+src/modules/payments/payments.service.ts(53,17): error TS2322: Type 'PaymentProvider' is not assignable to type 'PaymentMethod'.
+src/modules/payments/payments.service.ts(82,31): error TS2339: Property 'serviceRequest' does not exist on type 'PrismaService'.
+src/modules/payments/payments.service.ts(110,13): error TS18047: 'payment.request.student.user' is possibly 'null'.
+src/modules/programs/programs.service.ts(69,17): error TS2353: Object literal may only specify known properties, and 'isActive' does not exist in type 'Without<ProgramCreateInput, ProgramUncheckedCreateInput> & ProgramUncheckedCreateInput'.
+src/modules/requests/requests.controller.ts(61,45): error TS2304: Cannot find name 'CurrentUser'.
+src/modules/requests/requests.controller.ts(74,10): error TS2304: Cannot find name 'CurrentUser'.
+src/modules/service-requests/service-requests.controller.ts(21,40): error TS2307: Cannot find module './service-requests.service' or its corresponding type declarations.
+src/modules/students/students.service.ts(72,13): error TS2322: Type '{ matricule: string; }' is not assignable to type 'StudentWhereUniqueInput'.
+src/modules/students/students.service.ts(83,17): error TS2353: Object literal may only specify known properties, and 'birthDate' does not exist in type 'Without<StudentCreateInput, StudentUncheckedCreateInput> & StudentUncheckedCreateInput'.
+src/modules/students/students.service.ts(115,13): error TS2322: Type '{ matricule: string; }' is not assignable to type 'StudentWhereUniqueInput'.
+src/modules/students/students.service.ts(147,17): error TS2322: Type '{ matricule: any; }' is not assignable to type 'StudentWhereUniqueInput'.
+src/modules/universities/universities.service.ts(49,9): error TS2353: Object literal may only specify known properties, and 'domain' does not exist in type '(Without<UniversityCreateInput, UniversityUncheckedCreateInput> & UniversityUncheckedCreateInput) | (Without<...> & UniversityCreateInput)'.
+src/modules/uploads/uploads.service.ts(2,36): error TS2307: Cannot find module '../../integrations/providers/storage/r2-s3.service' or its corresponding type declarations.
+src/modules/verification/verification.service.ts(140,17): error TS2353: Object literal may only specify known properties, and 'hash' does not exist in type 'CertificateWhereInput'.
+src/modules/verification/verification.service.ts(176,22): error TS2353: Object literal may only specify known properties, and 'number' does not exist in type 'CertificateWhereUniqueInput'.

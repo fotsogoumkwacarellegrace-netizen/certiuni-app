@@ -1,0 +1,114 @@
+=== model Payment ===
+
+id String @id @default(uuid()) @db.Uuid
+requestId String  @db.Uuid
+request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+certificateId String?      @db.Uuid
+certificate   Certificate? @relation(fields: [certificateId], references: [id], onDelete: SetNull)
+studentId String?  @db.Uuid
+student   Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+amount               Decimal       @db.Decimal(12, 2)
+currency             String        @default("XAF") @db.VarChar(10)
+provider             PaymentMethod
+status               PaymentStatus @default(PENDING)
+transactionId        String?       @unique @db.VarChar(255)
+transactionReference String?       @unique @db.VarChar(255)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@index([requestId])
+@@index([certificateId])
+@@index([studentId])
+@@map("payments")
+
+=== model Request ===
+
+id            String        @id @default(uuid()) @db.Uuid
+requestNumber String        @unique @db.VarChar(100)
+status        RequestStatus @default(PENDING)
+paymentStatus PaymentStatus @default(UNPAID)
+amount   Decimal @default(0.00) @db.Decimal(12, 2)
+currency String  @default("XAF") @db.VarChar(10)
+notes String? @db.Text
+studentId String  @db.Uuid
+student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+serviceId String  @db.Uuid
+service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+handledById String? @db.Uuid
+handledBy   User?   @relation("HandledRequests", fields: [handledById], references: [id], onDelete: SetNull)
+attachedFiles File[]
+payments      Payment[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@index([studentId])
+@@index([serviceId])
+@@index([status])
+@@map("requests")
+
+=== model Service ===
+
+id          String  @id @default(uuid()) @db.Uuid
+code        String  @db.VarChar(50) // Ex: REISSUE, CERTIFIED_COPY
+name        String  @db.VarChar(100)
+description String? @db.Text
+universityId String     @db.Uuid
+university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+documentTypeId String       @db.Uuid
+documentType   DocumentType @relation(fields: [documentTypeId], references: [id], onDelete: Restrict)
+pricings Pricing[]
+requests Request[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@unique([code, universityId])
+@@map("services")
+
+=== model Pricing ===
+
+id       String  @id @default(uuid()) @db.Uuid
+amount   Decimal @default(0.00) @db.Decimal(12, 2)
+currency String  @default("XAF") @db.VarChar(10)
+isFree   Boolean @default(false)
+serviceId String  @db.Uuid
+service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+universityId String     @db.Uuid
+university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@index([serviceId])
+@@index([universityId])
+@@map("pricings")
+
+=== model University ===
+
+id         String   @id @default(uuid()) @db.Uuid
+name       String   @db.VarChar(255)
+code       String   @unique @db.VarChar(50) // Code institutionnel unique
+logoUrl    String?  @db.VarChar(1024)
+website    String?  @db.VarChar(255)
+isVerified Boolean  @default(true)
+createdAt  DateTime @default(now())
+updatedAt  DateTime @updatedAt
+users            User[]
+certificates     Certificate[]
+auditLogs        AuditLog[]
+templates        CertificateTemplate[]
+userUniversities UserUniversity[]
+programs         Program[]
+academicLevels   AcademicLevel[]
+academicYears    AcademicYear[]
+students         Student[]
+services         Service[]
+pricings         Pricing[]
+notifications    Notification[]
+@@map("universities")
+
+=== model DocumentType ===
+
+id          String  @id @default(uuid()) @db.Uuid
+code        String  @unique @db.VarChar(50) // Ex: DIPLOMA, TRANSCRIPT
+name        String  @db.VarChar(100)
+description String? @db.Text
+certificates Certificate[]
+services     Service[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@map("document_types")
