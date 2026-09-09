@@ -1,1 +1,0 @@
-DATABASE_URL = "postgresql://postgres:votre_mot_de_passe@localhost:5432/certiuni_db?schema=public"
