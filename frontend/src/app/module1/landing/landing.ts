@@ -2,13 +2,16 @@
 import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DarkModeService } from '../../services/dark-mode';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { DarkModeService } from '../../services/dark-mode';
+import { DarkModeDirective } from '../../directives/dark-mode.directive';
+import { ScrollToTopDirective } from '../../directives/scroll-to-top';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule, DarkModeDirective, ScrollToTopDirective],
   templateUrl: './landing.html',
   styleUrl: './landing.css'
 })
@@ -19,23 +22,18 @@ export class Landing implements OnInit, OnDestroy {
 
   isDarkMode = signal(false);
   isMenuOpen = signal(false);
+  lang = signal<'FR' | 'EN'>('FR');
 
   ngOnInit() {
-    // Récupérer l'état initial du dark mode
     this.isDarkMode.set(this.darkModeService.isDarkMode$);
-    
-    // S'abonner aux changements
+
     this.darkModeSubscription = this.darkModeService.getDarkModeObservable().subscribe(
       (isDark: boolean) => {
         this.isDarkMode.set(isDark);
-        // Appliquer la classe sur l'host pour le dark mode
-        const host = document.querySelector('app-landing');
-        if (host) {
-          if (isDark) {
-            host.classList.add('dark-mode');
-          } else {
-            host.classList.remove('dark-mode');
-          }
+        if (isDark) {
+          document.body.classList.add('dark-mode');
+        } else {
+          document.body.classList.remove('dark-mode');
         }
       }
     );
@@ -59,11 +57,7 @@ export class Landing implements OnInit, OnDestroy {
 
   toggleMenu(): void {
     this.isMenuOpen.set(!this.isMenuOpen());
-    if (this.isMenuOpen()) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = this.isMenuOpen() ? 'hidden' : '';
   }
 
   closeMenu(): void {
@@ -79,37 +73,48 @@ export class Landing implements OnInit, OnDestroy {
   }
 
   // ============================================
+  // LANGUE
+  // ============================================
+
+  setLang(l: 'FR' | 'EN'): void {
+    this.lang.set(l);
+  }
+
+  // ============================================
+  // ACTIONS HERO
+  // ============================================
+
+  onVerifyClick(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/accueil']);
+  }
+
+  // ============================================
   // NAVIGATION
   // ============================================
 
-  // Bouton "Vérifier un diplôme" (header + hero)
-  goToVerify(): void {
-    this.router.navigate(['/public/accueil']);
+  goToLanding(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/landing']);
   }
 
-  // Bouton "Se connecter"
   goToLogin(): void {
-    this.router.navigate(['/public/accueil']);
+    this.closeMenu();
+    this.router.navigate(['/public/login']);
   }
 
-  // Carte "Institutions"
   goToInstitutions(): void {
+    this.closeMenu();
     this.router.navigate(['/public/accueil']);
   }
 
-  // Carte "Étudiants"
   goToEtudiants(): void {
+    this.closeMenu();
     this.router.navigate(['/public/accueil']);
   }
 
-
-// Carte "Recruteurs"
-goToRecruteurs(): void {
-  // Rediriger vers la page de connexion recruteur
-  this.router.navigate(['/public/login']);
-}
-
-  
- 
-
+  goToRecruteurs(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/login']);
+  }
 }

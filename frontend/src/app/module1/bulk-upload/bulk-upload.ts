@@ -120,23 +120,21 @@ export class BulkUpload implements OnDestroy {
     event.preventDefault();
     alert('Historique — fonctionnalité bientôt disponible.');
   }
-
-  goToSettings(event: Event): void {
-    event.preventDefault();
-    alert('Paramètres — fonctionnalité bientôt disponible.');
-  }
+goToSettings(event: Event): void {
+  event.preventDefault();
+  this.router.navigate(['/public/settings']);
+}
 
   goToSupport(): void {
     alert('Support — fonctionnalité bientôt disponible.');
   }
 
-  /**
-   * Déconnexion de l'utilisateur
-   */
+
   logout(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('recruteur_user');
+    localStorage.removeItem('recruteur_remember');
     sessionStorage.clear();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/public/landing']);
   }
 
   // ============================================

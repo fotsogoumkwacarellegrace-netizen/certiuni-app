@@ -127,20 +127,19 @@ export class OcrScan implements OnDestroy {
     alert('Historique — fonctionnalité bientôt disponible.');
   }
 
-  goToSettings(event: Event): void {
-    event.preventDefault();
-    alert('Paramètres — fonctionnalité bientôt disponible.');
-  }
-
+ goToSettings(event: Event): void {
+  event.preventDefault();
+  this.router.navigate(['/public/settings']);
+}
   /**
    * Déconnexion de l'utilisateur
    */
-  logout(): void {
-    localStorage.removeItem('user');
+   logout(): void {
+    localStorage.removeItem('recruteur_user');
+    localStorage.removeItem('recruteur_remember');
     sessionStorage.clear();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/public/landing']);
   }
-
   // ============================================
   // MENU BURGER
   // ============================================

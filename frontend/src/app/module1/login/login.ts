@@ -18,7 +18,7 @@ export class Login implements OnInit, OnDestroy {
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
 
-  // Données du formulaire - PRÉ-REMPLIES POUR LE TEST
+  // Données du formulaire
   email = '';
   password = '';
   rememberMe = false;
@@ -28,7 +28,7 @@ export class Login implements OnInit, OnDestroy {
   isLoading = signal(false);
   showPassword = signal(false);
 
-  // État de validation - Faux par défaut
+  // État de validation
   showEmailError = signal(false);
   showPasswordError = signal(false);
 
@@ -47,6 +47,9 @@ export class Login implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Ne redirige que si une session recruteur valide existe réellement.
+    // Grâce au logout() corrigé ailleurs, cette clé est bien supprimée
+    // à la déconnexion — donc ce contrôle redevient fiable.
     const user = localStorage.getItem('recruteur_user');
     if (user) {
       this.router.navigate(['/public/accueil']);
@@ -58,12 +61,11 @@ export class Login implements OnInit, OnDestroy {
   }
 
   // ============================================
-  // VALIDATION - FONCTIONS PUBLIQUES
+  // VALIDATION
   // ============================================
 
   isEmailValid(): boolean {
     const email = this.email?.trim() || '';
-    // Accepte les emails avec @ et .
     return email.includes('@') && email.includes('.') && email.length > 3;
   }
 
@@ -75,19 +77,13 @@ export class Login implements OnInit, OnDestroy {
     return this.isEmailValid() && this.isPasswordValid() && !this.isLoading();
   }
 
-  // ============================================
-  // GESTION DES CHAMPS - RESET DES ERREURS
-  // ============================================
-
   onEmailChange(): void {
-    // Si l'email devient valide, on cache l'erreur immédiatement
     if (this.isEmailValid()) {
       this.showEmailError.set(false);
     }
   }
 
   onPasswordChange(): void {
-    // Si le mot de passe devient valide, on cache l'erreur immédiatement
     if (this.isPasswordValid()) {
       this.showPasswordError.set(false);
     }
@@ -102,11 +98,9 @@ export class Login implements OnInit, OnDestroy {
   // ============================================
 
   onSubmit(): void {
-    // Réinitialiser les erreurs avant de valider
     this.showEmailError.set(false);
     this.showPasswordError.set(false);
 
-    // Vérifier les champs un par un
     let hasError = false;
 
     if (!this.isEmailValid()) {
@@ -119,12 +113,10 @@ export class Login implements OnInit, OnDestroy {
       hasError = true;
     }
 
-    // Si une erreur, on arrête
     if (hasError) {
       return;
     }
 
-    // Connexion
     this.isLoading.set(true);
 
     setTimeout(() => {
@@ -138,7 +130,6 @@ export class Login implements OnInit, OnDestroy {
         localStorage.setItem('recruteur_remember', 'true');
       }
       this.isLoading.set(false);
-      // Réinitialiser les erreurs
       this.showEmailError.set(false);
       this.showPasswordError.set(false);
       this.router.navigate(['/public/accueil']);

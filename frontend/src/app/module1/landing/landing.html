@@ -1,36 +1,35 @@
 <!-- frontend/src/app/module1/landing/landing.html -->
-<div class="landing-page" [class.dark-mode]="isDarkMode()">
+<div class="landing-page" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
 
   <!-- HEADER -->
-  <header class="landing-header">
+  <header class="header">
     <div class="header-inner">
-      <div class="brand">
-        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
-        <span class="brand-text">CertiUni</span>
+      <div class="logo-container">
+        <a class="logo-link" (click)="goToLanding()">
+          <img src="images/logo.png" alt="CertiUni" class="logo-img" />
+        </a>
+        <span class="logo-text">CertiUni</span>
       </div>
 
-      <!-- BURGER MENU -->
-      <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()" aria-label="Menu">
+      <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()">
         <span class="burger-line"></span>
         <span class="burger-line"></span>
         <span class="burger-line"></span>
       </button>
 
-      <!-- NAVIGATION DESKTOP -->
-      <nav class="header-nav desktop-nav">
-        <a class="active" (click)="goToVerify()">Accueil</a>
+      <nav class="nav-links desktop-nav">
+        <a class="active" (click)="goToLanding()">Accueil</a>
         <a (click)="goToInstitutions()">Institutions</a>
         <a (click)="goToEtudiants()">Étudiants</a>
         <a (click)="goToRecruteurs()">Recruteurs</a>
       </nav>
 
       <div class="header-actions">
-        <button class="btn-ghost" (click)="goToLogin()">Se connecter</button>
-        <button class="btn-primary" (click)="goToVerify()">
-          <span class="material-symbols-outlined">search_check</span>
-          <span>Vérifier</span>
+        <button class="btn-login" (click)="goToLogin()">
+          <span class="material-symbols-outlined">login</span>
+          <span>Se connecter</span>
         </button>
-        <button class="theme-toggle" (click)="toggleDarkMode()" aria-label="Changer le thème">
+        <button class="theme-toggle" (click)="toggleDarkMode()">
           <span class="material-symbols-outlined">
             {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
           </span>
@@ -39,262 +38,355 @@
     </div>
   </header>
 
-  <!-- OVERLAY POUR LE MENU MOBILE -->
+  <!-- OVERLAY MOBILE -->
   <div class="menu-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
 
   <!-- MENU MOBILE -->
-  <nav class="mobile-nav" [class.open]="isMenuOpen()">
-    <div class="mobile-nav-header">
-      <div class="mobile-brand">
-        <img src="images/logo.png" alt="CertiUni" class="mobile-logo-img" />
-        <span class="mobile-brand-text">CertiUni</span>
-      </div>
-      <button class="mobile-close-btn" (click)="closeMenu()" aria-label="Fermer le menu">
+  <nav class="mobile-menu" [class.open]="isMenuOpen()">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Navigation</span>
+      <button class="mobile-menu-close" (click)="closeMenu()">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
-
-    <div class="mobile-nav-body">
-      <a class="active" (click)="goToVerify(); closeMenu()">
-        <span class="material-symbols-outlined">home</span>
-        Accueil
+    <div class="mobile-menu-body">
+      <a class="active" (click)="goToLanding(); closeMenu()">
+        <span class="material-symbols-outlined">verified</span> Accueil
       </a>
       <a (click)="goToInstitutions(); closeMenu()">
-        <span class="material-symbols-outlined">account_balance</span>
-        Institutions
+        <span class="material-symbols-outlined">account_balance</span> Institutions
       </a>
       <a (click)="goToEtudiants(); closeMenu()">
-        <span class="material-symbols-outlined">badge</span>
-        Étudiants
+        <span class="material-symbols-outlined">badge</span> Étudiants
       </a>
-      <!-- Dans le menu mobile -->
       <a (click)="goToRecruteurs(); closeMenu()">
-        <span class="material-symbols-outlined">manage_search</span>
-        Recruteurs
+        <span class="material-symbols-outlined">manage_search</span> Recruteurs
       </a>
     </div>
-
-    <div class="mobile-nav-footer">
-      <div class="mobile-divider"></div>
-      <button class="mobile-login-btn" (click)="goToLogin(); closeMenu()">
-        <span class="material-symbols-outlined">login</span>
-        Se connecter
+    <div class="mobile-menu-footer">
+      <button class="mobile-btn-login" (click)="goToLogin(); closeMenu()">
+        <span class="material-symbols-outlined">login</span> Se connecter
       </button>
-      <button class="mobile-verify-btn" (click)="goToVerify(); closeMenu()">
-        <span class="material-symbols-outlined">search_check</span>
-        Vérifier un diplôme
-      </button>
-      <div class="mobile-status">
-        <span class="status-dot"></span>
-        <span>Système en ligne</span>
+      <div class="mobile-lang-toggle">
+        <button [class.active]="lang() === 'FR'" (click)="setLang('FR')">FR</button>
+        <button [class.active]="lang() === 'EN'" (click)="setLang('EN')">EN</button>
+      </div>
+      <div class="mobile-social">
+        <span class="material-symbols-outlined">shield</span>
+        <span>Portail sécurisé</span>
       </div>
     </div>
   </nav>
 
-  <!-- MAIN -->
-  <main class="landing-main">
+  <!-- ============================================ -->
+<!-- SECTION 1: HERO - IMAGE FONDUE, STRUCTURE PRO -->
+<!-- ============================================ -->
+<section class="hero">
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-left">
-        <div class="hero-badge">
-          <span class="material-symbols-outlined">verified_user</span>
-          Système Souverain Camerounais • MINESUP
-        </div>
+  <!-- Image de fond, fondue proprement dans le fond de page -->
+  <div class="hero-media" aria-hidden="true">
+    <img src="images/fond.png" alt="" class="hero-media-img" />
+    <div class="hero-media-fade-left"></div>
+    <div class="hero-media-fade-bottom"></div>
+  </div>
 
-        <h1 class="hero-title">
-          Certifiez votre avenir,<br />
-          <span class="highlight">Sécurisez</span> vos diplômes
-        </h1>
+  <div class="hero-content">
+    <div class="hero-badge">
+      Plateforme Officielle du Cameroun
+    </div>
 
-        <p class="hero-subtitle">
-          La plateforme nationale officielle de certification et de vérification des diplômes
-          de l'enseignement supérieur. Assurez l'authenticité infalsifiable de vos parchemins
-          grâce à la technologie blockchain.
-        </p>
+    <h1 class="hero-title">
+      Certifiez votre avenir,<br />
+      <span class="highlight">Sécurisez</span> vos diplômes
+    </h1>
 
-        <div class="hero-actions">
-          <button class="btn-primary btn-lg" (click)="goToVerify()">
-            <span class="material-symbols-outlined">search_check</span>
-            Vérifier un diplôme
-          </button>
-          <button class="btn-ghost btn-lg" (click)="goToLogin()">
-            <span class="material-symbols-outlined">login</span>
-            Se connecter
-          </button>
-        </div>
+    <p class="hero-subtitle">
+      La plateforme nationale officielle de certification et de vérification des diplômes
+      de l'enseignement supérieur camerounais.
+    </p>
 
-        <div class="hero-trust">
-          <div class="trust-item">
-            <span class="trust-icon">
-              <span class="material-symbols-outlined">verified</span>
-            </span>
-            <span>100% Sécurisé</span>
-          </div>
-          <div class="trust-item">
-            <span class="trust-icon">
-              <span class="material-symbols-outlined">gavel</span>
-            </span>
-            <span>Conforme MINESUP</span>
-          </div>
-          <div class="trust-item">
-            <span class="trust-icon">
-              <span class="material-symbols-outlined">bolt</span>
-            </span>
-            <span>Instantané</span>
-          </div>
-        </div>
-      </div>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" (click)="onVerifyClick()">
+        <span class="material-symbols-outlined">search</span>
+        Vérifier un diplôme
+        <span class="btn-arrow">→</span>
+      </button>
+      <button class="btn-hero-secondary" (click)="goToLogin()">
+        <span class="material-symbols-outlined">login</span>
+        Se connecter
+      </button>
+    </div>
 
-      <!-- Carte certificat -->
-      <div class="hero-right">
-        <div class="cert-card">
-          <div class="cert-header">
-            <div class="cert-header-left">
-              <div class="cert-icon">
-                <span class="material-symbols-outlined">school</span>
-              </div>
-              <div>
-                <p class="cert-country">République du Cameroun</p>
-                <p class="cert-ministry">Ministère de l'Enseignement Supérieur</p>
-              </div>
-            </div>
-            <span class="cert-badge">
-              <span class="material-symbols-outlined">check_circle</span>
-              Validé
-            </span>
-          </div>
+    <div class="trust-badges-row">
+      <span class="trust-badge-item">
+        <span class="material-symbols-outlined">verified_user</span>
+        Authentification certifiée
+      </span>
+      <span class="trust-badge-item">
+        <span class="material-symbols-outlined">shield</span>
+        Conforme MINESUP
+      </span>
+      <span class="trust-badge-item">
+        <span class="material-symbols-outlined">bolt</span>
+        Vérification instantanée
+      </span>
+      <span class="trust-badge-item">
+        <span class="material-symbols-outlined">lock</span>
+        Signature cryptographique
+      </span>
+    </div>
+  </div>
+</section>
 
-          <div class="cert-body">
-            <span class="cert-label">Titulaire du diplôme</span>
-            <h3 class="cert-name">Jean-Paul Mbarga</h3>
+  <!-- ============================================ -->
+  <!-- SECTION 2: ÉCOSYSTÈME DE CONFIANCE -->
+  <!-- ============================================ -->
+  <section class="ecosystem-section">
+    <div class="ecosystem-card-outer">
 
-            <div class="cert-details">
-              <div class="cert-row">
-                <span>Diplôme :</span>
-                <strong>Licence en Informatique</strong>
-              </div>
-              <div class="cert-row">
-                <span>Établissement :</span>
-                <strong>Université de Yaoundé I</strong>
-              </div>
-              <div class="cert-row">
-                <span>Mention :</span>
-                <strong class="cert-mention">Très Bien</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="cert-footer">
-            <div>
-              <span class="cert-hash-label">Empreinte cryptographique</span>
-              <p class="cert-hash">0x8f9c...4a21b</p>
-            </div>
-            <div class="cert-qr">
-              <span class="material-symbols-outlined">qr_code_2</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ECOSYSTEM -->
-    <section class="ecosystem">
-      <div class="section-head">
-        <h2>Un écosystème de confiance</h2>
-        <p>Une solution unifiée qui connecte les institutions universitaires, les étudiants et les recruteurs.</p>
+      <div class="ecosystem-header">
+        <span class="ecosystem-tag">Notre solution</span>
+        <h2>Un écosystème de <span class="highlight">confiance</span></h2>
+        <p>Une plateforme unifiée qui connecte les institutions, les étudiants et les recruteurs pour une vérification académique transparente et sécurisée.</p>
       </div>
 
       <div class="ecosystem-grid">
-        <div class="eco-card" (click)="goToRecruteurs()">
-          <div class="eco-icon">
+
+        <!-- INSTITUTIONS -->
+        <div class="ecosystem-card" appScrollAnimate>
+          <div class="ecosystem-icon green">
             <span class="material-symbols-outlined">account_balance</span>
           </div>
           <h3>Institutions</h3>
           <p>Délivrez des diplômes numériques infalsifiables et simplifiez la gestion académique.</p>
-          <span class="eco-link">
-            Espace universités
+
+          <ul class="ecosystem-features">
+            <li>
+              <span class="feature-check green"><span class="material-symbols-outlined">check</span></span>
+              Émission sécurisée
+            </li>
+            <li>
+              <span class="feature-check green"><span class="material-symbols-outlined">check</span></span>
+              Gestion centralisée
+            </li>
+            <li>
+              <span class="feature-check green"><span class="material-symbols-outlined">check</span></span>
+              Traçabilité complète
+            </li>
+          </ul>
+
+          <button class="ecosystem-link" (click)="goToInstitutions()">
+            Découvrir
             <span class="material-symbols-outlined">arrow_forward</span>
-          </span>
+          </button>
         </div>
 
-        <div class="eco-card featured" (click)="goToEtudiants()">
-          <span class="eco-badge">Populaire</span>
-          <div class="eco-icon gold">
+        <!-- ÉTUDIANTS (populaire) -->
+        <div class="ecosystem-card ecosystem-card-popular" appScrollAnimate>
+          <span class="popular-badge">Populaire</span>
+          <div class="ecosystem-icon yellow">
             <span class="material-symbols-outlined">badge</span>
           </div>
           <h3>Étudiants</h3>
           <p>Accédez à votre portefeuille de diplômes souverains et partagez-les en un clic.</p>
-          <span class="eco-link">
-            Portefeuille étudiant
+
+          <ul class="ecosystem-features">
+            <li>
+              <span class="feature-check yellow"><span class="material-symbols-outlined">check</span></span>
+              Portefeuille numérique
+            </li>
+            <li>
+              <span class="feature-check yellow"><span class="material-symbols-outlined">check</span></span>
+              Partage instantané
+            </li>
+            <li>
+              <span class="feature-check yellow"><span class="material-symbols-outlined">check</span></span>
+              Accès 24/7
+            </li>
+          </ul>
+
+          <button class="ecosystem-link" (click)="goToEtudiants()">
+            Découvrir
             <span class="material-symbols-outlined">arrow_forward</span>
-          </span>
+          </button>
         </div>
 
-        <div class="eco-card" (click)="goToRecruteurs()">
-          <div class="eco-icon">
+        <!-- RECRUTEURS -->
+        <div class="ecosystem-card" appScrollAnimate>
+          <div class="ecosystem-icon red">
             <span class="material-symbols-outlined">manage_search</span>
           </div>
           <h3>Recruteurs</h3>
           <p>Éliminez la fraude aux diplômes. Vérifiez l'authenticité des candidatures en quelques secondes.</p>
-          <span class="eco-link">
-            Portail recruteurs
+
+          <ul class="ecosystem-features">
+            <li>
+              <span class="feature-check red"><span class="material-symbols-outlined">check</span></span>
+              Vérification instantanée
+            </li>
+            <li>
+              <span class="feature-check red"><span class="material-symbols-outlined">check</span></span>
+              Vérification en masse
+            </li>
+            <li>
+              <span class="feature-check red"><span class="material-symbols-outlined">check</span></span>
+              Rapport détaillé
+            </li>
+          </ul>
+
+          <button class="ecosystem-link" (click)="goToRecruteurs()">
+            Découvrir
             <span class="material-symbols-outlined">arrow_forward</span>
-          </span>
+          </button>
         </div>
-      </div>
-    </section>
 
-    <!-- HOW IT WORKS -->
-    <section class="how-it-works">
-      <div class="section-head">
-        <h2>Comment ça marche</h2>
-        <p>Un processus simple et transparent en trois étapes.</p>
+      </div>
+    </div>
+  </section>
+  <!-- ============================================ -->
+  <!-- SECTION 3: COMMENT ÇA MARCHE -->
+  <!-- ============================================ -->
+  <section class="how-it-works">
+    <div class="how-it-works-inner">
+      <div class="section-header">
+        <span class="section-tag">Processus</span>
+        <h2 class="section-title">Comment ça <span class="highlight">marche</span></h2>
+        <p class="section-subtitle">Un processus simple et transparent en trois étapes.</p>
       </div>
 
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-icon">
+      <div class="steps">
+        <div class="step" appScrollAnimate>
+          <div class="step-number">01</div>
+          <div class="step-circle">
             <span class="material-symbols-outlined">edit_note</span>
           </div>
-          <span class="step-label">Étape 01</span>
           <h3>Émission officielle</h3>
           <p>L'université émet et signe numériquement le diplôme lors de la collation des grades.</p>
         </div>
-        <div class="step-card">
-          <div class="step-icon">
+
+        <div class="step" appScrollAnimate>
+          <div class="step-number yellow">02</div>
+          <div class="step-circle yellow">
             <span class="material-symbols-outlined">security</span>
           </div>
-          <span class="step-label">Étape 02</span>
-          <h3>Ancrage souverain</h3>
+          <h3>Ancrage sécurisé</h3>
           <p>Le certificat est enregistré de manière immuable sur le registre national sécurisé.</p>
         </div>
-        <div class="step-card">
-          <div class="step-icon">
+
+        <div class="step" appScrollAnimate>
+          <div class="step-number red">03</div>
+          <div class="step-circle red">
             <span class="material-symbols-outlined">verified</span>
           </div>
-          <span class="step-label">Étape 03</span>
           <h3>Vérification instantanée</h3>
-          <p>Tiers et employeurs valident l'authenticité via le QR code ou le hash.</p>
+          <p>Les tiers et employeurs valident l'authenticité via QR code ou empreinte cryptographique.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+  <!-- ============================================ -->
+  <!-- SECTION 4: POURQUOI NOUS CHOISIR -->
+  <!-- ============================================ -->
+  <section class="why-choose">
+    <div class="why-choose-inner">
+      <div class="section-header">
+        <span class="section-tag">Atouts</span>
+        <h2 class="section-title">Pourquoi <span class="highlight">CertiUni</span></h2>
+        <p class="section-subtitle">Des atouts qui font la différence pour une vérification de diplômes fiable et rapide.</p>
+      </div>
 
+      <div class="features-grid">
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon green">
+            <span class="material-symbols-outlined">shield_lock</span>
+          </div>
+          <h3>Sécurité Maximale</h3>
+          <p>Protocoles de cryptage avancés pour garantir l'intégrité de chaque vérification.</p>
+        </div>
+
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon yellow">
+            <span class="material-symbols-outlined">bolt</span>
+          </div>
+          <h3>Rapidité</h3>
+          <p>Des résultats en temps réel pour accélérer vos processus administratifs et de recrutement.</p>
+        </div>
+
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon red">
+            <span class="material-symbols-outlined">gavel</span>
+          </div>
+          <h3>Conformité Légale</h3>
+          <p>Entièrement conforme aux réglementations nationales sur la protection des données.</p>
+        </div>
+
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon blue">
+            <span class="material-symbols-outlined">devices</span>
+          </div>
+          <h3>Multi-plateforme</h3>
+          <p>Accessible depuis tous vos appareils : ordinateur, tablette et smartphone.</p>
+        </div>
+
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon purple">
+            <span class="material-symbols-outlined">support_agent</span>
+          </div>
+          <h3>Assistance Dédiée</h3>
+          <p>Une équipe d'experts à votre disposition pour vous accompagner.</p>
+        </div>
+
+        <div class="feature" appScrollAnimate>
+          <div class="feature-icon teal">
+            <span class="material-symbols-outlined">api</span>
+          </div>
+          <h3>Intégration API</h3>
+          <p>Connectez facilement vos systèmes existants à notre API REST sécurisée.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 5: CTA FINAL -->
+  <!-- ============================================ -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-content">
+        <h2 class="cta-title">Prêt à <span class="highlight">sécuriser</span> vos diplômes ?</h2>
+        <p class="cta-subtitle">
+          Rejoignez la révolution de la certification académique au Cameroun.
+        </p>
+        <div class="cta-actions">
+          <button class="cta-btn-primary" (click)="onVerifyClick()">
+            Commencer maintenant
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+          <button class="cta-btn-secondary" (click)="goToLogin()">
+            Se connecter
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
   <!-- FOOTER -->
-  <footer class="landing-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <strong>CertiUni République du Cameroun</strong>
+  <!-- ============================================ -->
+  <footer class="footer-simple">
+    <div class="footer-simple-inner">
+      <div class="footer-simple-brand">
+        <strong>CertiUni</strong> République du Cameroun
         <span>Ministère de l'Enseignement Supérieur</span>
       </div>
-      <div class="footer-links">
+      <nav class="footer-simple-links">
         <a href="#">Mentions légales</a>
         <a href="#">Confidentialité</a>
         <a href="#">Support technique</a>
-      </div>
-      <span class="footer-copy">© 2026 CertiUni. Tous droits réservés.</span>
+        <a href="#">API</a>
+      </nav>
+      <p class="footer-simple-copy">© 2026 CertiUni. Tous droits réservés.</p>
     </div>
   </footer>
 

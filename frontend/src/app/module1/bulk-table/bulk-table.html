@@ -1,4 +1,4 @@
-<!-- src/app/module1/bulk-table/bulk-table.html -->
+<!-- frontend/src/app/module1/bulk-table/bulk-table.html -->
 <div class="bulk-page" [class.dark-mode]="isDarkMode()" appDarkMode>
 
   <!-- ============================================ -->
@@ -12,9 +12,7 @@
         <div class="logo-container">
           <img src="images/logo.png" alt="CertiUni Logo" class="certiuni-logo" />
         </div>
-        <div class="brand-text">
-          CertiUni
-        </div>
+        <div class="brand-text">CertiUni</div>
       </div>
 
       <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
@@ -24,7 +22,7 @@
       <nav class="top-nav">
         <a routerLink="/public/accueil" routerLinkActive="active">
           <span class="material-symbols-outlined">home</span>
-          <span class="nav-label">recruteur-accueil</span>
+          <span class="nav-label">Accueil</span>
         </a>
         <a routerLink="/public/camera-scan" routerLinkActive="active">
           <span class="material-symbols-outlined">qr_code_scanner</span>
@@ -58,15 +56,13 @@
           <span class="avatar-initials">AD</span>
         </div>
       </div>
-
-  
     </header>
 
     <!-- CONTENT WRAPPER -->
     <div class="content-wrapper">
 
       <!-- ============================================ -->
-      <!-- WORKSPACE : tableau + panneau de détail -->
+      <!-- WORKSPACE : TABLEAU + PANNEAU DE DÉTAIL -->
       <!-- ============================================ -->
       <div class="workspace">
 
@@ -83,15 +79,15 @@
             <div class="card-title">
               <h2>Rapport de Vérification en Masse</h2>
               <p>
-                Vérification groupée - {{ filteredCandidates().length }} candidats analysés
+                Vérification groupée - <strong>{{ totalCandidates() }}</strong> candidats analysés
               </p>
             </div>
 
             <button class="export-btn" (click)="exportReport()" [disabled]="isExporting()">
               @if (isExporting()) {
-              <span class="spinner-small"></span>
+                <span class="spinner-small"></span>
               } @else {
-              <span class="material-symbols-outlined">download</span>
+                <span class="material-symbols-outlined">download</span>
               }
               {{ isExporting() ? 'Export en cours...' : 'Exporter le Rapport final' }}
             </button>
@@ -101,32 +97,37 @@
           <div class="filters-bar">
             <div class="search-wrapper">
               <span class="material-symbols-outlined search-icon">search</span>
-              <input type="text" class="search-input" placeholder="Rechercher par nom, ID ou diplôme..."
-                [value]="searchTerm()" (input)="onSearchChange($event)" />
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Rechercher par nom, ID ou diplôme..."
+                [value]="searchTerm()"
+                (input)="onSearchChange($event)"
+              />
               @if (searchTerm()) {
-              <button class="clear-search" (click)="clearSearch()">
-                <span class="material-symbols-outlined">close</span>
-              </button>
+                <button class="clear-search" (click)="clearSearch()">
+                  <span class="material-symbols-outlined">close</span>
+                </button>
               }
             </div>
 
             <div class="filter-tabs">
               <button class="filter-tab" [class.active]="selectedStatus() === 'all'" (click)="setStatusFilter('all')">
                 Tous
-                <span class="badge">{{ candidates().length }}</span>
+                <span class="badge">{{ totalCandidates() }}</span>
               </button>
-              <button class="filter-tab valid" [class.active]="selectedStatus() === 'VALID'"
-                (click)="setStatusFilter('VALID')">
+              <button class="filter-tab valid" [class.active]="selectedStatus() === 'VALID'" (click)="setStatusFilter('VALID')">
+                <span class="material-symbols-outlined">check_circle</span>
                 Validés
                 <span class="badge">{{ totalValid() }}</span>
               </button>
-              <button class="filter-tab revoked" [class.active]="selectedStatus() === 'REVOKED'"
-                (click)="setStatusFilter('REVOKED')">
+              <button class="filter-tab revoked" [class.active]="selectedStatus() === 'REVOKED'" (click)="setStatusFilter('REVOKED')">
+                <span class="material-symbols-outlined">cancel</span>
                 Révoqués
                 <span class="badge">{{ totalRevoked() }}</span>
               </button>
-              <button class="filter-tab unknown" [class.active]="selectedStatus() === 'NOT_FOUND'"
-                (click)="setStatusFilter('NOT_FOUND')">
+              <button class="filter-tab unknown" [class.active]="selectedStatus() === 'NOT_FOUND'" (click)="setStatusFilter('NOT_FOUND')">
+                <span class="material-symbols-outlined">help</span>
                 Inconnus
                 <span class="badge">{{ totalUnknown() }}</span>
               </button>
@@ -136,55 +137,54 @@
           <!-- Tableau -->
           <div class="table-wrapper">
             @if (pagedCandidates().length === 0) {
-            <div class="empty-state">
-              <span class="material-symbols-outlined empty-icon">search_off</span>
-              <h3>Aucun résultat trouvé</h3>
-              <p>Essayez d'ajuster vos critères de recherche ou de filtrage</p>
-            </div>
+              <div class="empty-state">
+                <span class="material-symbols-outlined empty-icon">search_off</span>
+                <h3>Aucun résultat trouvé</h3>
+                <p>Essayez d'ajuster vos critères de recherche ou de filtrage</p>
+              </div>
             } @else {
-            <table class="candidates-table">
-              <thead>
-                <tr>
-                  <th>Candidat</th>
-                  <th>ID du Document</th>
-                  <th>Diplôme</th>
-                  <th>Statut</th>
-                  <th class="text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (candidate of pagedCandidates(); track candidate.uuid) {
-                <tr [class.row-active]="selectedCandidate()?.uuid === candidate.uuid" (click)="openDetails(candidate)">
-                  <td>
-                    <div class="candidate-info">
-                      <div class="candidate-avatar" [style.background]="getRandomColor(candidate.name)">
-                        {{ getInitials(candidate.name) }}
-                      </div>
-                      <div class="candidate-details">
-                        <span class="candidate-name">{{ candidate.name }}</span>
-                        <span class="candidate-email">{{ candidate.uuid | slice:0:8 }}...{{ candidate.uuid | slice:-4 }}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="uuid-cell">{{ candidate.uuid | slice:0:12 }}...</td>
-                  <td>{{ candidate.diploma }}</td>
-                  <td>
-                    <span class="status-badge" [class]="getStatusClass(candidate.status)">
-                      <span class="material-symbols-outlined">
-                        {{ getStatusIcon(candidate.status) }}
-                      </span>
-                      {{ getStatusLabel(candidate.status) }}
-                    </span>
-                  </td>
-                  <td class="text-right">
-                    <button class="view-btn" (click)="$event.stopPropagation(); openDetails(candidate)">
-                      <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                  </td>
-                </tr>
-                }
-              </tbody>
-            </table>
+              <table class="candidates-table">
+                <thead>
+                  <tr>
+                    <th>UUID CANDIDAT</th>
+                    <th>NOM EXTRAIT</th>
+                    <th>DIPLÔME DÉTECTÉ</th>
+                    <th>STATUT DE CONFORMITÉ</th>
+                    <th class="text-right">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (candidate of pagedCandidates(); track candidate.uuid) {
+                    <tr [class.row-active]="selectedCandidate()?.uuid === candidate.uuid" (click)="openDetails(candidate)">
+                      <td>
+                        <span class="uuid-cell">{{ candidate.uuid | slice:0:12 }}...</span>
+                      </td>
+                      <td>
+                        <div class="candidate-info">
+                          <div class="candidate-avatar" [style.background]="getRandomColor(candidate.name)">
+                            {{ getInitials(candidate.name) }}
+                          </div>
+                          <span class="candidate-name">{{ candidate.name }}</span>
+                        </div>
+                      </td>
+                      <td>{{ candidate.diploma }}</td>
+                      <td>
+                        <span class="status-badge" [class]="getStatusClass(candidate.status)">
+                          <span class="material-symbols-outlined">
+                            {{ getStatusIcon(candidate.status) }}
+                          </span>
+                          {{ getStatusLabel(candidate.status) }}
+                        </span>
+                      </td>
+                      <td class="text-right">
+                        <button class="view-btn" (click)="$event.stopPropagation(); openDetails(candidate)">
+                          <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
             }
           </div>
 
@@ -192,16 +192,16 @@
           <div class="table-footer">
             <div class="footer-info">
               <span class="material-symbols-outlined">info</span>
-              Affichage de {{ startIndex() }} à {{ endIndex() }} sur {{ filteredCandidates().length }} résultats
+              Affichage de <strong>{{ startIndex() }}</strong> à <strong>{{ endIndex() }}</strong> sur <strong>{{ filteredCandidates().length }}</strong> résultats
             </div>
             <div class="pagination">
               <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
                 <span class="material-symbols-outlined">chevron_left</span>
               </button>
               @for (page of getPageNumbers(); track page) {
-              <button class="page-btn" [class.active]="currentPage() === page" (click)="goToPage(page)">
-                {{ page }}
-              </button>
+                <button class="page-btn" [class.active]="currentPage() === page" (click)="goToPage(page)">
+                  {{ page }}
+                </button>
               }
               <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">
                 <span class="material-symbols-outlined">chevron_right</span>
@@ -217,146 +217,148 @@
         <aside class="detail-panel" [class.open]="selectedCandidate() !== null">
           @if (selectedCandidate(); as candidate) {
 
-          <div class="panel-header">
-            <div class="panel-identity">
-              <div class="panel-avatar" [style.background]="getRandomColor(candidate.name)">
-                {{ getInitials(candidate.name) }}
+            <div class="panel-header">
+              <div class="panel-identity">
+                <div class="panel-avatar" [style.background]="getRandomColor(candidate.name)">
+                  {{ getInitials(candidate.name) }}
+                </div>
+                <div class="panel-identity-text">
+                  <h3 class="panel-name">{{ candidate.name }}</h3>
+                  <span class="panel-uuid">ID : {{ candidate.uuid | slice:0:8 }}...{{ candidate.uuid | slice:-4 }}</span>
+                </div>
               </div>
-              <div class="panel-identity-text">
-                <h3 class="panel-name">{{ candidate.name }}</h3>
-                <span class="panel-uuid">ID : {{ candidate.uuid | slice:0:8 }}...{{ candidate.uuid | slice:-4 }}</span>
-              </div>
-            </div>
-            <button class="panel-close" (click)="closeDetails()">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
-
-          <div class="panel-body">
-
-            @if (isLoadingDetails()) {
-
-            <div class="panel-loading">
-              <div class="panel-spinner"></div>
-              <p>Chargement des informations...</p>
+              <button class="panel-close" (click)="closeDetails()">
+                <span class="material-symbols-outlined">close</span>
+              </button>
             </div>
 
-            } @else if (panelData(); as data) {
+            <div class="panel-body">
 
-              @if (data.status === 'VALID') {
+              @if (isLoadingDetails()) {
 
-                <div class="status-banner valid">
-                  <span class="material-symbols-outlined">verified</span>
-                  <div>
-                    <strong>Certificat Authentique</strong>
-                    <p>Signature cryptographique validée · {{ data.issueDate | date:'dd/MM/yyyy' }}</p>
-                  </div>
+                <div class="panel-loading">
+                  <div class="panel-spinner"></div>
+                  <p>Chargement des informations...</p>
                 </div>
 
-                <div class="panel-card">
-                  <div class="panel-card-title">
-                    <span class="material-symbols-outlined">school</span>
-                    Données académiques
-                  </div>
-                  <dl class="info-grid">
-                    <div class="info-row">
-                      <dt>
-                        <span class="material-symbols-outlined">account_balance</span>
-                        Institution
-                      </dt>
-                      <dd>{{ data.university }}</dd>
-                    </div>
-                    <div class="info-row">
-                      <dt>
-                        <span class="material-symbols-outlined">workspace_premium</span>
-                        Diplôme
-                      </dt>
-                      <dd>{{ data.courseTitle }}</dd>
-                    </div>
-                    <div class="info-row">
-                      <dt>
-                        <span class="material-symbols-outlined">stars</span>
-                        Mention
-                      </dt>
-                      <dd>{{ data.mention }}</dd>
-                    </div>
-                    <div class="info-row highlight">
-                      <dt>
-                        <span class="material-symbols-outlined">trending_up</span>
-                        Moyenne générale
-                      </dt>
-                      <dd class="info-value-strong">{{ data.average }}<span class="unit">/20</span></dd>
-                    </div>
-                  </dl>
-                </div>
+              } @else if (panelData(); as data) {
 
-                @if (data.notes && data.notes.length) {
-                <div class="panel-card">
-                  <div class="panel-card-title">
-                    <span class="material-symbols-outlined">list_alt</span>
-                    Relevé détaillé
-                    <span class="credits-total">{{ data.totalCredits }} crédits</span>
-                  </div>
-                  <div class="grades-table">
-                    <div class="grades-row grades-head">
-                      <span>Matière</span><span class="col-center">Note</span><span class="col-right">Crédits</span>
+                @if (data.status === 'VALID') {
+
+                  <div class="status-banner valid">
+                    <span class="material-symbols-outlined">verified</span>
+                    <div>
+                      <strong>Certificat Authentique</strong>
+                      <p>Signature cryptographique validée · {{ data.issueDate | date:'dd/MM/yyyy' }}</p>
                     </div>
-                    @for (grade of data.notes; track grade.matiere) {
-                    <div class="grades-row">
-                      <div class="grade-name-cell">
-                        <span class="grade-name">{{ grade.matiere }}</span>
-                        <span class="grade-semester">{{ grade.semestre }}</span>
+                  </div>
+
+                  <div class="panel-card">
+                    <div class="panel-card-title">
+                      <span class="material-symbols-outlined">school</span>
+                      Données académiques
+                    </div>
+                    <dl class="info-grid">
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">account_balance</span>
+                          Institution
+                        </dt>
+                        <dd>{{ data.university }}</dd>
                       </div>
-                      <span class="grade-note-pill">{{ grade.note }}</span>
-                      <span class="grade-credits">{{ grade.credits }}</span>
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">workspace_premium</span>
+                          Diplôme
+                        </dt>
+                        <dd>{{ data.courseTitle }}</dd>
+                      </div>
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">stars</span>
+                          Mention
+                        </dt>
+                        <dd>{{ data.mention }}</dd>
+                      </div>
+                      <div class="info-row highlight">
+                        <dt>
+                          <span class="material-symbols-outlined">trending_up</span>
+                          Moyenne générale
+                        </dt>
+                        <dd class="info-value-strong">{{ data.average }}<span class="unit">/20</span></dd>
+                      </div>
+                    </dl>
+                  </div>
+
+                  @if (data.notes && data.notes.length) {
+                    <div class="panel-card">
+                      <div class="panel-card-title">
+                        <span class="material-symbols-outlined">list_alt</span>
+                        Relevé détaillé
+                        <span class="credits-total">{{ data.totalCredits }} crédits</span>
+                      </div>
+                      <div class="grades-table">
+                        <div class="grades-row grades-head">
+                          <span>Matière</span>
+                          <span class="col-center">Note</span>
+                          <span class="col-right">Crédits</span>
+                        </div>
+                        @for (grade of data.notes; track grade.matiere) {
+                          <div class="grades-row">
+                            <div class="grade-name-cell">
+                              <span class="grade-name">{{ grade.matiere }}</span>
+                              <span class="grade-semester">{{ grade.semestre }}</span>
+                            </div>
+                            <span class="grade-note-pill">{{ grade.note }}</span>
+                            <span class="grade-credits">{{ grade.credits }}</span>
+                          </div>
+                        }
+                      </div>
                     </div>
-                    }
+                  }
+
+                  <div class="hash-row" (click)="copyHash(data.hash)">
+                    <span class="material-symbols-outlined">fingerprint</span>
+                    <div class="hash-text">
+                      <span class="hash-label">Empreinte SHA-256</span>
+                      <span class="hash-value">{{ data.hash }}</span>
+                    </div>
+                    <span class="material-symbols-outlined copy-icon" [class.done]="hashCopied()">
+                      {{ hashCopied() ? 'check' : 'content_copy' }}
+                    </span>
                   </div>
-                </div>
+
+                  <button class="panel-primary-btn" (click)="onViewOriginal()">
+                    <span class="material-symbols-outlined">visibility</span>
+                    Voir le Diplôme Original
+                  </button>
+
+                } @else if (data.status === 'REVOKED') {
+
+                  <div class="status-banner revoked">
+                    <span class="material-symbols-outlined">block</span>
+                    <div>
+                      <strong>Diplôme Révoqué</strong>
+                      <p>{{ data.message }}</p>
+                    </div>
+                  </div>
+                  <p class="panel-fallback-name">{{ data.studentName }}</p>
+
+                } @else {
+
+                  <div class="status-banner unknown">
+                    <span class="material-symbols-outlined">help</span>
+                    <div>
+                      <strong>Document Introuvable</strong>
+                      <p>{{ data.message }}</p>
+                    </div>
+                  </div>
+
                 }
-
-                <div class="hash-row" (click)="copyHash(data.hash)">
-                  <span class="material-symbols-outlined">fingerprint</span>
-                  <div class="hash-text">
-                    <span class="hash-label">Empreinte SHA-256</span>
-                    <span class="hash-value">{{ data.hash | slice:0:28 }}...</span>
-                  </div>
-                  <span class="material-symbols-outlined copy-icon" [class.done]="hashCopied()">
-                    {{ hashCopied() ? 'check' : 'content_copy' }}
-                  </span>
-                </div>
-
-                <button class="panel-primary-btn" (click)="onViewOriginal()">
-                  <span class="material-symbols-outlined">visibility</span>
-                  Voir le Diplôme Original
-                </button>
-
-              } @else if (data.status === 'REVOKED') {
-
-                <div class="status-banner revoked">
-                  <span class="material-symbols-outlined">block</span>
-                  <div>
-                    <strong>Diplôme Révoqué</strong>
-                    <p>{{ data.message }}</p>
-                  </div>
-                </div>
-                <p class="panel-fallback-name">{{ data.studentName }}</p>
-
-              } @else {
-
-                <div class="status-banner unknown">
-                  <span class="material-symbols-outlined">help</span>
-                  <div>
-                    <strong>Document Introuvable</strong>
-                    <p>{{ data.message }}</p>
-                  </div>
-                </div>
 
               }
 
-            }
-
-          </div>
+            </div>
 
           }
         </aside>
@@ -378,7 +380,7 @@
   <div class="mobile-overlay" [class.active]="isMobileMenuOpen()" (click)="toggleMobileMenu()"></div>
 
   <!-- ============================================ -->
-  <!-- MENU MOBILE - version simplifiée -->
+  <!-- MENU MOBILE -->
   <!-- ============================================ -->
   <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
     <div class="mobile-menu-header">

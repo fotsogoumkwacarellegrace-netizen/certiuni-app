@@ -1,7 +1,9 @@
 <!-- src/app/module1/ecran-accueil/ecran-accueil.html -->
 <div class="accueil-container" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
 
+  <!-- ============================================ -->
   <!-- HEADER - PLEINE LARGEUR -->
+  <!-- ============================================ -->
   <header class="header">
     <div class="header-inner">
       <div class="logo-container">
@@ -18,25 +20,46 @@
         <span class="burger-line"></span>
       </button>
 
-      <!-- NAVIGATION DESKTOP -->
+      <!-- NAVIGATION DESKTOP — mêmes 6 liens que ocr-scan -->
       <nav class="nav-links desktop-nav">
-        <a (click)="goToLanding()">Accueil</a>
-        <a (click)="goToInstitutions()">Institutions</a>
-        <a (click)="goToEtudiants()">Étudiants</a>
-        <a class="active" (click)="goToRecruteurs()">Recruteurs</a>
+        <a routerLink="/public/accueil" routerLinkActive="active">
+          <span class="material-symbols-outlined">home</span>
+          Accueil
+        </a>
+        <a routerLink="/public/camera-scan" routerLinkActive="active">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+          Scanner
+        </a>
+        <a routerLink="/public/ocr-scan" routerLinkActive="active">
+          <span class="material-symbols-outlined">document_scanner</span>
+          Analyse
+        </a>
+        <a routerLink="/public/bulk-upload" routerLinkActive="active">
+          <span class="material-symbols-outlined">checklist_rtl</span>
+          Lot
+        </a>
+        <a href="#" (click)="goToHistory($event)">
+          <span class="material-symbols-outlined">history</span>
+          Historique
+        </a>
+        <a href="#" (click)="goToSettings($event)">
+          <span class="material-symbols-outlined">settings</span>
+          Paramètres
+        </a>
       </nav>
 
       <div class="header-actions">
-        <button class="btn-institutional" (click)="goToInstitutions()">
-          <span class="material-symbols-outlined">business</span>
-          Accès Institutionnel
-        </button>
-
-        <button class="theme-toggle" (click)="toggleDarkMode()">
+        <!-- Thème -->
+        <button class="theme-toggle" (click)="toggleDarkMode()" title="Changer le thème">
           <span class="material-symbols-outlined">
             {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
           </span>
         </button>
+
+        <!-- Déconnexion -->
+        <div class="avatar" (click)="logout()" title="Déconnexion">
+          <span class="avatar-initials">AD</span>
+        </div>
       </div>
     </div>
   </header>
@@ -44,7 +67,7 @@
   <!-- OVERLAY POUR LE MENU MOBILE -->
   <div class="menu-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
 
-  <!-- MENU MOBILE -->
+  <!-- MENU MOBILE — mêmes 6 liens + footer -->
   <nav class="mobile-menu" [class.open]="isMenuOpen()">
     <div class="mobile-menu-header">
       <span class="mobile-menu-title">Navigation</span>
@@ -54,21 +77,29 @@
     </div>
 
     <div class="mobile-menu-body">
-      <a (click)="goToLanding(); closeMenu()">
-        <span class="material-symbols-outlined">verified</span>
+      <a routerLink="/public/accueil" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">home</span>
         Accueil
       </a>
-      <a (click)="goToInstitutions(); closeMenu()">
-        <span class="material-symbols-outlined">account_balance</span>
-        Institutions
+      <a routerLink="/public/camera-scan" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        Scanner
       </a>
-      <a (click)="goToEtudiants(); closeMenu()">
-        <span class="material-symbols-outlined">badge</span>
-        Étudiants
+      <a routerLink="/public/ocr-scan" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">document_scanner</span>
+        Analyse
       </a>
-      <a class="active" (click)="goToRecruteurs(); closeMenu()">
-        <span class="material-symbols-outlined">manage_search</span>
-        Recruteurs
+      <a routerLink="/public/bulk-upload" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">checklist_rtl</span>
+        Lot
+      </a>
+      <a (click)="goToHistory($event); closeMenu()">
+        <span class="material-symbols-outlined">history</span>
+        Historique
+      </a>
+      <a (click)="goToSettings($event); closeMenu()">
+        <span class="material-symbols-outlined">settings</span>
+        Paramètres
       </a>
     </div>
 
@@ -88,19 +119,16 @@
     </div>
   </nav>
 
+  <!-- ============================================ -->
   <!-- HERO - PLEINE LARGEUR -->
+  <!-- ============================================ -->
   <section class="hero">
     <div class="hero-content">
-    
 
       <h1 class="hero-title">
-        Portail National de<br />
+        Portail de<br />
         <span class="highlight">Vérification Académique</span>
       </h1>
-
-      <p class="hero-subtitle">
-        Validation sécurisée et authentique des diplômes et attestations dans le cadre national camerounais.
-      </p>
 
       <div class="search-box">
         <div class="search-wrapper">
@@ -120,7 +148,9 @@
     </div>
   </section>
 
+  <!-- ============================================ -->
   <!-- CARDS - PLEINE LARGEUR -->
+  <!-- ============================================ -->
   <section class="cards-section">
     <div class="cards-grid">
       <div class="card" (click)="openCameraScan()">
@@ -164,63 +194,9 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS - PLEINE LARGEUR -->
-  <section class="how-it-works">
-    <h2 class="section-title">Comment ça marche</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-circle">
-          <span class="material-symbols-outlined">edit_note</span>
-        </div>
-        <h3>1. Saisissez les informations</h3>
-        <p>Entrez le matricule ou scannez le code QR présent sur le document académique.</p>
-      </div>
-      <div class="step">
-        <div class="step-circle yellow">
-          <span class="material-symbols-outlined">security</span>
-        </div>
-        <h3>2. Analyse sécurisée</h3>
-        <p>Notre système interroge instantanément le registre national sécurisé.</p>
-      </div>
-      <div class="step">
-        <div class="step-circle red">
-          <span class="material-symbols-outlined">verified</span>
-        </div>
-        <h3>3. Résultat instantané</h3>
-        <p>Obtenez une confirmation officielle de l'authenticité du diplôme en quelques secondes.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY CHOOSE US - PLEINE LARGEUR -->
-  <section class="why-choose">
-    <h2 class="section-title">Pourquoi nous choisir</h2>
-    <div class="features">
-      <div class="feature">
-        <div class="feature-icon green">
-          <span class="material-symbols-outlined">shield_lock</span>
-        </div>
-        <h3>Sécurité Maximale</h3>
-        <p>Protocoles de cryptage de pointe pour garantir l'intégrité de chaque vérification.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon yellow">
-          <span class="material-symbols-outlined">bolt</span>
-        </div>
-        <h3>Rapidité d'exécution</h3>
-        <p>Des résultats en temps réel pour accélérer vos processus administratifs et de recrutement.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon red">
-          <span class="material-symbols-outlined">gavel</span>
-        </div>
-        <h3>Conformité Légale</h3>
-        <p>Entièrement conforme aux réglementations nationales sur la protection des données.</p>
-      </div>
-    </div>
-  </section>
-
+  <!-- ============================================ -->
   <!-- FOOTER - PLEINE LARGEUR -->
+  <!-- ============================================ -->
   <footer class="footer">
     <div class="footer-inner">
       <img src="images/logo.png" alt="CertiUni" class="footer-logo" />

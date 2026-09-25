@@ -1,9 +1,19 @@
 // src/app/module1/ecran-accueil/ecran-accueil.ts
-import { Component, inject, signal, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  HostListener
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
 import { MockDataService } from '../../core/services/mock-data.service';
 import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
@@ -23,6 +33,9 @@ import { ScrollToTopDirective } from '../../directives/scroll-to-top';
   styleUrl: './ecran-accueil.css'
 })
 export class EcranAccueil implements OnInit, OnDestroy {
+  // ============================================
+  // INJECTIONS
+  // ============================================
   private router = inject(Router);
   private mockService = inject(MockDataService);
   private darkModeService = inject(DarkModeService);
@@ -30,20 +43,21 @@ export class EcranAccueil implements OnInit, OnDestroy {
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // Signaux pour l'état de l'interface
+  // ============================================
+  // ÉTAT DE L'INTERFACE (Signaux)
+  // ============================================
   searchQuery = signal('');
   lang = signal<'FR' | 'EN'>('FR');
   isDarkMode = signal(false);
   isMenuOpen = signal(false);
   isProcessing = signal(false);
 
-  /**
-   * Initialisation du composant
-   * Récupère l'état du dark mode depuis le service
-   */
-  ngOnInit() {
+  // ============================================
+  // CYCLE DE VIE
+  // ============================================
+  ngOnInit(): void {
     this.isDarkMode.set(this.darkModeService.isDarkMode$);
-    
+
     this.darkModeSubscription = this.darkModeService.getDarkModeObservable().subscribe(
       (isDark: boolean) => {
         this.isDarkMode.set(isDark);
@@ -56,32 +70,20 @@ export class EcranAccueil implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Nettoyage du composant
-   */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.darkModeSubscription.unsubscribe();
   }
 
   // ============================================
-  // GESTION DU DARK MODE
+  // DARK MODE
   // ============================================
-
-  /**
-   * Bascule entre le mode clair et le mode sombre
-   */
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();
   }
 
   // ============================================
-  // GESTION DU MENU BURGER
+  // MENU MOBILE
   // ============================================
-
-  /**
-   * Ouvre ou ferme le menu burger
-   * Bloquer le scroll quand le menu est ouvert
-   */
   toggleMenu(): void {
     this.isMenuOpen.set(!this.isMenuOpen());
     if (this.isMenuOpen()) {
@@ -91,44 +93,26 @@ export class EcranAccueil implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Ferme le menu burger
-   * Réactive le scroll
-   */
   closeMenu(): void {
     this.isMenuOpen.set(false);
     document.body.style.overflow = '';
   }
 
-  /**
-   * Ferme le menu avec la touche Echap
-   */
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     this.closeMenu();
   }
 
   // ============================================
-  // GESTION DE LA LANGUE
+  // LANGUE
   // ============================================
-
-  /**
-   * Change la langue de l'interface
-   * @param l - 'FR' ou 'EN'
-   */
   setLang(l: 'FR' | 'EN'): void {
     this.lang.set(l);
   }
 
   // ============================================
-  // GESTION DE LA RECHERCHE
+  // RECHERCHE
   // ============================================
-
-  /**
-   * Soumet la recherche d'un certificat
-   * Vérifie le certificat via le service mock
-   * Redirige vers la page appropriée selon le résultat
-   */
   onSearchSubmit(): void {
     const query = this.searchQuery().trim();
     if (!query || this.isProcessing()) return;
@@ -160,79 +144,69 @@ export class EcranAccueil implements OnInit, OnDestroy {
   // ============================================
   // NAVIGATION — CARTES DE LA PAGE
   // ============================================
-
-  /**
-   * Ouvre la page de scan par caméra
-   * Ferme le menu si ouvert
-   */
   openCameraScan(): void {
     this.closeMenu();
     this.router.navigate(['/public/camera-scan']);
   }
 
-  /**
-   * Ouvre la page de scan OCR
-   * Ferme le menu si ouvert
-   */
   openOCRScan(): void {
     this.closeMenu();
     this.router.navigate(['/public/ocr-scan']);
   }
 
-  /**
-   * Navigue vers la page de vérification par lot
-   * Ferme le menu si ouvert
-   */
   navigateToBulk(): void {
     this.closeMenu();
     this.router.navigate(['/public/bulk-upload']);
   }
 
   // ============================================
-  // NAVIGATION — NAVBAR
+  // NAVIGATION — NAVBAR (mêmes 6 liens que ocr-scan)
   // ============================================
-
-  /**
-   * Lien "Accueil" — mène vers la page landing
-   */
   goToLanding(): void {
     this.closeMenu();
     this.router.navigate(['/public/landing']);
   }
 
-  /**
-   * Lien "Institutions"
-   */
+  goToHistory(event: Event): void {
+    event.preventDefault();
+    alert('Historique — fonctionnalité bientôt disponible.');
+  }
+
+  goToSettings(event: Event): void {
+    event.preventDefault();
+    this.router.navigate(['/public/settings']);
+  }
+
+  // ============================================
+  // DÉCONNEXION
+  // ============================================
+  logout(): void {
+    localStorage.removeItem('recruteur_user');
+    localStorage.removeItem('recruteur_remember');
+    sessionStorage.clear();
+    this.router.navigate(['/public/landing']);
+  }
+
+  // ============================================
+  // NAVIGATION — FOOTER
+  // ============================================
   goToInstitutions(): void {
     this.closeMenu();
     this.router.navigate(['/public/accueil']);
   }
 
-  /**
-   * Lien "Étudiants"
-   */
   goToEtudiants(): void {
     this.closeMenu();
     this.router.navigate(['/public/accueil']);
   }
 
-  /**
-   * Lien "Recruteurs" — reste sur la page accueil
-   */
   goToRecruteurs(): void {
     this.closeMenu();
-    // Reste sur la page actuelle (ecran-accueil)
   }
 
   // ============================================
-  // MÉTHODES UTILITAIRES
+  // UTILITAIRES
   // ============================================
-
-  /**
-   * Obtient la couleur du statut d'un certificat
-   * @param status - Le statut du certificat
-   * @returns La classe CSS correspondante
-   */
   getStatusColor(status: string): string {
     switch (status) {
       case 'VALID': return 'bg-emerald-100 text-emerald-700';
@@ -241,11 +215,6 @@ export class EcranAccueil implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Obtient la couleur du point de statut
-   * @param status - Le statut du certificat
-   * @returns La classe CSS correspondante
-   */
   getStatusDot(status: string): string {
     switch (status) {
       case 'VALID': return 'bg-emerald-500';

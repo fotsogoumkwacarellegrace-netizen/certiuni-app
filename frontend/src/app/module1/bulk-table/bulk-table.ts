@@ -1,4 +1,4 @@
-// src/app/module1/bulk-table/bulk-table.ts
+// frontend/src/app/module1/bulk-table/bulk-table.ts
 import { Component, inject, signal, computed, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -35,6 +35,9 @@ export class BulkTable implements OnInit, OnDestroy {
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
 
+  // ============================================
+  // ÉTAT DE L'APPLICATION
+  // ============================================
   candidates = signal<BulkCandidate[]>([]);
   currentPage = signal(1);
   pageSize = 5;
@@ -49,6 +52,9 @@ export class BulkTable implements OnInit, OnDestroy {
   isLoadingDetails = signal(false);
   hashCopied = signal(false);
 
+  // ============================================
+  // DONNÉES DU PANNEAU DÉTAIL
+  // ============================================
   panelData = computed<PanelData | null>(() => {
     const candidate = this.selectedCandidate();
     const result = this.selectedResult();
@@ -92,10 +98,17 @@ export class BulkTable implements OnInit, OnDestroy {
     };
   });
 
+  // ============================================
+  // COMPUTED - STATISTIQUES
+  // ============================================
   totalValid = computed(() => this.candidates().filter(c => c.status === 'VALID').length);
   totalRevoked = computed(() => this.candidates().filter(c => c.status === 'REVOKED').length);
   totalUnknown = computed(() => this.candidates().filter(c => c.status === 'NOT_FOUND').length);
+  totalCandidates = computed(() => this.candidates().length);
 
+  // ============================================
+  // COMPUTED - FILTRAGE & PAGINATION
+  // ============================================
   filteredCandidates = computed(() => {
     let items = this.candidates();
 
@@ -129,6 +142,9 @@ export class BulkTable implements OnInit, OnDestroy {
     return end < total ? end : total;
   });
 
+  // ============================================
+  // CYCLE DE VIE
+  // ============================================
   constructor() {
     this.isDarkMode.set(this.darkModeService.isDarkMode$);
     this.darkModeSubscription = this.darkModeService.getDarkModeObservable().subscribe(
@@ -146,6 +162,9 @@ export class BulkTable implements OnInit, OnDestroy {
     this.darkModeSubscription.unsubscribe();
   }
 
+  // ============================================
+  // PAGINATION
+  // ============================================
   getPageNumbers(): number[] {
     const total = this.totalPages();
     const current = this.currentPage();
@@ -175,6 +194,9 @@ export class BulkTable implements OnInit, OnDestroy {
     }
   }
 
+  // ============================================
+  // FILTRES & RECHERCHE
+  // ============================================
   setStatusFilter(status: string): void {
     this.selectedStatus.set(status);
     this.currentPage.set(1);
@@ -191,6 +213,9 @@ export class BulkTable implements OnInit, OnDestroy {
     this.currentPage.set(1);
   }
 
+  // ============================================
+  // PANNEAU DE DÉTAIL
+  // ============================================
   openDetails(candidate: BulkCandidate): void {
     this.selectedCandidate.set(candidate);
     this.selectedResult.set(null);
@@ -213,16 +238,12 @@ export class BulkTable implements OnInit, OnDestroy {
     this.selectedResult.set(null);
   }
 
+  // ============================================
+  // MÉTHODES UTILITAIRES
+  // ============================================
   getMention(finalGrade: string): string {
     const match = finalGrade.match(/\(([^)]+)\)/);
     return match ? match[1].replace('Mention ', '') : '—';
-  }
-
-  gradeTone(note: number): 'excellent' | 'good' | 'average' | 'low' {
-    if (note >= 16) return 'excellent';
-    if (note >= 14) return 'good';
-    if (note >= 10) return 'average';
-    return 'low';
   }
 
   copyHash(hash: string | undefined): void {
@@ -242,6 +263,9 @@ export class BulkTable implements OnInit, OnDestroy {
     }
   }
 
+  // ============================================
+  // NAVIGATION
+  // ============================================
   goToHistory(event: Event): void {
     event.preventDefault();
     alert('Historique — fonctionnalité bientôt disponible.');
@@ -249,23 +273,23 @@ export class BulkTable implements OnInit, OnDestroy {
 
   goToSettings(event: Event): void {
     event.preventDefault();
-    alert('Paramètres — fonctionnalité bientôt disponible.');
-  }
-
-  goToSupport(): void {
-    alert('Support — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/settings']);
   }
 
   logout(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('recruteur_user');
+    localStorage.removeItem('recruteur_remember');
     sessionStorage.clear();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/public/landing']);
   }
 
   onNewList(): void {
     this.router.navigate(['/public/bulk-upload']);
   }
 
+  // ============================================
+  // EXPORT
+  // ============================================
   exportReport(): void {
     const data = this.filteredCandidates();
     if (!data || data.length === 0) {
@@ -310,6 +334,9 @@ export class BulkTable implements OnInit, OnDestroy {
     return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
   }
 
+  // ============================================
+  // MENU MOBILE
+  // ============================================
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.set(!this.isMobileMenuOpen());
     document.body.style.overflow = this.isMobileMenuOpen() ? 'hidden' : '';
@@ -330,11 +357,14 @@ export class BulkTable implements OnInit, OnDestroy {
     this.darkModeService.toggleDarkMode();
   }
 
+  // ============================================
+  // AFFICHAGE DES STATUTS
+  // ============================================
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'VALID': return 'VALIDÉ';
-      case 'REVOKED': return 'RÉVOQUÉ';
-      case 'NOT_FOUND': return 'INCONNU';
+      case 'VALID': return 'Validé';
+      case 'REVOKED': return 'Révoqué';
+      case 'NOT_FOUND': return 'Inconnu';
       default: return status;
     }
   }
