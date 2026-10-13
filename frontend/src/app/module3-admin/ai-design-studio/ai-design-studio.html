@@ -1,0 +1,99 @@
+<div class="studio-page">
+  <a class="back-link" routerLink="/admin/creer-diplomes">← Retour</a>
+  <h1>Créer un nouveau design (AI Design Studio)</h1>
+
+  <div class="studio-layout">
+    <div class="studio-panel">
+      <label for="description">Décrivez le design souhaité</label>
+      <textarea
+        id="description"
+        rows="5"
+        placeholder="Ex : Un diplôme moderne pour une licence en génie logiciel avec le logo de l'université en haut, le titre du diplôme au centre, une zone pour le nom du titulaire et sa signature du recteur"
+        [ngModel]="description()"
+        (ngModelChange)="description.set($event)"
+      ></textarea>
+
+      <button type="button" class="btn-primary" (click)="genererAvecIA()" [disabled]="generating()">
+        {{ generating() ? 'Génération en cours…' : 'Générer avec l\'IA ✨' }}
+      </button>
+
+      <h2 class="options-title">Options</h2>
+
+      <div class="form-field">
+        <label for="style">Style</label>
+        <select id="style" [ngModel]="style()" (ngModelChange)="style.set($event)">
+          @for (s of styles; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="couleurs">Couleurs</label>
+        <select id="couleurs" [ngModel]="couleurs()" (ngModelChange)="couleurs.set($event)">
+          @for (c of palettes; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="format">Format</label>
+        <select id="format" [ngModel]="format()" (ngModelChange)="format.set($event)">
+          @for (f of formats; track f) {
+            <option [value]="f">{{ f }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field form-field-toggle">
+        <label for="qrToggle">Inclure QR Code</label>
+        <input
+          id="qrToggle"
+          type="checkbox"
+          [ngModel]="inclureQrCode()"
+          (ngModelChange)="inclureQrCode.set($event)"
+        />
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h2>Aperçu du design proposé</h2>
+        <span class="version-tag">Version {{ versionActuelle() }}/3</span>
+      </div>
+
+      <div class="diploma-preview">
+        <p class="preview-country">RÉPUBLIQUE DU CAMEROUN</p>
+        <p class="preview-motto">Paix - Travail - Patrie</p>
+        <p class="preview-university">UNIVERSITÉ DE TECHNOLOGIE DE YAOUNDÉ</p>
+        <p class="preview-faculty">Faculté des Sciences</p>
+        <h3>DIPLÔME DE LICENCE</h3>
+        <h3>GÉNIE LOGICIEL</h3>
+        <p class="preview-decerne">
+          Décerné à<br />
+          <strong>{{ '{{NOM_COMPLET}}' }}</strong>
+        </p>
+        <p class="preview-mention">Mention : {{ '{{MENTION}}' }}</p>
+        <p class="preview-annee">Année académique : {{ '{{ANNEE}}' }}</p>
+        <div class="preview-signatures">
+          <span>Le Recteur<br />(SIGNATURE)</span>
+          <span>Le Doyen<br />(SIGNATURE)</span>
+        </div>
+        @if (inclureQrCode()) {
+          <span class="preview-qr" aria-hidden="true"><span class="material-icons">qr_code</span></span>
+        }
+      </div>
+
+      <div class="preview-actions">
+        <button type="button" class="btn-secondary" (click)="genererAvecIA()" [disabled]="generating()">
+          Régénérer
+        </button>
+        <button type="button" class="btn-secondary">Modifier</button>
+        <button type="button" class="btn-primary" (click)="enregistrerDesign()">
+          Enregistrer le design
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

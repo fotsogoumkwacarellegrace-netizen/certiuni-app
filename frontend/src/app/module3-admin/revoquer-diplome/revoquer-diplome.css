@@ -1,0 +1,255 @@
+:host {
+  --primary: #19764a;
+  --primary-dark: #12633d;
+  --secondary: #edeff3;
+  --accent: #f9c31f;
+  --accent-tint: #fef6dc;
+  --destructive: #dc2828;
+  --gray-200: #e1e4e4;
+  --gray-400: #9aa3a3;
+  --gray-600: #5c6666;
+  --gray-800: #23292a;
+  --black-soft: #17191a;
+
+  display: block;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--black-soft);
+}
+
+.material-icons {
+  font-size: 1.1rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--gray-600);
+  text-decoration: none;
+  font-size: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.back-link .material-icons {
+  font-size: 1rem;
+}
+
+.back-link:hover {
+  color: var(--primary);
+}
+
+.revoke-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 1.75rem;
+  max-width: 600px;
+}
+
+.revoke-card h1 {
+  margin: 0 0 1.25rem;
+  font-size: 1.15rem;
+}
+
+.warning-banner {
+  display: flex;
+  gap: 0.75rem;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.warning-banner .material-icons {
+  color: #92720a;
+  font-size: 1.3rem;
+}
+
+.warning-banner strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.warning-banner p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--gray-800);
+}
+
+.info-list {
+  margin: 0 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.info-list dt {
+  font-size: 0.72rem;
+  color: var(--gray-600);
+  margin-bottom: 0.15rem;
+}
+
+.info-list dd {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  background: var(--secondary);
+  color: var(--gray-800);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.form-field {
+  margin-bottom: 1.25rem;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.83rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  background: #fff;
+  color: var(--black-soft);
+}
+
+.form-field select.has-error {
+  border-color: var(--destructive);
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+.field-error {
+  display: block;
+  color: var(--destructive);
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  margin-top: 0.3rem;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+  background: var(--black-soft);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--destructive);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--gray-800);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--gray-400);
+}
+
+.after-revoke {
+  background: var(--secondary);
+  border-radius: 6px;
+  padding: 1rem 1.1rem;
+}
+
+.after-revoke h2 {
+  margin: 0 0 0.6rem;
+  font-size: 0.83rem;
+}
+
+.after-revoke ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.after-revoke li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--gray-800);
+}
+
+.after-revoke .material-icons {
+  color: var(--primary);
+  font-size: 1rem;
+  margin-top: 0.05rem;
+}
+
+.empty-state {
+  color: var(--gray-600);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  .revoke-card {
+    padding: 1.25rem;
+  }
+
+  .info-list {
+    grid-template-columns: 1fr;
+  }
+
+  .form-footer {
+    flex-direction: column-reverse;
+  }
+}

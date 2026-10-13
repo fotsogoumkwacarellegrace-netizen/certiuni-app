@@ -1,0 +1,34 @@
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MOCK_INSTITUTION } from '../../assets/data/mock-data.admin';
+import { AdminState } from '../services/admin-state';
+
+
+@Component({
+  selector: 'app-admin-layout',
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  templateUrl: './admin-layout.html',
+  styleUrl: './admin-layout.css'
+})
+export class AdminLayout {
+  private readonly router = inject(Router);
+  private readonly state = inject(AdminState);
+
+  readonly institution = MOCK_INSTITUTION;
+  readonly showLogoutConfirm = this.state.showLogoutConfirm;
+
+  demanderDeconnexion(): void {
+    this.state.openLogoutConfirm();
+  }
+
+  annulerDeconnexion(): void {
+    this.state.closeLogoutConfirm();
+  }
+
+  confirmerDeconnexion(): void {
+    this.state.closeLogoutConfirm();
+    // TODO: remplacer par l'appel réel de déconnexion (invalidation de session/token).
+    this.router.navigate(['/admin-login']);
+  }
+}
