@@ -1,0 +1,125 @@
+<div class="archive-page">
+
+  <button class="mobile-toggle" (click)="toggleSidebar()" aria-label="Menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  @if (isSidebarOpen()) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <div class="body-layout">
+
+    <!-- ===== SIDEBAR VERTE ===== -->
+    <aside class="sidebar" [class.sidebar-open]="isSidebarOpen()">
+      <div class="sidebar-logo-box">
+        <img src="assets/logos/logo2.png" alt="CertiUni" class="brand-logo-sm" />
+        <span class="brand-text">CertiUni</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item" (click)="goToDashboard(); closeSidebar()">
+          <mat-icon class="nav-icon">grid_view</mat-icon> Overview
+        </button>
+        <button class="nav-item" (click)="goToDashboard(); closeSidebar()">
+          <mat-icon class="nav-icon">school</mat-icon> My Diplomas
+        </button>
+        <button class="nav-item active" (click)="closeSidebar()">
+          <mat-icon class="nav-icon">receipt_long</mat-icon> Transaction History
+        </button>
+        <button class="nav-item" (click)="onSidebarLinkClick('identity'); closeSidebar()">
+          <mat-icon class="nav-icon">verified_user</mat-icon> Identity Verification
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item nav-support" (click)="onSidebarLinkClick('support'); closeSidebar()">
+          <mat-icon class="nav-icon">help_outline</mat-icon>
+          <span class="nav-support-text">
+            <strong>Help Support</strong>
+            <small>Besoin d'aide ?</small>
+          </span>
+        </button>
+        <button class="btn-add-credential" (click)="onSidebarLinkClick('add-credential'); closeSidebar()">
+          <mat-icon>add</mat-icon> Add New Credential
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="archive-main">
+
+      <!-- Topbar -->
+      <header class="archive-topbar">
+        <button class="back-btn" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon> Retour au portefeuille
+        </button>
+
+        <div class="topbar-right">
+          <button class="icon-btn" aria-label="Notifications">
+            <mat-icon>notifications</mat-icon>
+            <span class="notif-dot"></span>
+          </button>
+          @if (studentService.currentStudent(); as student) {
+            <button class="user-btn" (click)="onSidebarLinkClick('user-menu')">
+              <span class="user-avatar"><mat-icon>account_circle</mat-icon></span>
+              <span class="user-name">{{ student.first_name }} {{ student.last_name }}</span>
+              <mat-icon class="chevron">expand_more</mat-icon>
+            </button>
+          }
+        </div>
+      </header>
+
+      <div class="archive-content">
+
+        <!-- Bannière -->
+        <div class="banner-card">
+          <div class="banner-icon">
+            <mat-icon class="doc-icon">description</mat-icon>
+            <span class="clock-badge"><mat-icon>schedule</mat-icon></span>
+          </div>
+          <div class="banner-text">
+            <h1>Historique des Factures</h1>
+            <p>Consultez et téléchargez les reçus de vos paiements de certification.</p>
+            <div class="banner-underline"></div>
+          </div>
+        </div>
+
+        <!-- Liste des factures -->
+        <div class="invoices-list">
+          @for (payment of studentService.paymentHistory(); track payment.id) {
+            <div class="invoice-row">
+              <div class="invoice-icon">
+                <mat-icon class="doc-icon">description</mat-icon>
+                <span class="clock-badge small"><mat-icon>schedule</mat-icon></span>
+              </div>
+
+              <div class="invoice-info">
+                <h3>{{ payment.certificate_title }}</h3>
+                <p class="invoice-meta">
+                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                  {{ payment.method }} · {{ payment.date }}
+                </p>
+              </div>
+
+              <div class="invoice-amount">{{ payment.amount }} FCFA</div>
+
+              <button class="btn-download" (click)="downloadReceipt(payment.reference)">
+                <mat-icon>download</mat-icon> Reçu
+              </button>
+
+              <button class="btn-chevron" (click)="onViewDetails(payment.id)" aria-label="Voir le détail">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          } @empty {
+            <div class="empty-state">
+              <p>Aucune facture pour le moment.</p>
+            </div>
+          }
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>

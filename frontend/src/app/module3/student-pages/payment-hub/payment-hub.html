@@ -1,0 +1,46 @@
+<div class="payment-hub">
+
+  <div class="hub-logo">
+    <img src="assets/logos/logo-blanc.jpg" alt="CertiUni" />
+    <p>CertiUni</p>
+  </div>
+
+  <div class="fee-badge">
+    <mat-icon class="fee-icon">receipt_long</mat-icon>
+    <span>Frais de délivrance numérique : <strong>{{ amount }} FCFA</strong></span>
+  </div>
+
+  <div class="method-list">
+    <button class="method-row momo" (click)="selectMethod('momo')">
+      <span class="method-icon-box momo-icon">
+        <mat-icon>smartphone</mat-icon>
+      </span>
+      <span class="method-label">MTN Mobile Money</span>
+      <mat-icon class="method-arrow">chevron_right</mat-icon>
+    </button>
+
+    <button class="method-row orange" (click)="selectMethod('orange')">
+      <span class="method-icon-box orange-icon">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </span>
+      <span class="method-label">Orange Money</span>
+      <mat-icon class="method-arrow">chevron_right</mat-icon>
+    </button>
+
+    <button class="method-row card" (click)="selectMethod('card')">
+      <span class="method-icon-box card-icon">
+        <mat-icon>credit_card</mat-icon>
+      </span>
+      <span class="method-label">Carte Bancaire (Visa/Mastercard)</span>
+      <mat-icon class="method-arrow">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="secure-badge">
+    <mat-icon>lock</mat-icon>
+    <span>Paiement sécurisé et chiffré de bout en bout</span>
+  </div>
+
+  <button class="cancel-btn" (click)="close()">Annuler</button>
+
+</div>
