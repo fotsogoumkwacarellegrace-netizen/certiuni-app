@@ -1,0 +1,174 @@
+<!-- src/app/module1/ocr-scan/ocr-scan.html -->
+<div class="ocr-page" [class.dark-mode]="isDarkMode()" appDarkMode>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-brand">
+        <div class="logo-container">
+          <img src="images/logo.png" alt="CertiUni Logo" class="certiuni-logo" />
+        </div>
+        <div class="brand-text">
+          CertiUni
+        </div>
+      </div>
+
+      <button class="mobile-menu-btn" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+
+      <nav class="top-nav">
+        <a (click)="goToRecruteurAccueil()">
+          <span class="material-symbols-outlined">home</span>
+          <span class="nav-label">accueil</span>
+        </a>
+        <a routerLink="/public/camera-scan" routerLinkActive="active">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+          <span class="nav-label">Scanner</span>
+        </a>
+        <a routerLink="/public/ocr-scan" routerLinkActive="active">
+          <span class="material-symbols-outlined">document_scanner</span>
+          <span class="nav-label">Analyse</span>
+        </a>
+        <a routerLink="/public/bulk-upload" routerLinkActive="active">
+          <span class="material-symbols-outlined">checklist_rtl</span>
+          <span class="nav-label">Lot</span>
+        </a>
+        <a href="#" (click)="goToHistory($event)">
+          <span class="material-symbols-outlined">history</span>
+          <span class="nav-label">Historique</span>
+        </a>
+        <a href="#" (click)="goToSettings($event)">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="nav-label">Paramètres</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" (click)="toggleDarkMode()">
+          <span class="material-symbols-outlined">
+            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
+        <!-- Avatar / Déconnexion -->
+        <div class="avatar" (click)="logout()" title="Déconnexion">
+          <span class="avatar-initials">AD</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECURE SESSION BANNER -->
+    <div class="session-banner">
+      <span class="lock-circle">
+        <span class="material-symbols-outlined lock-icon">lock</span>
+      </span>
+      <div class="banner-text-group">
+        <span class="banner-title">Session de vérification institutionnelle sécurisée</span>
+        <span class="banner-subtitle">Vos vérifications sont protégées et confidentielles.</span>
+      </div>
+      <span class="material-symbols-outlined shield-watermark">shield</span>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <main class="content-area">
+
+      <!-- OCR CARD -->
+      <div class="ocr-card">
+
+        <!-- Bande jaune -->
+        <div class="gold-stripe"></div>
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <h1>Scanner IA OCR</h1>
+          <div class="card-header-icon">
+            <span class="material-symbols-outlined">image</span>
+          </div>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" [class.dragging]="isDragging()" [class.scanning]="isScanning()"
+          (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+          <div class="scan-beam" [class.active]="isScanning()"></div>
+
+          @if (!isScanning()) {
+          <div class="upload-content">
+            <span class="material-symbols-outlined upload-icon">upload_file</span>
+            <p class="upload-title">Glissez la photo ou le scan du diplôme ici</p>
+            <p class="upload-hint">Formats acceptés : PNG, JPEG, PDF jusqu'à 10 Mo</p>
+          </div>
+          } @else {
+          <div class="scanning-content">
+            <div class="spinner"></div>
+            <p class="scanning-title">Analyse en cours par l'IA...</p>
+            <p class="scanning-hint">Veuillez patienter quelques instants</p>
+          </div>
+          }
+        </div>
+
+        <!-- Browse Button -->
+        <div class="card-actions">
+          <input #fileInput type="file" accept=".png,.jpg,.jpeg,.pdf" (change)="onFileSelected($event)"
+            style="display:none;" />
+          <button class="browse-btn" (click)="fileInput.click()" [disabled]="isScanning()">
+            <span class="material-symbols-outlined">folder_open</span>
+            PARCOURIR LE FICHIER
+          </button>
+
+          <!-- Separator -->
+          <div class="separator">
+            <span class="separator-line"></span>
+            <span class="separator-text">ou</span>
+            <span class="separator-line"></span>
+          </div>
+
+          <!-- Cancel Link -->
+          <a class="cancel-link" (click)="onCancel()">Annuler et Revenir</a>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- MOBILE MENU - version simplifiée (uniquement la navigation) -->
+  <div class="mobile-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
+  <aside class="mobile-menu" [class.open]="isMenuOpen()">
+    <div class="mobile-menu-header">
+      <button class="mobile-close" (click)="closeMenu()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <nav class="mobile-nav">
+      <a class="mobile-nav-link" (click)="goToRecruteurAccueil(); closeMenu()">
+        <span class="material-symbols-outlined">home</span>
+        Accueil
+      </a>
+      <a class="mobile-nav-link" routerLink="/public/camera-scan" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        Scanner
+      </a>
+      <a class="mobile-nav-link" routerLink="/public/ocr-scan" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">document_scanner</span>
+        Analyse
+      </a>
+      <a class="mobile-nav-link" routerLink="/public/bulk-table" routerLinkActive="active" (click)="closeMenu()">
+        <span class="material-symbols-outlined">checklist_rtl</span>
+        Lot
+      </a>
+      <a class="mobile-nav-link" (click)="goToHistory($event); closeMenu()">
+        <span class="material-symbols-outlined">history</span>
+        Historique
+      </a>
+      <a class="mobile-nav-link" (click)="goToSettings($event); closeMenu()">
+        <span class="material-symbols-outlined">settings</span>
+        Paramètres
+      </a>
+    </nav>
+  </aside>
+
+</div>

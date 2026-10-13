@@ -1,0 +1,83 @@
+<div class="drawer-overlay">
+
+  <!-- Faux arrière-plan du tableau de bord (statique, non interactif) -->
+  <div class="fake-backdrop">
+    <div class="fake-header">
+      <div class="fake-logo"></div>
+      <span class="fake-title">Bulk Operations Dashboard</span>
+    </div>
+    <div class="fake-stats">
+      <div class="fake-stat-card"></div>
+      <div class="fake-stat-card"></div>
+    </div>
+    <div class="fake-table">
+      <div class="fake-row"></div>
+      <div class="fake-row"></div>
+      <div class="fake-row"></div>
+    </div>
+  </div>
+
+  <!-- TIROIR LATÉRAL -->
+  <aside class="drawer-panel">
+    @if (student() && certificate()) {
+      <header class="drawer-header">
+        <div class="drawer-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Notes : {{ student()!.first_name }} {{ student()!.last_name }}
+        </div>
+        <button class="close-btn" (click)="onClose()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </header>
+
+      <div class="drawer-summary">
+        <div class="summary-block">
+          <span class="summary-label">PROGRAMME</span>
+          <span class="summary-value">{{ certificate()!.course_title }}</span>
+        </div>
+        <div class="summary-block">
+          <span class="summary-label">MOYENNE G.</span>
+          <span class="summary-value highlight">{{ moyenneGenerale() }}/20</span>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        @for (grade of certificate()!.notes; track grade.matiere) {
+          <div class="grade-card">
+            <div class="grade-info">
+              <span class="grade-name">{{ grade.matiere }}</span>
+              <span class="grade-semester">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                {{ grade.semestre }}
+              </span>
+            </div>
+            <div class="grade-value">
+              <span class="grade-note">{{ grade.note }}/20</span>
+              <span class="grade-credits">{{ grade.credits }} Crédits</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <footer class="drawer-footer">
+        <button class="export-btn" (click)="onExport()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Exporter le relevé (PDF)
+        </button>
+      </footer>
+    } @else {
+      <div class="drawer-empty">Candidat introuvable</div>
+    }
+  </aside>
+</div>

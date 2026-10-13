@@ -1,0 +1,103 @@
+<div class="cdas-page">
+
+  <!-- HEADER -->
+  <header class="header">
+      <div class="header-brand">
+        <div class="logo-container">
+          <img src="images/logo1.png" alt="CertiUni Logo" class="certiuni-logo" />
+        </div>
+
+        <div class="brand-text">
+          CertiUni
+        </div>
+      </div>
+    <button class="close-btn" (click)="onClose()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <!-- BODY -->
+  <main class="body">
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Vérification en cours...</p>
+      </div>
+    } @else if (certificate() && student()) {
+
+      <!-- CARTE SUCCÈS -->
+      <div class="success-card">
+        <div class="success-circle">
+          <span class="material-symbols-outlined">check</span>
+        </div>
+        <h1 class="success-title">Document authentique</h1>
+        <p class="success-text">
+          Diplôme authentifié. Vous pouvez maintenant télécharger le PDF certifié avec cachet
+          <strong>VÉRIFIÉ · CertiUni</strong>.
+        </p>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- CARTE ATTESTATION -->
+      <!-- ============================================ -->
+      <div class="attestation-card">
+
+        <!-- Bandeau haut -->
+        <div class="attestation-header">
+          <div class="status-label">
+            
+            Attestation Numérique d'État
+          </div>
+          <span class="verified-pill">
+            <span class="material-symbols-outlined">check</span>
+            Diplôme Vérifié
+          </span>
+        </div>
+
+        <!-- Titulaire du diplôme -->
+        <div class="holder-section">
+          <span class="holder-icon">
+            <span class="material-symbols-outlined">school</span>
+          </span>
+          <div class="holder-text">
+            <span class="holder-label">Titulaire du diplôme</span>
+            <h2 class="holder-name">{{ fullName() }}</h2>
+            <span class="holder-diploma">
+              <span class="dot-sep"></span>
+              {{ diplomaLine() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Grille d'informations -->
+        <div class="info-grid">
+          <div class="info-tile">
+            <span class="info-tile-label">Année académique</span>
+            <span class="info-tile-value">{{ academicYear() }}</span>
+          </div>
+          <div class="info-tile">
+            <span class="info-tile-label">Établissement accrédité</span>
+            <span class="info-tile-value">{{ accreditedInstitution() }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <button class="btn-download" (click)="onDownload()">
+        <span class="material-symbols-outlined">download</span>
+        Télécharger le diplôme certifié
+      </button>
+
+      <button class="btn-new-verif" (click)="onNewVerification()">
+        Nouvelle vérification
+      </button>
+
+      <a class="history-link" (click)="onViewHistory()">Voir l'historique</a>
+
+    }
+
+  </main>
+
+</div>

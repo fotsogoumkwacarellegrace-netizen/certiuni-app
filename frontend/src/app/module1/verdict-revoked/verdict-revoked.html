@@ -1,0 +1,107 @@
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-container">
+        <img src="images/logo1.png" alt="CertiUni Logo" class="certiuni-logo" />
+      </div>
+      <div class="brand-text">CertiUni</div>
+    </div>
+    <button class="close-btn" (click)="onBackToHome()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <!-- BODY -->
+  <main class="body">
+
+    @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Vérification en cours...</p>
+    </div>
+    } @else {
+
+    <!-- CARTE STATUT -->
+    <div class="status-card">
+      <div class="status-circle">
+        <span class="material-symbols-outlined">block</span>
+      </div>
+      <h1 class="status-title">Document révoqué</h1>
+      <p class="status-text">
+        Ce diplôme n'est plus valide. Il a été <strong>officiellement annulé</strong>
+        par l'établissement émetteur et ne peut plus être utilisé comme preuve d'authenticité.
+      </p>
+    </div>
+
+    <!-- CARTE ATTESTATION -->
+    <div class="attestation-card">
+
+      <div class="attestation-header">
+        <div class="status-label">
+          Attestation Numérique d'État
+        </div>
+        <span class="revoked-pill">
+          <span class="material-symbols-outlined">block</span>
+          Diplôme Révoqué
+        </span>
+      </div>
+
+      <!-- section titulaire, remplace le bloc holder-section existant -->
+      <div class="holder-section">
+        <span class="holder-icon">
+          <span class="material-symbols-outlined">account_balance</span>
+        </span>
+        <div class="holder-text">
+          <span class="holder-label">Titulaire du diplôme</span>
+          <h2 class="holder-name">{{ studentName() }}</h2>
+          <span class="holder-diploma">
+            <span class="dot-sep"></span>
+            {{ diplomaLine() }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <span class="info-tile-label">Référence document</span>
+          <span class="info-tile-value">{{ documentRef() }}</span>
+        </div>
+        <div class="info-tile">
+          <span class="info-tile-label">Statut</span>
+          <span class="info-tile-value">Révoqué</span>
+        </div>
+      </div>
+
+      <div class="reason-box">
+        <span class="reason-label">
+          <span class="material-symbols-outlined">info</span>
+          Motif de révocation
+        </span>
+        <p>{{ revocationReason() }}</p>
+      </div>
+
+    </div>
+
+    <!-- Sécurité -->
+    <div class="security-notice">
+      <span class="material-symbols-outlined">shield</span>
+      <span>Les données nominatives de ce document sont verrouillées par mesure de sécurité.</span>
+    </div>
+
+    <!-- ACTIONS -->
+    <button class="btn-contact" (click)="onContactSecretariat()">
+      <span class="material-symbols-outlined">mail</span>
+      Contacter le Secrétariat Émetteur
+    </button>
+
+    <button class="btn-new-verif" (click)="onBackToHome()">
+      Nouvelle vérification
+    </button>
+
+    }
+
+  </main>
+
+</div>

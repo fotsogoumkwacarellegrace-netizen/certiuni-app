@@ -1,0 +1,171 @@
+<div class="checkout-page">
+  <!-- HEADER -->
+  <header class="checkout-header">
+    <div class="header-inner">
+      <button class="back-btn" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <div class="logo-container">
+        <span class="material-symbols-outlined logo-icon">verified</span>
+        <span class="logo-title">CertiUni</span>
+      </div>
+      <div class="header-spacer"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="checkout-body">
+    <div class="checkout-card">
+      <!-- Card Status Bar -->
+      <div class="card-status-bar"></div>
+
+      <!-- Card Header -->
+      <div class="card-header-section">
+        <div class="security-badge">
+          <span class="material-symbols-outlined">lock</span>
+          Paiement sécurisé
+        </div>
+        <span class="amount-badge">{{ amount }} FCFA</span>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body-section">
+        <!-- Icon -->
+        <div class="payment-icon-wrapper">
+          <span class="material-symbols-outlined">payments</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="payment-title">Vérification Manuelle</h1>
+        <p class="payment-subtitle">
+          Sécurisation de la requête manuelle par Mobile Money
+        </p>
+
+        <!-- Amount Display -->
+        <div class="amount-display">
+          <span class="amount-label">Montant fixe de facturation d'audit</span>
+          <span class="amount-value">{{ amount }} FCFA</span>
+        </div>
+
+        <!-- Operator Selection -->
+        <div class="operator-section">
+          <p class="operator-label">Choisissez votre opérateur</p>
+          <div class="operator-grid">
+            <button 
+              class="operator-btn" 
+              [class.active]="selectedOperator() === 'mtn'"
+              (click)="selectOperator('mtn')"
+            >
+              <span class="operator-icon material-symbols-outlined">phone_android</span>
+              <span class="operator-name">MTN MoMo</span>
+              <span class="operator-check" *ngIf="selectedOperator() === 'mtn'">
+                <span class="material-symbols-outlined">check_circle</span>
+              </span>
+            </button>
+            <button 
+              class="operator-btn" 
+              [class.active]="selectedOperator() === 'orange'"
+              (click)="selectOperator('orange')"
+            >
+              <span class="operator-icon material-symbols-outlined">phone_android</span>
+              <span class="operator-name">Orange Money</span>
+              <span class="operator-check" *ngIf="selectedOperator() === 'orange'">
+                <span class="material-symbols-outlined">check_circle</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Phone Input -->
+        <div class="phone-section">
+          <p class="phone-label">Numéro de téléphone</p>
+          <div class="phone-input-wrapper">
+            <span class="phone-prefix">+237</span>
+            <input 
+              type="tel" 
+              class="phone-input" 
+              placeholder="6 XX XX XX XX"
+              [(ngModel)]="phoneNumber"
+              [disabled]="isProcessing() || isSuccess()"
+              maxlength="9"
+            />
+          </div>
+        </div>
+
+        <!-- OTP Section -->
+        @if (showOTP()) {
+          <div class="otp-section">
+            <div class="otp-header">
+              <span class="material-symbols-outlined">sms</span>
+              <span>Code de confirmation</span>
+            </div>
+            <div class="otp-input-wrapper">
+              <input 
+                type="text" 
+                class="otp-input" 
+                placeholder="Code OTP"
+                [(ngModel)]="otpCode"
+                maxlength="6"
+                [disabled]="isProcessing() || isSuccess()"
+              />
+              <button class="resend-btn" (click)="resendOTP()" [disabled]="countdown() > 10">
+                Renvoyer
+                @if (countdown() > 0) {
+                  <span class="countdown-badge">{{ countdown() }}s</span>
+                }
+              </button>
+            </div>
+            <p class="otp-hint">
+              <span class="material-symbols-outlined">info</span>
+              Un code vous a été envoyé par SMS
+            </p>
+          </div>
+        }
+
+        <!-- Action Button -->
+        @if (!isSuccess()) {
+          <button 
+            class="pay-btn" 
+            (click)="onPay()" 
+            [disabled]="isProcessing()"
+          >
+            @if (isProcessing()) {
+              <span class="spinner"></span>
+              Traitement en cours...
+            } @else {
+              <span class="material-symbols-outlined">lock</span>
+              Payer {{ amount }} FCFA
+            }
+          </button>
+        } @else {
+          <div class="success-section">
+            <div class="success-icon">
+              <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <h2 class="success-title">Paiement confirmé !</h2>
+            <p class="success-desc">Votre demande de vérification manuelle a été enregistrée avec succès.</p>
+            <div class="success-ref">
+              <span>Référence :</span>
+              <strong>{{ transactionRef() }}</strong>
+            </div>
+            <button class="success-btn" (click)="goHome()">
+              <span class="material-symbols-outlined">home</span>
+              Retour à l'accueil
+            </button>
+          </div>
+        }
+
+        <!-- Footer Info -->
+        <div class="secure-footer">
+          <span class="material-symbols-outlined">shield</span>
+          <span>Transaction sécurisée par cryptage SSL</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="checkout-footer">
+    <p>© 2026 CertiUni Cameroun — Portail sécurisé de vérification</p>
+  </footer>
+</div>
