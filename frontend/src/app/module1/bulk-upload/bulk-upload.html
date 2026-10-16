@@ -3,58 +3,6 @@
 
   <main class="main-content">
 
-    <!-- TOP HEADER -->
-    <header class="top-header">
-      <div class="header-brand">
-        <div class="logo-container">
-          <img src="images/logo.png" alt="CertiUni Logo" class="certiuni-logo" />
-        </div>
-        <div class="brand-text">CertiUni</div>
-      </div>
-
-      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-
-      <nav class="top-nav">
-        <a routerLink="/public/accueil" routerLinkActive="active">
-          <span class="material-symbols-outlined">home</span>
-          <span class="nav-label">accueil</span>
-        </a>
-        <a routerLink="/public/camera-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">qr_code_scanner</span>
-          <span class="nav-label">Scanner</span>
-        </a>
-        <a routerLink="/public/ocr-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">document_scanner</span>
-          <span class="nav-label">Analyse</span>
-        </a>
-        <a routerLink="/public/bulk-upload" routerLinkActive="active">
-          <span class="material-symbols-outlined">checklist_rtl</span>
-          <span class="nav-label">Lot</span>
-        </a>
-        <a href="#" (click)="goToHistory($event)">
-          <span class="material-symbols-outlined">history</span>
-          <span class="nav-label">Historique</span>
-        </a>
-        <a href="#" (click)="goToSettings($event)">
-          <span class="material-symbols-outlined">settings</span>
-          <span class="nav-label">Paramètres</span>
-        </a>
-      </nav>
-
-      <div class="header-actions">
-        <button class="theme-toggle" (click)="toggleDarkMode()">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
-        <div class="avatar" (click)="logout()" title="Déconnexion">
-          <span class="avatar-initials">AD</span>
-        </div>
-      </div>
-    </header>
-
     <!-- CONTENT WRAPPER -->
     <div class="content-wrapper">
 
@@ -65,9 +13,7 @@
         </div>
       </div>
 
-      <!-- ============================================ -->
       <!-- CARTE PRINCIPALE : UPLOAD -->
-      <!-- ============================================ -->
       <div class="upload-card">
 
         <div class="upload-left">
@@ -111,6 +57,7 @@
         <div class="upload-right">
 
           <div class="drop-zone"
+            [class.paywall]="paywall() !== null"
             [class.dragging]="isDragging()"
             [class.processing]="isProcessing()"
             [class.done]="uploadComplete()"
@@ -133,7 +80,16 @@
               <span class="drop-title">Analyse terminée !</span>
               <span class="drop-hint">{{ processedCandidates().length }} candidats traités</span>
             </div>
+            } @else if (paywall(); as wall) {
 
+            <div class="drop-state">
+              <span class="material-symbols-outlined drop-icon warn">lock</span>
+              <span class="drop-title">Crédits insuffisants</span>
+              <span class="drop-hint">
+                Ce lot comporte <strong>{{ wall.needed }}</strong> vérification(s) facturable(s).
+                Il vous en manque <strong>{{ wall.missing }}</strong>.
+              </span>
+            </div>
             } @else {
 
             <div class="drop-state">
@@ -147,7 +103,24 @@
 
             }
           </div>
-
+          @if (paywall()) {
+          <div class="result-actions">
+            <button class="secondary-btn" (click)="onReset()">
+              <span class="material-symbols-outlined">refresh</span>
+              Changer de fichier
+            </button>
+            <button class="primary-btn" (click)="buyMissing()">
+              <span class="material-symbols-outlined">account_balance_wallet</span>
+              Recharger mes crédits
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+          }
+          
+          <p class="charge-note">
+            <span class="material-symbols-outlined">receipt_long</span>
+            {{ chargedCount() }} vérification(s) débitée(s) · les documents introuvables ne sont pas facturés.
+          </p>
           @if (uploadComplete()) {
 
           <!-- RÉSUMÉ APRÈS ANALYSE -->
@@ -207,48 +180,5 @@
     </div>
 
   </main>
-
-  <!-- ============================================ -->
-  <!-- OVERLAY MOBILE (menu) -->
-  <!-- ============================================ -->
-  <div class="mobile-overlay" [class.active]="isMobileMenuOpen()" (click)="toggleMobileMenu()"></div>
-
-  <!-- ============================================ -->
-  <!-- MENU MOBILE - version simplifiée -->
-  <!-- ============================================ -->
-  <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
-    <div class="mobile-menu-header">
-      <button class="mobile-close" (click)="toggleMobileMenu()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <nav class="mobile-nav">
-      <a class="mobile-nav-link" routerLink="/public/accueil" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="material-symbols-outlined">home</span>
-        Accueil
-      </a>
-      <a class="mobile-nav-link" routerLink="/public/camera-scan" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        Scanner
-      </a>
-      <a class="mobile-nav-link" routerLink="/public/ocr-scan" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="material-symbols-outlined">document_scanner</span>
-        Analyse
-      </a>
-      <a class="mobile-nav-link" routerLink="/public/bulk-upload" routerLinkActive="active" (click)="closeMobileMenu()">
-        <span class="material-symbols-outlined">checklist_rtl</span>
-        Lot
-      </a>
-      <a class="mobile-nav-link" (click)="goToHistory($event); closeMobileMenu()">
-        <span class="material-symbols-outlined">history</span>
-        Historique
-      </a>
-      <a class="mobile-nav-link" (click)="goToSettings($event); closeMobileMenu()">
-        <span class="material-symbols-outlined">settings</span>
-        Paramètres
-      </a>
-    </nav>
-  </div>
 
 </div>

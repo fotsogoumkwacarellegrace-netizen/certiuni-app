@@ -1,127 +1,7 @@
 <!-- src/app/module1/ecran-accueil/ecran-accueil.html -->
 <div class="accueil-container" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
 
-  <!-- ============================================ -->
-  <!-- HEADER - PLEINE LARGEUR -->
-  <!-- ============================================ -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo-container">
-        <a class="logo-link" (click)="goToLanding()">
-          <img src="images/logo.png" alt="CertiUni" class="logo-img" />
-        </a>
-        <span class="logo-text">CertiUni</span>
-      </div>
-
-      <!-- MENU BURGER -->
-      <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()">
-        <span class="burger-line"></span>
-        <span class="burger-line"></span>
-        <span class="burger-line"></span>
-      </button>
-
-      <!-- NAVIGATION DESKTOP — mêmes 6 liens que ocr-scan -->
-      <nav class="nav-links desktop-nav">
-        <a routerLink="/public/accueil" routerLinkActive="active">
-          <span class="material-symbols-outlined">home</span>
-          Accueil
-        </a>
-        <a routerLink="/public/camera-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">qr_code_scanner</span>
-          Scanner
-        </a>
-        <a routerLink="/public/ocr-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">document_scanner</span>
-          Analyse
-        </a>
-        <a routerLink="/public/bulk-upload" routerLinkActive="active">
-          <span class="material-symbols-outlined">checklist_rtl</span>
-          Lot
-        </a>
-        <a href="#" (click)="goToHistory($event)">
-          <span class="material-symbols-outlined">history</span>
-          Historique
-        </a>
-        <a href="#" (click)="goToSettings($event)">
-          <span class="material-symbols-outlined">settings</span>
-          Paramètres
-        </a>
-      </nav>
-
-      <div class="header-actions">
-        <!-- Thème -->
-        <button class="theme-toggle" (click)="toggleDarkMode()" title="Changer le thème">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
-
-        <!-- Déconnexion -->
-        <div class="avatar" (click)="logout()" title="Déconnexion">
-          <span class="avatar-initials">AD</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- OVERLAY POUR LE MENU MOBILE -->
-  <div class="menu-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
-
-  <!-- MENU MOBILE — mêmes 6 liens + footer -->
-  <nav class="mobile-menu" [class.open]="isMenuOpen()">
-    <div class="mobile-menu-header">
-      <span class="mobile-menu-title">Navigation</span>
-      <button class="mobile-menu-close" (click)="closeMenu()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <div class="mobile-menu-body">
-      <a routerLink="/public/accueil" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">home</span>
-        Accueil
-      </a>
-      <a routerLink="/public/camera-scan" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        Scanner
-      </a>
-      <a routerLink="/public/ocr-scan" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">document_scanner</span>
-        Analyse
-      </a>
-      <a routerLink="/public/bulk-upload" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">checklist_rtl</span>
-        Lot
-      </a>
-      <a (click)="goToHistory($event); closeMenu()">
-        <span class="material-symbols-outlined">history</span>
-        Historique
-      </a>
-      <a (click)="goToSettings($event); closeMenu()">
-        <span class="material-symbols-outlined">settings</span>
-        Paramètres
-      </a>
-    </div>
-
-    <div class="mobile-menu-footer">
-      <button class="mobile-btn-institutional" (click)="goToInstitutions(); closeMenu()">
-        <span class="material-symbols-outlined">business</span>
-        Accès Institutionnel
-      </button>
-      <div class="mobile-lang-toggle">
-        <button [class.active]="lang() === 'FR'" (click)="setLang('FR')">FR</button>
-        <button [class.active]="lang() === 'EN'" (click)="setLang('EN')">EN</button>
-      </div>
-      <div class="mobile-social">
-        <span class="material-symbols-outlined">shield</span>
-        <span>Portail sécurisé</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ============================================ -->
-  <!-- HERO - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
 
@@ -148,9 +28,7 @@
     </div>
   </section>
 
-  <!-- ============================================ -->
-  <!-- CARDS - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- CARTES -->
   <section class="cards-section">
     <div class="cards-grid">
       <div class="card" (click)="openCameraScan()">
@@ -194,9 +72,7 @@
     </div>
   </section>
 
-  <!-- ============================================ -->
-  <!-- FOOTER - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
       <img src="images/logo.png" alt="CertiUni" class="footer-logo" />

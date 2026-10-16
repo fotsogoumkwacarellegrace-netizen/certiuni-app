@@ -1,1 +1,158 @@
 /* You can add global styles to this file, and also import other style files */
+/* frontend/src/styles.css */
+
+/* ============================================ */
+/* ===== ANIMATIONS AU SCROLL (global) ===== */
+/* ============================================ */
+
+.scroll-animate {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition-property: opacity, transform;
+  transition-duration: var(--anim-duration, 800ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--anim-delay, 0ms);
+}
+
+/* --- fade-up (défaut) --- */
+.scroll-animate--fade-up {
+  transform: translate3d(0, 40px, 0);
+}
+
+/* --- fade-down --- */
+.scroll-animate--fade-down {
+  transform: translate3d(0, -40px, 0);
+}
+
+/* --- fade-left --- */
+.scroll-animate--fade-left {
+  transform: translate3d(50px, 0, 0);
+}
+
+/* --- fade-right --- */
+.scroll-animate--fade-right {
+  transform: translate3d(-50px, 0, 0);
+}
+
+/* --- zoom-in --- */
+.scroll-animate--zoom-in {
+  transform: scale(0.88);
+}
+
+/* --- zoom-out --- */
+.scroll-animate--zoom-out {
+  transform: scale(1.1);
+}
+
+/* --- flip-up --- */
+.scroll-animate--flip-up {
+  transform: perspective(1000px) rotateX(-15deg) translate3d(0, 30px, 0);
+  transform-origin: bottom center;
+}
+
+/* --- fade simple --- */
+.scroll-animate--fade {
+  transform: none;
+}
+
+/* --- État final visible --- */
+.scroll-animate.scroll-animate--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* ============================================ */
+/* ===== ACCESSIBILITÉ ===== */
+/* ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-animate {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ===== Défilement fluide ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== Scroll Reveal (utilisé par la directive appReveal) ===== */
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal--up    { transform: translate3d(0, 36px, 0); }
+.reveal--down  { transform: translate3d(0, -36px, 0); }
+.reveal--right { transform: translate3d(-48px, 0, 0); }  /* glisse vers la droite */
+.reveal--left  { transform: translate3d(48px, 0, 0); }   /* glisse vers la gauche */
+.reveal--zoom  { transform: scale(0.92); }
+.reveal--fade  { transform: none; }
+
+.reveal.reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== Transition de page douce (View Transitions) ===== */
+::view-transition-old(root) {
+  animation: vt-out 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes vt-out {
+  to { opacity: 0; transform: scale(0.99); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: scale(1.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
+
+/* ===== Fondations responsive globales ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Le body avait la marge par défaut de 8px : elle créait un liseré blanc */
+html, body {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f4f6f8;
+}
+
+body.dark-mode { background: #0b0d12; }
+
+img, video, canvas { max-width: 100%; height: auto; }
+
+/* Évite les débordements de textes longs (UUID, hash SHA-256, e-mails) */
+p, h1, h2, h3, h4, td, th { overflow-wrap: anywhere; }
+
+/* Zones tactiles confortables sur écrans tactiles */
+@media (pointer: coarse) {
+  button, a, [role='button'] { touch-action: manipulation; }
+}

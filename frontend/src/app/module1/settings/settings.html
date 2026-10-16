@@ -1,36 +1,8 @@
 <!-- frontend/src/app/module1/settings/settings.html -->
 <div class="settings-page" [class.dark-mode]="isDarkMode()">
 
-  <!-- HEADER -->
-  <header class="settings-header">
-    <div class="header-inner">
-      <div class="brand" (click)="goBack()">
-        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
-        <span class="brand-text">CertiUni</span>
-      </div>
-
-      <div class="header-actions">
-        <button class="btn-back" (click)="goBack()">
-          <span class="material-symbols-outlined">arrow_back</span>
-          <span>Retour</span>
-        </button>
-        <button class="theme-toggle" (click)="toggleDarkMode()" aria-label="Changer le thème">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
-
   <!-- MAIN -->
   <main class="settings-main">
-
-    <div class="settings-title">
-      <span class="material-symbols-outlined">settings</span>
-      <h1>Paramètres</h1>
-    </div>
-    <p class="settings-subtitle">Gérez la configuration de votre plateforme CertiUni</p>
 
     <div class="settings-grid">
 
@@ -292,7 +264,7 @@
           <p>Gérez votre abonnement et vos méthodes de paiement</p>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+        <div class="grid-2" style="margin-bottom:24px;">
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px;">
             <div style="font-size:0.72rem; color:var(--text-light); text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Plan actuel</div>
             <div style="font-size:1.2rem; font-weight:700; color:var(--text); margin:4px 0;">{{ billingPlan }}</div>
@@ -582,7 +554,7 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="grid-2">
             <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
               <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Version</div>
               <div style="font-weight:600; color:var(--text);">v3.0.0</div>

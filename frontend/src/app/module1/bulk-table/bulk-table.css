@@ -1992,3 +1992,22 @@
     font-size: 0.75rem;
   }
 }
+
+/* ===== Responsive ===== */
+.bulk-page,
+.main-content {
+  min-height: calc(100dvh - var(--top-h, 68px));
+}
+
+/* Le tableau défile horizontalement au lieu d'écraser les colonnes */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.candidates-table { min-width: 680px; }
+
+@media (max-width: 640px) {
+  .candidates-table { min-width: 600px; }
+  .detail-panel.open { max-width: 100%; }
+  .panel-body { padding-bottom: calc(26px + env(safe-area-inset-bottom)); }
+}

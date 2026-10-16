@@ -1,0 +1,238 @@
+<!-- src/app/module1/shell/shell.html -->
+<div class="shell" [class.collapsed]="collapsed()" appDarkMode>
+
+  <div class="scrim" [class.show]="mobileOpen()" (click)="closeMobile()"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sb" [class.open]="mobileOpen()" [attr.aria-label]="t('portalVerifier')">
+
+    <div class="sb-bg" aria-hidden="true">
+      <span class="sb-glow"></span>
+    </div>
+
+    <button type="button" class="sb-toggle" (click)="toggleCollapse()"
+      [attr.aria-label]="collapsed() ? t('expand') : t('collapse')">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+
+    <div class="sb-head">
+      <a class="sb-brand" routerLink="/public/landing" aria-label="CertiUni">
+        <img src="images/logo.png" alt="" class="sb-logo" />
+        <span class="sb-brand-text">
+          <strong>CertiUni</strong>
+          <small>{{ t('brandTagline') }}</small>
+        </span>
+      </a>
+      <button type="button" class="sb-close" (click)="closeMobile()" [attr.aria-label]="t('closeMenu')">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <nav class="sb-nav">
+      <p class="sb-label"><span>{{ t('navVerification') }}</span></p>
+
+      @for (item of mainNav; track item.key) {
+      <a class="sb-link" [class.active]="activeKey() === item.key" [routerLink]="item.route"
+        [attr.data-label]="t(item.labelKey)" [style.--i]="$index" (click)="closeMobile()">
+        <span class="sb-ico"><span class="material-symbols-outlined">{{ item.icon }}</span></span>
+        <span class="sb-txt">{{ t(item.labelKey) }}</span>
+      </a>
+      }
+
+      <p class="sb-label"><span>{{ t('navSpace') }}</span></p>
+
+      @for (item of accountNav; track item.key) {
+      @if (item.route) {
+      <a class="sb-link" [class.active]="activeKey() === item.key" [routerLink]="item.route"
+        [attr.data-label]="t(item.labelKey)" [style.--i]="$index + 4" (click)="closeMobile()">
+        <span class="sb-ico"><span class="material-symbols-outlined">{{ item.icon }}</span></span>
+        <span class="sb-txt">{{ t(item.labelKey) }}</span>
+      </a>
+      } @else {
+      <button type="button" class="sb-link" [attr.data-label]="t(item.labelKey)" [style.--i]="$index + 4"
+        (click)="comingSoon(item.labelKey)">
+        <span class="sb-ico"><span class="material-symbols-outlined">{{ item.icon }}</span></span>
+        <span class="sb-txt">{{ t(item.labelKey) }}</span>
+        @if (item.badge) { <span class="sb-badge">{{ t('soon') }}</span> }
+      </button>
+      }
+      }
+    </nav>
+
+    <div class="sb-foot">
+
+      <!-- Solde de vérifications (remplace « Session sécurisée ») -->
+      <a class="sb-wallet" routerLink="/public/credits" [class.is-empty]="!billing.hasAllowance()"
+        [attr.title]="t('walletTitle')" [attr.aria-label]="t('walletTitle')" (click)="closeMobile()">
+        <div class="sbw-top">
+          <span class="sbw-ico"><span class="material-symbols-outlined">account_balance_wallet</span></span>
+          <div class="sbw-main">
+            <small>{{ t('walletAvailable') }}</small>
+            <strong>{{ billing.available() }}</strong>
+          </div>
+          <span class="material-symbols-outlined sbw-go">arrow_forward</span>
+        </div>
+
+        <div class="sbw-bar" aria-hidden="true">
+          <span [style.width.%]="freePercent()"></span>
+        </div>
+
+        <div class="sbw-split">
+          <span><b>{{ billing.freeRemaining() }}</b> {{ t('walletFree') }}</span>
+          <span><b>{{ billing.credits() }}</b> {{ t('walletCredits') }}</span>
+        </div>
+      </a>
+
+      <div class="sb-user">
+        <span class="sb-avatar">{{ initials() }}</span>
+        <div class="sb-user-info">
+          <strong>{{ displayName() }}</strong>
+          <small>{{ user() ? t('recruiter') : t('publicMode') }}</small>
+        </div>
+        <button type="button" class="sb-logout" (click)="logout()"
+          [attr.title]="user() ? t('logout') : t('login')"
+          [attr.aria-label]="user() ? t('logout') : t('login')">
+          <span class="material-symbols-outlined">{{ user() ? 'logout' : 'login' }}</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= CONTENU ================= -->
+  <div class="main">
+
+    <header class="topbar">
+      <button type="button" class="tb-burger" (click)="openMobile()" [attr.aria-label]="t('openMenu')">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+
+      <nav class="crumbs" [attr.aria-label]="t('breadcrumb')">
+        <span class="material-symbols-outlined crumbs-home">home</span>
+        <span class="crumbs-section">{{ page().section }}</span>
+        <span class="material-symbols-outlined crumbs-sep">chevron_right</span>
+        <strong>{{ page().title }}</strong>
+      </nav>
+
+      <span class="spacer"></span>
+
+      <!-- Pastille de solde : visible uniquement quand la sidebar est un tiroir (mobile/tablette) -->
+      <a class="tb-wallet" routerLink="/public/credits" [attr.title]="t('walletTitle')"
+        [attr.aria-label]="t('walletTitle')" [class.is-empty]="!billing.hasAllowance()">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <b>{{ billing.available() }}</b>
+      </a>
+
+      <!-- Langue -->
+      <div class="dd" (click)="$event.stopPropagation()">
+        <button type="button" class="tb-lang" (click)="toggleMenu('lang', $event)"
+          [attr.aria-expanded]="openMenu() === 'lang'" aria-haspopup="listbox" [attr.aria-label]="t('language')">
+          <app-flag-icon [code]="lang()" />
+          <b>{{ lang() }}</b>
+          <span class="material-symbols-outlined chev" [class.up]="openMenu() === 'lang'">expand_more</span>
+        </button>
+
+        @if (openMenu() === 'lang') {
+        <div class="menu menu--sm" role="listbox">
+          <button type="button" class="menu-item" [class.sel]="lang() === 'FR'" (click)="setLang('FR')">
+            <app-flag-icon code="FR" /> Français
+            @if (lang() === 'FR') { <span class="material-symbols-outlined tick">check</span> }
+          </button>
+          <button type="button" class="menu-item" [class.sel]="lang() === 'EN'" (click)="setLang('EN')">
+            <app-flag-icon code="EN" /> English
+            @if (lang() === 'EN') { <span class="material-symbols-outlined tick">check</span> }
+          </button>
+        </div>
+        }
+      </div>
+
+      <!-- Notifications -->
+      <div class="dd" (click)="$event.stopPropagation()">
+        <button type="button" class="tb-btn" (click)="toggleMenu('notif', $event)"
+          [attr.aria-expanded]="openMenu() === 'notif'" [attr.aria-label]="t('notifications')">
+          <span class="material-symbols-outlined">notifications</span>
+          @if (unreadCount() > 0) {
+          <span class="tb-count">{{ unreadCount() }}</span>
+          }
+        </button>
+
+        @if (openMenu() === 'notif') {
+        <div class="menu menu--lg">
+          <div class="menu-head">
+            <strong>{{ t('notifications') }}</strong>
+            @if (unreadCount() > 0) {
+            <button type="button" class="menu-link" (click)="markAllRead()">{{ t('markAll') }}</button>
+            }
+          </div>
+
+          <div class="notif-list">
+            @for (n of notifs(); track n.id) {
+            <button type="button" class="notif" [class.unread]="isUnread(n.id)" (click)="markRead(n.id)">
+              <span class="notif-ico notif-ico--{{ n.tone }}">
+                <span class="material-symbols-outlined">{{ n.icon }}</span>
+              </span>
+              <span class="notif-body">
+                <span class="notif-text">{{ n.text[lang()] }}</span>
+                <small>{{ n.time[lang()] }}</small>
+              </span>
+              @if (isUnread(n.id)) { <i class="notif-dot"></i> }
+            </button>
+            } @empty {
+            <p class="menu-empty">{{ t('noNotif') }}</p>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Thème -->
+      <button type="button" class="tb-btn" (click)="toggleDarkMode()" [attr.aria-label]="t('theme')">
+        <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+
+      <span class="tb-sep" aria-hidden="true"></span>
+
+      <!-- Menu utilisateur -->
+      <div class="dd" (click)="$event.stopPropagation()">
+        <button type="button" class="tb-user" (click)="toggleMenu('user', $event)"
+          [attr.aria-expanded]="openMenu() === 'user'" aria-haspopup="menu">
+          <span class="tb-avatar">{{ initials() }}</span>
+          <span class="tb-user-txt">
+            <strong>{{ displayName() }}</strong>
+            <small>{{ user() ? t('recruiter') : t('publicMode') }}</small>
+          </span>
+          <span class="material-symbols-outlined chev" [class.up]="openMenu() === 'user'">expand_more</span>
+        </button>
+
+                @if (openMenu() === 'user') {
+        <div class="menu menu--md" role="menu">
+          <div class="menu-profile">
+            <span class="tb-avatar tb-avatar--lg">{{ initials() }}</span>
+            <div>
+              <strong>{{ displayName() }}</strong>
+              <small>{{ userEmail() || t('publicMode') }}</small>
+            </div>
+          </div>
+
+          <div class="menu-sep"></div>
+
+          <button type="button" class="menu-item menu-item--danger" role="menuitem" (click)="logout()">
+            <span class="material-symbols-outlined">{{ user() ? 'logout' : 'login' }}</span>
+            {{ user() ? t('logout') : t('login') }}
+          </button>
+        </div>
+        }
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+
+  @if (toast()) {
+  <div class="toast" role="status">
+    <span class="material-symbols-outlined">info</span>
+    {{ toast() }}
+  </div>
+  }
+</div>

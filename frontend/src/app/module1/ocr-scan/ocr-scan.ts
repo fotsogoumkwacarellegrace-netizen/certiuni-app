@@ -6,7 +6,7 @@ import { MockDataService } from '../../core/services/mock-data.service';
 import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { Subscription } from 'rxjs';
-
+import { VerificationGateService } from '../../services/verification-gate.service';
 @Component({
   selector: 'app-ocr-scan',
   standalone: true,
@@ -19,7 +19,7 @@ export class OcrScan implements OnDestroy {
   private mockService = inject(MockDataService);
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
-
+  private gate = inject(VerificationGateService);
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   isDragging = signal(false);
@@ -81,31 +81,37 @@ export class OcrScan implements OnDestroy {
   // FILE PROCESSING
   // ============================================
 
-  processFile(file: File): void {
-    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-    if (!validTypes.includes(file.type)) {
-      alert('Format de fichier non supporté. Utilisez PNG, JPEG ou PDF.');
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Le fichier est trop volumineux. Taille maximum : 10 Mo.');
-      return;
-    }
-
-    this.isScanning.set(true);
-
-    this.mockService.simulateOCR(file).subscribe({
-      next: (result) => {
-        this.isScanning.set(false);
-        this.router.navigate(['/public/verify', result.uuid]);
-      },
-      error: () => {
-        this.isScanning.set(false);
-        alert('Erreur lors de l\'analyse du document. Veuillez réessayer.');
-      }
-    });
+processFile(file: File): void {
+  const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+  if (!validTypes.includes(file.type)) {
+    alert('Format de fichier non supporté. Utilisez PNG, JPEG ou PDF.');
+    return;
   }
+
+  if (file.size > 10 * 1024 * 1024) {
+    alert('Le fichier est trop volumineux. Taille maximum : 10 Mo.');
+    return;
+  }
+
+  // Plus de gratuit ni de crédit : redirection avant l'analyse
+  if (!this.gate.ensureAllowance(1)) return;
+
+  this.isScanning.set(true);
+
+  this.mockService.simulateOCR(file).subscribe({
+    next: async (result) => {
+      try {
+        await this.gate.verifyAndRoute(result.uuid);
+      } finally {
+        this.isScanning.set(false);
+      }
+    },
+    error: () => {
+      this.isScanning.set(false);
+      alert('Erreur lors de l\'analyse du document. Veuillez réessayer.');
+    }
+  });
+}
 
   // ============================================
   // NAVIGATION — NAVBAR
