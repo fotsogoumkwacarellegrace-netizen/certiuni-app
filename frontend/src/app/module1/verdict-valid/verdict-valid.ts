@@ -2,11 +2,12 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MockDataService, Student, Certificate } from '../../core/services/mock-data.service';
+import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
   selector: 'app-verdict-valid',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, BackButton],
   templateUrl: './verdict-valid.html',
   styleUrl: './verdict-valid.css'
 })

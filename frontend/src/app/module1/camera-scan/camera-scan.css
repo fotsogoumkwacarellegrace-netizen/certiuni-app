@@ -249,3 +249,21 @@
   width: auto;
   margin: 0;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .scan-header { padding: 10px 12px; gap: 8px; }
+  .certiuni-logo { height: 40px; }
+  .brand-text { font-size: 1.05rem; }
+  .screen-title { display: none; }
+  .instruction-text { width: 90%; top: 14%; }
+  .instruction-text h2 { font-size: 1.05rem; }
+  .viewfinder { width: min(68vw, 220px); height: min(68vw, 220px); }
+  .scan-line { width: min(68vw, 220px); }
+  @keyframes scanMove {
+    0% { transform: translate(-50%, -110px); }
+    50% { transform: translate(-50%, 110px); }
+    100% { transform: translate(-50%, -110px); }
+  }
+  .capture-btn { width: 52px; height: 52px; }
+}

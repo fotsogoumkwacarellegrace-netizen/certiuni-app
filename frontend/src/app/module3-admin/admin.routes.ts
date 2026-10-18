@@ -22,6 +22,12 @@ import { Parametres } from './parametres/parametres';
 export const ADMIN_ROUTES: Routes = [
   { path: 'login', component: AdminLogin },
   { path: 'inscription', component: InstitutionRegistration },
+  // Page « en preparation » hors layout : plein ecran, sans sidebar/navbar.
+  {
+    path: 'bientot',
+    loadComponent: () =>
+      import('../shared/coming-soon/coming-soon').then((m) => m.ComingSoon),
+  },
   {
     path: '',
     component: AdminLayout,
@@ -46,11 +52,6 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'mon-institution', component: MonInstitution },
       { path: 'mon-institution/changer-logo', component: ChangerLogo },
       { path: 'parametres', component: Parametres },
-      {
-        path: 'bientot',
-        loadComponent: () =>
-          import('../shared/coming-soon/coming-soon').then((m) => m.ComingSoon),
-      },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

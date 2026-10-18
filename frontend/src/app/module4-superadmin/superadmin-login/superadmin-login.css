@@ -171,3 +171,10 @@
 .auth-header .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #0f172a; font-weight: 800; }
 .auth-header .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 9px; background: #0b4d3a; color: #fff; }
 .auth-header .brand-mark .material-icons { font-size: 20px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  :host { padding: 0.75rem; }
+  .auth-form { padding: 1.25rem; }
+  .auth-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+}

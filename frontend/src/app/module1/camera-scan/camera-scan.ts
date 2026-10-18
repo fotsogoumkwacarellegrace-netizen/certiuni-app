@@ -1,10 +1,11 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
   selector: 'app-camera-scan',
   standalone: true,
-  imports: [],
+  imports: [BackButton],
   templateUrl: './camera-scan.html',
   styleUrl: './camera-scan.css'
 })

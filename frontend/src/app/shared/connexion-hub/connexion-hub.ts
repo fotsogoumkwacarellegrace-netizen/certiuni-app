@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { BackButton } from '../ui/back-button';
 
 export interface Space {
   label: string;
@@ -18,7 +19,7 @@ export interface Space {
 @Component({
   selector: 'app-connexion-hub',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BackButton],
   templateUrl: './connexion-hub.html',
   styleUrl: './connexion-hub.css',
 })

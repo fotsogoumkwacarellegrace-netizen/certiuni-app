@@ -271,6 +271,8 @@
 
   .page-content {
     padding: 1.25rem;
+    margin-left: 72px;
+    min-width: calc(100% - 72px);
   }
 
   .topbar {
@@ -304,7 +306,17 @@
 
   .logout-btn {
     margin: 0.5rem;
+    white-space: nowrap;
   }
+
+  .page-content {
+    margin-left: 0;
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .topbar { flex-wrap: wrap; gap: 8px; }
+  .topbar-user .user-name { display: none; }
 }
 /* Topbar : logo cliquable + bouton retour */
 .topbar-left { display: flex; align-items: center; gap: 14px; }

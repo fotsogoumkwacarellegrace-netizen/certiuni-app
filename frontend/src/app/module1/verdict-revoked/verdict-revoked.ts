@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockDataService } from '../../core/services/mock-data.service';
+import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
   selector: 'app-verdict-revoked',
   standalone: true,
-  imports: [],
+  imports: [BackButton],
   templateUrl: './verdict-revoked.html',
   styleUrl: './verdict-revoked.css'
 })

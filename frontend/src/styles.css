@@ -1,13 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* ================================================================ */
-/* MODE SOMBRE GLOBAL (Module 3, Module 3 admin, Module 4)           */
-/* Mecanique identique au Module 1 : classe .dark-mode sur <body>    */
-/* appliquee par DarkModeDirective montee sur l'app racine.          */
+/* MODE SOMBRE GLOBAL — theme premium « Nuit Emeraude CertiUni »    */
+/* Fond bleu nuit profond, surfaces ardoise, accent vert CertiUni.  */
+/* Mecanique identique au Module 1 : classe .dark-mode sur <body>   */
+/* appliquee par DarkModeDirective montee sur l'app racine.         */
 /* ================================================================ */
+:root {
+  --dm-bg: #070d1a;
+  --dm-bg-soft: #0b1428;
+  --dm-surface: #101c34;
+  --dm-surface-2: #14233f;
+  --dm-border: #22345a;
+  --dm-text: #eaf0fa;
+  --dm-muted: #9db0cc;
+  --dm-accent: #34d399;
+  --dm-accent-soft: rgba(52, 211, 153, 0.14);
+  --dm-gold: #f9c31f;
+}
+
 body.dark-mode {
-  background: #0b1220;
-  color: #e6edf3;
+  background: radial-gradient(1200px 600px at 70% -10%, #0e2a22 0%, var(--dm-bg) 55%);
+  background-color: var(--dm-bg);
+  color: var(--dm-text);
 }
 
 /* --- Coquilles / fonds principaux --- */
@@ -24,23 +39,24 @@ body.dark-mode .registration-page,
 body.dark-mode .auth-page,
 body.dark-mode .login-page,
 body.dark-mode .help-page {
-  background: #0b1220 !important;
-  color: #e6edf3 !important;
+  background: transparent !important;
+  color: var(--dm-text) !important;
 }
 
 body.dark-mode .sidebar {
-  background: #0e1726 !important;
-  color: #e6edf3 !important;
-  border-right-color: #1f2b3d !important;
+  background: linear-gradient(180deg, #0c1a30 0%, #0a1428 100%) !important;
+  color: var(--dm-text) !important;
+  border-right: 1px solid var(--dm-border) !important;
 }
 
 body.dark-mode .topbar,
 body.dark-mode .auth-header,
 body.dark-mode .page-header,
 body.dark-mode .help-header {
-  background: #0e1726 !important;
-  color: #e6edf3 !important;
-  border-bottom-color: #1f2b3d !important;
+  background: rgba(16, 28, 52, 0.85) !important;
+  backdrop-filter: blur(8px);
+  color: var(--dm-text) !important;
+  border-bottom-color: var(--dm-border) !important;
 }
 
 body.dark-mode .main-column,
@@ -49,8 +65,8 @@ body.dark-mode .dashboard-main,
 body.dark-mode .archive-main,
 body.dark-mode .auth-main,
 body.dark-mode .help-main {
-  background: #0b1220 !important;
-  color: #e6edf3 !important;
+  background: transparent !important;
+  color: var(--dm-text) !important;
 }
 
 /* --- Surfaces (cartes, tableaux, formulaires) --- */
@@ -73,16 +89,19 @@ body.dark-mode .invoice-card,
 body.dark-mode .detail-card,
 body.dark-mode .info-card,
 body.dark-mode .list-card {
-  background: #111c2e !important;
-  color: #e6edf3 !important;
-  border-color: #1f2b3d !important;
+  background: linear-gradient(180deg, var(--dm-surface-2) 0%, var(--dm-surface) 100%) !important;
+  color: var(--dm-text) !important;
+  border: 1px solid var(--dm-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 /* --- Textes --- */
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3,
-body.dark-mode h4,
+body.dark-mode h4 {
+  color: #ffffff;
+}
 body.dark-mode p,
 body.dark-mode label,
 body.dark-mode li,
@@ -92,7 +111,15 @@ body.dark-mode span,
 body.dark-mode .nav-item,
 body.dark-mode .user-name,
 body.dark-mode .section-title {
-  color: #cbd5e1;
+  color: var(--dm-muted);
+}
+
+/* Accent emeraude sur les liens et la navigation active */
+body.dark-mode a { color: var(--dm-accent); }
+body.dark-mode .nav-item.is-active,
+body.dark-mode .nav-item.active {
+  background: linear-gradient(135deg, #19764A, #0B4D3A) !important;
+  color: #fff !important;
 }
 
 /* Texte des boutons a fond colore conserve (recoloration ciblee) */
@@ -110,13 +137,13 @@ body.dark-mode .pdf-cta {
 body.dark-mode input,
 body.dark-mode select,
 body.dark-mode textarea {
-  background: #0e1726 !important;
-  color: #e6edf3 !important;
-  border-color: #2a3a52 !important;
+  background: #0a1327 !important;
+  color: var(--dm-text) !important;
+  border-color: var(--dm-border) !important;
 }
 body.dark-mode input::placeholder,
 body.dark-mode textarea::placeholder {
-  color: #7d8ba0 !important;
+  color: #64748b !important;
 }
 
 /* --- Tableaux --- */
@@ -124,11 +151,11 @@ body.dark-mode table,
 body.dark-mode .mat-mdc-table,
 body.dark-mode .mat-mdc-header-row {
   background: transparent !important;
-  color: #cbd5e1;
+  color: var(--dm-muted);
 }
 body.dark-mode .mat-mdc-row,
 body.dark-mode tbody tr {
-  background: #111c2e !important;
+  background: linear-gradient(180deg, var(--dm-surface-2), var(--dm-surface)) !important;
   color: #cbd5e1 !important;
 }
 body.dark-mode .mat-mdc-header-cell,
@@ -137,32 +164,32 @@ body.dark-mode th {
 }
 
 /* --- Liens / separations --- */
-body.dark-mode a { color: #7dd3c0; }
+body.dark-mode a { color: var(--dm-accent); }
 body.dark-mode a.nav-item,
 body.dark-mode a.brand,
 body.dark-mode a.sidebar-brand,
 body.dark-mode a.topbar-brand,
 body.dark-mode a.hub-brand,
 body.dark-mode a.cs-brand { color: inherit; }
-body.dark-mode hr { border-color: #1f2b3d; }
+body.dark-mode hr { border-color: var(--dm-border); }
 
 /* --- Dialogues / overlays Material --- */
 body.dark-mode .cdk-overlay-pane,
 body.dark-mode .certiuni-dialog,
 body.dark-mode .certiuni-bottom-sheet {
   background: #111c2e !important;
-  color: #e6edf3 !important;
+  color: var(--dm-text) !important;
 }
 body.dark-mode .mat-mdc-dialog-container .mdc-dialog__surface,
 body.dark-mode .mat-mdc-bottom-sheet-container .mdc-bottom-sheet__surface {
   background: #111c2e !important;
-  color: #e6edf3 !important;
+  color: var(--dm-text) !important;
 }
 
 /* --- Scrollbars --- */
 body.dark-mode ::-webkit-scrollbar { width: 10px; height: 10px; }
-body.dark-mode ::-webkit-scrollbar-track { background: #0b1220; }
-body.dark-mode ::-webkit-scrollbar-thumb { background: #26344a; border-radius: 6px; }
+body.dark-mode ::-webkit-scrollbar-track { background: var(--dm-bg); }
+body.dark-mode ::-webkit-scrollbar-thumb { background: #2a3f66; border-radius: 6px; }
 
 /* ================================================================ */
 /* SOCLE RESPONSIVE GLOBAL — anti-debordement, tactile, fluide      */

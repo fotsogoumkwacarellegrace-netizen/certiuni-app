@@ -230,6 +230,11 @@
     width: 72px;
   }
 
+  .main-column {
+    margin-left: 72px;
+    min-width: calc(100% - 72px);
+  }
+
   .sidebar-brand span:last-child,
   .nav-item span:last-child {
     display: none;
@@ -259,3 +264,26 @@
 .topbar-logo { height: 30px; width: 30px; object-fit: contain; border-radius: 6px; }
 .topbar-back { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(120,120,140,0.35); background: transparent; color: inherit; cursor: pointer; }
 .topbar-back:hover { background: rgba(120,120,140,0.15); }
+
+/* ===== RESPONSIVE MOBILE : sidebar devient barre haute horizontale ===== */
+@media (max-width: 600px) {
+  .admin-shell { flex-direction: column; }
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0.5rem;
+  }
+  .sidebar-brand { border-bottom: none; padding: 0.5rem; }
+  .sidebar-nav { flex-direction: row; overflow-x: auto; flex: 1; padding: 0.25rem; }
+  .nav-item { white-space: nowrap; }
+  .logout-btn { margin: 0.5rem; white-space: nowrap; }
+  .main-column { margin-left: 0; min-width: 0; }
+  .page-content { padding: 1rem; }
+  .topbar { padding: 0.7rem 1rem; flex-wrap: wrap; gap: 8px; }
+  .topbar-user .user-name { display: none; }
+}

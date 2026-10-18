@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockDataService, Student, Certificate } from '../../core/services/mock-data.service';
+import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
   selector: 'app-candidate-drawer',
   standalone: true,
-  imports: [],
+  imports: [BackButton],
   templateUrl: './candidate-drawer.html',
   styleUrl: './candidate-drawer.css'
 })

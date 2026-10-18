@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { BackButton } from '../../shared/ui/back-button';
 
 interface StepDefinition {
   index: 1 | 2 | 3;
@@ -17,7 +18,7 @@ interface StepDefinition {
 @Component({
   selector: 'app-institution-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, BackButton],
   templateUrl: './institution-registration.html',
   styleUrl: './institution-registration.css'
 })

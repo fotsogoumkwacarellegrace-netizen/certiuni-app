@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MockDataService } from '../../core/services/mock-data.service';
+import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
   selector: 'app-momo-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BackButton],
   templateUrl: './momo-checkout.html',
   styleUrl: './momo-checkout.css'
 })
