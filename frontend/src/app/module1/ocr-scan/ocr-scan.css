@@ -906,3 +906,7 @@
     display: block;
   }
 }
+/* Bouton retour (header) */
+.header-back { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(120,120,140,0.35); background: transparent; color: inherit; cursor: pointer; margin-left: auto; text-decoration: none; }
+.header-back:hover { background: rgba(120,120,140,0.14); color: inherit; }
+.header-brand { text-decoration: none; color: inherit; cursor: pointer; display: flex; align-items: center; gap: 10px; }

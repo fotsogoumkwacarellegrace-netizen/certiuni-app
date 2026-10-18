@@ -1,9 +1,9 @@
 <div class="admin-shell">
   <aside class="sidebar">
-   <div class="sidebar-brand">
+   <a class="sidebar-brand" routerLink="/admin/dashboard" title="Accueil CertiUni">
   <img src="/assets/images/logo-bg-white.jpeg" alt="logo-bg-white" class="logo">
   <span>CertiUni</span>
-</div>
+</a>
 
     <nav class="sidebar-nav">
       <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="is-active">
@@ -34,9 +34,18 @@
 
   <div class="main-column">
     <header class="topbar">
-      <div></div>
+      <div class="topbar-left">
+        <a class="topbar-brand" routerLink="/admin/dashboard" title="Accueil CertiUni">
+          <img src="/assets/images/logo-bg-white.jpeg" alt="CertiUni" class="topbar-logo" />
+          <span>CertiUni</span>
+        </a>
+        <button type="button" class="topbar-back" (click)="goBack()" title="Page précédente">
+          <span class="material-icons" aria-hidden="true">arrow_back</span>
+        </button>
+      </div>
       <div class="topbar-user">
         <span class="bell" aria-hidden="true"><span class="material-icons">notifications</span></span>
+        <app-theme-toggle></app-theme-toggle>
         <span class="user-name">{{ institution.adminNom }}</span>
         <span aria-hidden="true"><span class="material-icons">arrow_drop_down</span></span>
       </div>

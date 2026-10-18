@@ -1,4 +1,4 @@
-// frontend/src/app/module1/login/login.ts
+﻿// frontend/src/app/module1/login/login.ts
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -49,7 +49,7 @@ export class Login implements OnInit, OnDestroy {
   ngOnInit() {
     // Ne redirige que si une session recruteur valide existe réellement.
     // Grâce au logout() corrigé ailleurs, cette clé est bien supprimée
-    // à la déconnexion — donc ce contrôle redevient fiable.
+    // à la déconnexion â€” donc ce contrôle redevient fiable.
     const user = localStorage.getItem('recruteur_user');
     if (user) {
       this.router.navigate(['/public/accueil']);
@@ -145,11 +145,11 @@ export class Login implements OnInit, OnDestroy {
   }
 
   onForgotPassword(): void {
-    alert('Réinitialisation du mot de passe - bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Mot de passe oublie' } });
   }
 
   onRegister(): void {
-    alert('Création de compte - bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Creation de compte recruteur' } });
   }
 
   toggleDarkMode(): void {

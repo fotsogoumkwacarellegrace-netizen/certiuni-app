@@ -47,7 +47,14 @@ export class DiplomesEmis {
   }
 
   telechargerPdf(id: string): void {
-    // TODO: remplacer par le téléchargement réel du PDF une fois l'API disponible.
-    console.log('Téléchargement du PDF (mock)', id);
+    const diplome = this.diplomes().find((d) => d.id === id);
+    const nom = diplome ? diplome.numero + '-' + diplome.titulaireNom : id;
+    const blob = new Blob(['Recapitulatif diplome CertiUni — ' + nom], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'diplome-' + id + '.txt';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

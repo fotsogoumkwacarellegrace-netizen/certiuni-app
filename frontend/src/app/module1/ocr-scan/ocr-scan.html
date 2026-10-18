@@ -6,14 +6,16 @@
 
     <!-- TOP HEADER -->
     <header class="top-header">
-      <div class="header-brand">
+      <a class="header-brand" routerLink="/public/accueil" title="Accueil CertiUni">
         <div class="logo-container">
           <img src="images/logo.png" alt="CertiUni Logo" class="certiuni-logo" />
         </div>
         <div class="brand-text">
           CertiUni
         </div>
-      </div>
+      </a>
+
+      <a class="header-back" routerLink="/public/accueil" title="Retour à l accueil"><span class="material-symbols-outlined">arrow_back</span></a>
 
       <button class="mobile-menu-btn" (click)="toggleMenu()">
         <span class="material-symbols-outlined">menu</span>

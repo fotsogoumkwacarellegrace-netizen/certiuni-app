@@ -1,4 +1,4 @@
-<!-- frontend/src/app/module1/settings/settings.html -->
+﻿<!-- frontend/src/app/module1/settings/settings.html -->
 <div class="settings-page" [class.dark-mode]="isDarkMode()">
 
   <!-- HEADER -->
@@ -607,10 +607,10 @@
           <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
             <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Liens utiles</div>
             <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
-              <a href="#" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Documentation</a>
-              <a href="#" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">API Reference</a>
-              <a href="#" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Support</a>
-              <a href="#" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Statut</a>
+              <a routerLink="/public/bientot" [queryParams]="{page: 'Documentation'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Documentation</a>
+              <a routerLink="/public/bientot" [queryParams]="{page: 'API Reference'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">API Reference</a>
+              <a routerLink="/public/bientot" [queryParams]="{page: 'Support technique'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Support</a>
+              <a routerLink="/public/bientot" [queryParams]="{page: 'Statut de la plateforme'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Statut</a>
             </div>
           </div>
 

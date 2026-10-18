@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ThemeToggle } from '../../../shared/ui/theme-toggle';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { StudentService, Certificate } from '../../student-service/student.service';
@@ -11,7 +12,7 @@ import { LinkedinShare, LinkedinShareData } from '../linkedin-share/linkedin-sha
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, RouterLink, ThemeToggle],
   styleUrl: './dashboard.css',
   templateUrl: './dashboard.html',
 })
@@ -47,7 +48,12 @@ export class Dashboard implements OnInit {
   }
 
   onSidebarLinkClick(section: string) {
-    console.log('Navigation sidebar vers :', section);
+    // « Besoin d'aide » ouvre la page d'aide plein ecran (sans sidebar/navbar)
+    if (section === 'support') {
+      this.router.navigate(['/student/help']);
+      return;
+    }
+    this.router.navigate(['/student/bientot'], { queryParams: { page: section } });
   }
 
   onUnlockClick(certificate: Certificate) {
@@ -87,6 +93,9 @@ export class Dashboard implements OnInit {
   }
 
   onDownloadClick(certificate: Certificate) {
-    console.log('Ouverture menu export pour :', certificate.course_title);
+    this.router.navigate(['/student/bientot'], { queryParams: { page: 'Export PDF' } });
+  }
+  onMessageClick(): void {
+    this.router.navigate(['/student/bientot'], { queryParams: { page: 'Messagerie' } });
   }
 }

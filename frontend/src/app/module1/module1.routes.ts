@@ -79,6 +79,18 @@ export const MODULE1_ROUTES: Routes = [
         path: 'settings',
         loadComponent: () =>
           import('./settings/settings').then(m => m.Settings)
+      },
+      // Hub central « Se connecter » (choix du profil)
+      {
+        path: 'connexion',
+        loadComponent: () =>
+          import('../shared/connexion-hub/connexion-hub').then(m => m.ConnexionHub)
+      },
+      // Page « fonctionnalité en préparation » (liens sans page dédiée)
+      {
+        path: 'bientot',
+        loadComponent: () =>
+          import('../shared/coming-soon/coming-soon').then(m => m.ComingSoon)
       }
     ]
   }

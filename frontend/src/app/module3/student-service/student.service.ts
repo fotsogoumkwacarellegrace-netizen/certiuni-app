@@ -1,6 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Certificate {
   id: string;
@@ -74,6 +76,25 @@ export class StudentService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Connexion de DEMONSTRATION (dev uniquement) — compte etudiant fictif
+   * controle, role « etudiant », sans mot de passe ni secret, aucun appel externe.
+   * Bloquee en production via `environment.production`.
+   */
+  static readonly DEMO_EMAIL = 'marie.ngo@univ-douala.cm';
+  static readonly DEMO_ROLE = 'etudiant';
+
+  isDemoEnabled(): boolean {
+    return !environment.production;
+  }
+
+  /** Connecte le compte de demonstration (charge le mock si besoin). */
+  loginDemo(): Observable<boolean> {
+    if (environment.production) return of(false);
+    if (this.mockData()) return of(this.loginByEmail(StudentService.DEMO_EMAIL));
+    return this.loadData().pipe(map(() => this.loginByEmail(StudentService.DEMO_EMAIL)));
   }
 
   // Simule le déblocage d'un diplôme après paiement (PENDING -> PAID)

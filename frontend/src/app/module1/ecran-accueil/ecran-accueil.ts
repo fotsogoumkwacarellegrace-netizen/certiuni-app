@@ -1,4 +1,4 @@
-// src/app/module1/ecran-accueil/ecran-accueil.ts
+﻿// src/app/module1/ecran-accueil/ecran-accueil.ts
 import {
   Component,
   inject,
@@ -142,7 +142,7 @@ export class EcranAccueil implements OnInit, OnDestroy {
   }
 
   // ============================================
-  // NAVIGATION — CARTES DE LA PAGE
+  // NAVIGATION â€” CARTES DE LA PAGE
   // ============================================
   openCameraScan(): void {
     this.closeMenu();
@@ -160,7 +160,7 @@ export class EcranAccueil implements OnInit, OnDestroy {
   }
 
   // ============================================
-  // NAVIGATION — NAVBAR (mêmes 6 liens que ocr-scan)
+  // NAVIGATION â€” NAVBAR (mêmes 6 liens que ocr-scan)
   // ============================================
   goToLanding(): void {
     this.closeMenu();
@@ -169,7 +169,7 @@ export class EcranAccueil implements OnInit, OnDestroy {
 
   goToHistory(event: Event): void {
     event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
   }
 
   goToSettings(event: Event): void {
@@ -188,20 +188,21 @@ export class EcranAccueil implements OnInit, OnDestroy {
   }
 
   // ============================================
-  // NAVIGATION — FOOTER
+  // NAVIGATION â€” FOOTER
   // ============================================
   goToInstitutions(): void {
     this.closeMenu();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/admin/login']);
   }
 
   goToEtudiants(): void {
     this.closeMenu();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/student/login']);
   }
 
   goToRecruteurs(): void {
     this.closeMenu();
+    this.router.navigate(['/public/login']);
   }
 
   // ============================================

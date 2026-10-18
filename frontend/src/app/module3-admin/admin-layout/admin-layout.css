@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-:root {
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-}
 
 :host {
   --primary: #19764A;
@@ -256,3 +252,10 @@
     padding: 0.85rem 1.25rem;
   }
 }
+/* Topbar : logo cliquable + bouton retour */
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.topbar-brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; font-weight: 800; cursor: pointer; }
+.topbar-brand:hover { opacity: 0.85; }
+.topbar-logo { height: 30px; width: 30px; object-fit: contain; border-radius: 6px; }
+.topbar-back { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(120,120,140,0.35); background: transparent; color: inherit; cursor: pointer; }
+.topbar-back:hover { background: rgba(120,120,140,0.15); }

@@ -1,14 +1,24 @@
-import { Component, computed, signal } from '@angular/core';
+﻿
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Institution, MOCK_INSTITUTIONS } from '../../assets/data/mock-data-superadmin';
 
 @Component({
   selector: 'app-institutions-superadmin',
   standalone: true,
-  imports: [],
+  imports: [
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './institutions-superadmin.html',
   styleUrl: './institutions-superadmin.css'
 })
 export class InstitutionsSuperadmin {
+  private readonly router = inject(Router);
   // Ne contient que les institutions déjà traitées (Active / Suspendue) —
   // les demandes en attente vivent uniquement dans MOCK_DEMANDES_INSCRIPTION.
   readonly institutions = signal<Institution[]>(MOCK_INSTITUTIONS);
@@ -29,8 +39,7 @@ export class InstitutionsSuperadmin {
   }
 
   voirDetails(institution: Institution): void {
-    // TODO: naviguer vers une page de détail dédiée une fois spécifiée.
-    console.log('Voir détails', institution);
+    this.router.navigate(['/superadmin/bientot'], { queryParams: { page: 'Fiche institution — ' + institution.nom } });
   }
 
   demanderSuppression(institution: Institution): void {
@@ -50,3 +59,4 @@ export class InstitutionsSuperadmin {
     this.institutionASupprimer.set(null);
   }
 }
+

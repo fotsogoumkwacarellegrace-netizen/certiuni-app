@@ -62,7 +62,6 @@ export class CameraScan implements OnInit, OnDestroy {
   }
 
   onRotateCamera() {
-    // Pour une vraie implémentation multi-caméra, basculer front/back ici
-    console.log('Rotation caméra (non implémentée en mode démo)');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Rotation camera' } });
   }
 }

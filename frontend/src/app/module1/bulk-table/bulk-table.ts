@@ -1,4 +1,4 @@
-// frontend/src/app/module1/bulk-table/bulk-table.ts
+﻿// frontend/src/app/module1/bulk-table/bulk-table.ts
 import { Component, inject, signal, computed, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -65,7 +65,7 @@ export class BulkTable implements OnInit, OnDestroy {
       const notes = cert.notes ?? [];
       const average = notes.length
         ? (notes.reduce((sum, n) => sum + n.note, 0) / notes.length).toFixed(1)
-        : '—';
+        : 'â€”';
       const totalCredits = notes.reduce((sum, n) => sum + (n.credits ?? 0), 0);
 
       return {
@@ -243,7 +243,7 @@ export class BulkTable implements OnInit, OnDestroy {
   // ============================================
   getMention(finalGrade: string): string {
     const match = finalGrade.match(/\(([^)]+)\)/);
-    return match ? match[1].replace('Mention ', '') : '—';
+    return match ? match[1].replace('Mention ', '') : 'â€”';
   }
 
   copyHash(hash: string | undefined): void {
@@ -268,7 +268,7 @@ export class BulkTable implements OnInit, OnDestroy {
   // ============================================
   goToHistory(event: Event): void {
     event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
   }
 
   goToSettings(event: Event): void {

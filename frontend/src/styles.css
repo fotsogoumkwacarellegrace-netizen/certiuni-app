@@ -1,1 +1,250 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* ================================================================ */
+/* MODE SOMBRE GLOBAL (Module 3, Module 3 admin, Module 4)           */
+/* Mecanique identique au Module 1 : classe .dark-mode sur <body>    */
+/* appliquee par DarkModeDirective montee sur l'app racine.          */
+/* ================================================================ */
+body.dark-mode {
+  background: #0b1220;
+  color: #e6edf3;
+}
+
+/* --- Coquilles / fonds principaux --- */
+body.dark-mode .admin-shell,
+body.dark-mode .superadmin-shell,
+body.dark-mode .dashboard-page,
+body.dark-mode .page,
+body.dark-mode .wizard-page,
+body.dark-mode .generation-page,
+body.dark-mode .emission-page,
+body.dark-mode .institution-page,
+body.dark-mode .studio-page,
+body.dark-mode .registration-page,
+body.dark-mode .auth-page,
+body.dark-mode .login-page,
+body.dark-mode .help-page {
+  background: #0b1220 !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-mode .sidebar {
+  background: #0e1726 !important;
+  color: #e6edf3 !important;
+  border-right-color: #1f2b3d !important;
+}
+
+body.dark-mode .topbar,
+body.dark-mode .auth-header,
+body.dark-mode .page-header,
+body.dark-mode .help-header {
+  background: #0e1726 !important;
+  color: #e6edf3 !important;
+  border-bottom-color: #1f2b3d !important;
+}
+
+body.dark-mode .main-column,
+body.dark-mode .page-content,
+body.dark-mode .dashboard-main,
+body.dark-mode .archive-main,
+body.dark-mode .auth-main,
+body.dark-mode .help-main {
+  background: #0b1220 !important;
+  color: #e6edf3 !important;
+}
+
+/* --- Surfaces (cartes, tableaux, formulaires) --- */
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .stats-card,
+body.dark-mode .panel,
+body.dark-mode .panel-card,
+body.dark-mode .table-card,
+body.dark-mode .content-card,
+body.dark-mode .form-card,
+body.dark-mode .auth-card,
+body.dark-mode .login-card,
+body.dark-mode .welcome-card,
+body.dark-mode .diploma-card,
+body.dark-mode .banner-card,
+body.dark-mode .help-card,
+body.dark-mode .help-contact,
+body.dark-mode .invoice-card,
+body.dark-mode .detail-card,
+body.dark-mode .info-card,
+body.dark-mode .list-card {
+  background: #111c2e !important;
+  color: #e6edf3 !important;
+  border-color: #1f2b3d !important;
+}
+
+/* --- Textes --- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode li,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode span,
+body.dark-mode .nav-item,
+body.dark-mode .user-name,
+body.dark-mode .section-title {
+  color: #cbd5e1;
+}
+
+/* Texte des boutons a fond colore conserve (recoloration ciblee) */
+body.dark-mode .btn-danger,
+body.dark-mode .btn-primary,
+body.dark-mode .btn-primary-dark,
+body.dark-mode .logout-btn,
+body.dark-mode .btn-add-credential,
+body.dark-mode .help-cta,
+body.dark-mode .pdf-cta {
+  color: #ffffff;
+}
+
+/* --- Champs de formulaire --- */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #0e1726 !important;
+  color: #e6edf3 !important;
+  border-color: #2a3a52 !important;
+}
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #7d8ba0 !important;
+}
+
+/* --- Tableaux --- */
+body.dark-mode table,
+body.dark-mode .mat-mdc-table,
+body.dark-mode .mat-mdc-header-row {
+  background: transparent !important;
+  color: #cbd5e1;
+}
+body.dark-mode .mat-mdc-row,
+body.dark-mode tbody tr {
+  background: #111c2e !important;
+  color: #cbd5e1 !important;
+}
+body.dark-mode .mat-mdc-header-cell,
+body.dark-mode th {
+  color: #9aa4b2 !important;
+}
+
+/* --- Liens / separations --- */
+body.dark-mode a { color: #7dd3c0; }
+body.dark-mode a.nav-item,
+body.dark-mode a.brand,
+body.dark-mode a.sidebar-brand,
+body.dark-mode a.topbar-brand,
+body.dark-mode a.hub-brand,
+body.dark-mode a.cs-brand { color: inherit; }
+body.dark-mode hr { border-color: #1f2b3d; }
+
+/* --- Dialogues / overlays Material --- */
+body.dark-mode .cdk-overlay-pane,
+body.dark-mode .certiuni-dialog,
+body.dark-mode .certiuni-bottom-sheet {
+  background: #111c2e !important;
+  color: #e6edf3 !important;
+}
+body.dark-mode .mat-mdc-dialog-container .mdc-dialog__surface,
+body.dark-mode .mat-mdc-bottom-sheet-container .mdc-bottom-sheet__surface {
+  background: #111c2e !important;
+  color: #e6edf3 !important;
+}
+
+/* --- Scrollbars --- */
+body.dark-mode ::-webkit-scrollbar { width: 10px; height: 10px; }
+body.dark-mode ::-webkit-scrollbar-track { background: #0b1220; }
+body.dark-mode ::-webkit-scrollbar-thumb { background: #26344a; border-radius: 6px; }
+
+/* ================================================================ */
+/* SOCLE RESPONSIVE GLOBAL — anti-debordement, tactile, fluide      */
+/* Les @media specifiques de chaque page restent la reference ;     */
+/* ce socle garantit seulement qu'aucune page ne casse sous 360px.  */
+/* ================================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #f9fafb;
+}
+
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+img { display: inline-block; vertical-align: middle; }
+
+/* Tableaux : scroll horizontal localise, jamais de scroll de page */
+.table-wrapper, .table-card, .table-responsive, .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+table { border-collapse: collapse; }
+
+/* Champs et boutons tactiles (min 40px), jamais plus larges que l'ecran */
+button, a, input, select, textarea { max-width: 100%; }
+button, [role="button"], a.btn, input[type="submit"], input[type="button"] {
+  min-height: 40px;
+  touch-action: manipulation;
+}
+input, select, textarea { font-size: max(14px, 1rem); }
+
+/* Conteneurs de page : gouttieres fluides, contenus resserres */
+.app-container { min-height: 100vh; min-height: 100svh; overflow-x: clip; }
+.page, .main-column, .page-content, .main-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Grilles auto-adaptatives par defaut (sauf surcharge du composant) */
+.grid-auto { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+/* Dialogues / bottom-sheets Material : tiennent dans le viewport mobile */
+.cdk-overlay-pane { max-width: 96vw !important; }
+.mat-mdc-dialog-container { max-width: 96vw; }
+
+/* Breakpoint tablette : resserre les gouttieres globales */
+@media (max-width: 900px) {
+  .page, .main-column, .page-content, .main-content { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Breakpoint mobile : titres fluides, actions empilees si flex row serree */
+@media (max-width: 600px) {
+  h1 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.2; }
+  h2 { font-size: clamp(1.15rem, 5vw, 1.5rem); line-height: 1.25; }
+  .actions-row, .btn-row, .form-actions { flex-wrap: wrap; }
+}
+
+/* Tres petits ecrans (<= 360px) : filets de securite */
+@media (max-width: 360px) {
+  body { font-size: 14px; }
+  .page, .main-column, .page-content, .main-content { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Mouvements reduits : respect accessibilite */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

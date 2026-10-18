@@ -1,4 +1,4 @@
-// src/app/module1/ocr-scan/ocr-scan.ts
+﻿// src/app/module1/ocr-scan/ocr-scan.ts
 import { Component, inject, signal, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -108,23 +108,23 @@ export class OcrScan implements OnDestroy {
   }
 
   // ============================================
-  // NAVIGATION — NAVBAR
+  // NAVIGATION â€” NAVBAR
   // ============================================
 
   /**
    * Retourne à l'accueil des recruteurs
    */
   goToRecruteurAccueil(): void {
-    this.router.navigate(['/public/ecran-accueil']);
+    this.router.navigate(['/public/accueil']);
   }
 
   onCancel(): void {
-    this.router.navigate(['/public/ecran-accueil']);
+    this.router.navigate(['/public/accueil']);
   }
 
   goToHistory(event: Event): void {
     event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
   }
 
  goToSettings(event: Event): void {

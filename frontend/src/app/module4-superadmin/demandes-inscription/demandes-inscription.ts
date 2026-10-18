@@ -7,7 +7,7 @@ type Onglet = 'Toutes' | 'En attente' | 'Validées' | 'Rejetées';
 @Component({
   selector: 'app-demandes-inscription',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './demandes-inscription.html',
   styleUrl: './demandes-inscription.css'
 })

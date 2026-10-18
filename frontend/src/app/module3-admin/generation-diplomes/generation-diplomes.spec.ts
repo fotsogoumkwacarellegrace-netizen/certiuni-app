@@ -1,4 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { GenerationDiplomes } from './generation-diplomes';
 
 describe('GenerationDiplomes', () => {
@@ -8,6 +10,7 @@ describe('GenerationDiplomes', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GenerationDiplomes],
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GenerationDiplomes);

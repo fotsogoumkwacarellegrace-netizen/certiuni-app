@@ -1,0 +1,56 @@
+<div class="help-page">
+  <header class="help-header">
+    <app-brand-logo home="/student/dashboard"></app-brand-logo>
+    <div class="help-header-actions">
+      <app-theme-toggle></app-theme-toggle>
+      <app-back-button></app-back-button>
+    </div>
+  </header>
+
+  <main class="help-main">
+    <p class="help-pill">Espace etudiant — Aide</p>
+    <h1>Besoin d'aide ?</h1>
+    <p class="help-sub">
+      Retrouvez ici les reponses aux questions frequentes sur votre espace
+      CertiUni : connexion, diplomes, paiements et partage.
+    </p>
+
+    <section class="help-grid">
+      <article class="help-card">
+        <span class="material-symbols-outlined">login</span>
+        <h2>Connexion</h2>
+        <p>La connexion se fait par lien magique envoye a votre email institutionnel. Verifiez vos spams si besoin.</p>
+      </article>
+      <article class="help-card">
+        <span class="material-symbols-outlined">school</span>
+        <h2>Mes diplomes</h2>
+        <p>Vos diplomes payes sont telechargeables en PDF depuis le tableau de bord. Les diplomes en attente se debloquent apres paiement.</p>
+      </article>
+      <article class="help-card">
+        <span class="material-symbols-outlined">payments</span>
+        <h2>Paiements</h2>
+        <p>MTN MoMo et Orange Money sont acceptes. Chaque paiement genere un recu disponible dans l'historique.</p>
+      </article>
+      <article class="help-card">
+        <span class="material-symbols-outlined">share</span>
+        <h2>Partage LinkedIn</h2>
+        <p>Partagez vos certificats verifies directement sur LinkedIn depuis la fiche de chaque diplome.</p>
+      </article>
+    </section>
+
+    <section class="help-contact">
+      <h2>Contacter le support</h2>
+      <p>Email : <strong>support&#64;certiuni.cm</strong> — reponse sous 48 h ouvrees.</p>
+      <div class="help-links">
+        <a routerLink="/student/dashboard" class="help-cta">Espace étudiant</a>
+        <a routerLink="/admin/login" class="help-cta help-cta-alt">Espace institution</a>
+        <a routerLink="/superadmin/login" class="help-cta help-cta-alt">Super administrateur</a>
+        <a routerLink="/public/landing" class="help-cta help-cta-alt">Accueil</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="help-footer">
+    <span>CertiUni Cameroon — Plateforme nationale de certification des diplomes</span>
+  </footer>
+</div>

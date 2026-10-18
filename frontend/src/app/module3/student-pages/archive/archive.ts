@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ThemeToggle } from '../../../shared/ui/theme-toggle';
 import { StudentService } from '../../student-service/student.service';
 
 @Component({
   selector: 'app-archive',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, RouterLink, ThemeToggle],
   styleUrl: './archive.css',
   templateUrl: './archive.html',
 })
@@ -33,14 +34,25 @@ export class Archive {
   }
 
   onSidebarLinkClick(section: string) {
-    console.log('Navigation sidebar vers :', section);
+    // « Besoin d'aide » ouvre la page d'aide plein ecran (sans sidebar/navbar)
+    if (section === 'support') {
+      this.router.navigate(['/student/help']);
+      return;
+    }
+    const labels: Record<string, string> = {
+      'identity': 'Verification identite',
+      'support': 'Aide et support etudiant',
+      'add-credential': 'Ajouter un certificat',
+      'user-menu': 'Menu utilisateur',
+    };
+    this.router.navigate(['/student/bientot'], { queryParams: { page: labels[section] ?? section } });
   }
 
   downloadReceipt(reference: string) {
-    console.log('Téléchargement du reçu :', reference);
+    this.router.navigate(['/student/bientot'], { queryParams: { page: 'Recu ' + reference } });
   }
 
   onViewDetails(paymentId: string) {
-    console.log('Voir détail transaction :', paymentId);
+    this.router.navigate(['/student/bientot'], { queryParams: { page: 'Detail transaction ' + paymentId } });
   }
 }

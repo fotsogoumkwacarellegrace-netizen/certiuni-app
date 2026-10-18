@@ -1,4 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { Archive } from './archive';
 
 describe('Archive', () => {
@@ -8,6 +10,7 @@ describe('Archive', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Archive],
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Archive);

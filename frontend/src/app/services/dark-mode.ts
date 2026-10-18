@@ -1,4 +1,4 @@
-// src/app/services/dark-mode.ts
+﻿// src/app/services/dark-mode.ts
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -16,7 +16,10 @@ export class DarkModeService {
       this.isDarkSubject.next(isDark);
       this.isDarkSignal.set(isDark);
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const prefersDark =
+        typeof window.matchMedia === 'function'
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false;
       this.isDarkSubject.next(prefersDark);
       this.isDarkSignal.set(prefersDark);
     }

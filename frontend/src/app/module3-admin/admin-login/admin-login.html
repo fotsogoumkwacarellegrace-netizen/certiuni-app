@@ -1,10 +1,14 @@
 <div class="auth-page">
   <header class="auth-header">
-    <a class="brand" routerLink="/">
+    <a class="brand" routerLink="/public/landing">
       <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
       <span class="brand-name">CertiUni</span>
     </a>
-    <a class="help-link" href="#" aria-label="Besoin d'aide ?">
+    <div class="header-tools">
+      <app-back-button></app-back-button>
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+    <a class="help-link" routerLink="/admin/bientot" [queryParams]="{page: 'Aide et support'}" aria-label="Besoin d'aide ?">
       Besoin d'aide ?
     </a>
   </header>
@@ -82,7 +86,7 @@
           }
         </div>
 
-        <a class="forgot-link" href="#">Mot de passe oublié ?</a>
+        <a class="forgot-link" routerLink="/admin/bientot" [queryParams]="{page: 'Mot de passe oublié'}">Mot de passe oublié ?</a>
 
         <button type="submit" class="btn-primary" [disabled]="submitting()">
           
@@ -107,9 +111,9 @@
   <footer class="auth-footer">
     <span>© 2026 CertiUni - Tous droits réservés</span>
     <nav>
-      <a href="#">Aide</a>
-      <a href="#">Contact</a>
-      <a href="#">Confidentialité</a>
+      <a routerLink="/admin/bientot" [queryParams]="{page: 'Aide'}">Aide</a>
+      <a routerLink="/admin/bientot" [queryParams]="{page: 'Contact'}">Contact</a>
+      <a routerLink="/admin/bientot" [queryParams]="{page: 'Confidentialité'}">Confidentialité</a>
     </nav>
   </footer>
 </div>

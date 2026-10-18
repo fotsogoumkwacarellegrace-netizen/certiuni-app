@@ -1,8 +1,4 @@
-:root { @import url('https://fonts.googleapis.com/icon?family=Material+Icons'); }
 
-:root {
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-}
 
 :host {
   --primary: #0DAA6F;

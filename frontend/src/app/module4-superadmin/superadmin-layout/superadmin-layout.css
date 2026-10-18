@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 :host {
   --primary: #0DAA6F;
@@ -307,3 +306,9 @@
     margin: 0.5rem;
   }
 }
+/* Topbar : logo cliquable + bouton retour */
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.topbar-brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; font-weight: 800; cursor: pointer; }
+.topbar-brand:hover { opacity: 0.85; }
+.topbar-back { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(120,120,140,0.35); background: transparent; color: inherit; cursor: pointer; }
+.topbar-back:hover { background: rgba(120,120,140,0.15); }

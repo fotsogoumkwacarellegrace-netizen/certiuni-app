@@ -1,13 +1,16 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { BackButton } from '../../../shared/ui/back-button';
+import { ThemeToggle } from '../../../shared/ui/theme-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { StudentService } from '../../student-service/student.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule , MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, RouterLink, BackButton, ThemeToggle],
   styleUrl: './login.css',
   templateUrl: './login.html',
 })
@@ -18,6 +21,13 @@ export class Login {
   email = signal('');
   errorMessage = signal('');
   emailSent = signal(false);
+  infoMessage = signal('');
+  isDemoLoading = signal(false);
+
+  /** Demo desactivee en production (securite : aucune simulation en prod). */
+  get demoEnabled(): boolean {
+    return !environment.production;
+  }
 
   countdown = signal(59);
   private countdownInterval: ReturnType<typeof setInterval> | null = null;
@@ -28,15 +38,36 @@ export class Login {
 
   onSubmit() {
     this.errorMessage.set('');
+    this.infoMessage.set('');
 
     if (!this.email().trim()) {
       this.errorMessage.set('Veuillez saisir votre adresse e-mail.');
       return;
     }
 
-    console.log('Lien magique simulé envoyé à :', this.email());
-    this.emailSent.set(true);
-    this.startCountdown();
+    // Pas de backend : aucun email n'est reellement envoye (message honnete).
+    this.infoMessage.set(
+      "L'envoi du lien magique sera disponible apres la connexion du service d'authentification. Pour tester le module, utilisez le compte de demonstration ci-dessous."
+    );
+  }
+
+  /** Connexion simulee DEV uniquement : compte etudiant fictif -> vrai dashboard. */
+  loginWithDemo() {
+    if (!this.demoEnabled) return;
+    this.errorMessage.set('');
+    this.infoMessage.set('');
+    this.isDemoLoading.set(true);
+    this.studentService.loginDemo().subscribe({
+      next: (ok) => {
+        this.isDemoLoading.set(false);
+        if (ok) this.router.navigate(['/student/dashboard']);
+        else this.errorMessage.set("La demonstration est indisponible pour le moment.");
+      },
+      error: () => {
+        this.isDemoLoading.set(false);
+        this.errorMessage.set("La demonstration est indisponible pour le moment.");
+      },
+    });
   }
 
   private startCountdown() {

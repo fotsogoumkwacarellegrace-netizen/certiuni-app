@@ -1,4 +1,4 @@
-// src/app/module1/bulk-upload/bulk-upload.ts
+﻿// src/app/module1/bulk-upload/bulk-upload.ts
 import { Component, inject, signal, computed, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -113,12 +113,12 @@ export class BulkUpload implements OnDestroy {
   }
 
   // ============================================
-  // NAVIGATION — NAVBAR
+  // NAVIGATION â€” NAVBAR
   // ============================================
 
   goToHistory(event: Event): void {
     event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
   }
 goToSettings(event: Event): void {
   event.preventDefault();
@@ -126,7 +126,7 @@ goToSettings(event: Event): void {
 }
 
   goToSupport(): void {
-    alert('Support — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Support technique' } });
   }
 
 

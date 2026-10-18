@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+﻿import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MockDataService, Student, Certificate } from '../../core/services/mock-data.service';
@@ -39,7 +39,7 @@ export class VerdictValid implements OnInit {
     return `${startYear} / ${startYear + 1}`;
   });
 
-  // "IUT — Université Centrale"
+  // "IUT â€” Université Centrale"
   accreditedInstitution = computed(() => {
     const cert = this.certificate();
     return cert ? cert.university_name : '';
@@ -81,6 +81,6 @@ export class VerdictValid implements OnInit {
   }
 
   onViewHistory(): void {
-    alert('Historique — fonctionnalité bientôt disponible.');
+    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
   }
 }

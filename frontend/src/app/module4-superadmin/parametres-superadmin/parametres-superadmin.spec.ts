@@ -1,4 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { ParametresSuperadmin } from './parametres-superadmin';
 
 describe('ParametresSuperadmin', () => {
@@ -8,6 +10,7 @@ describe('ParametresSuperadmin', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ParametresSuperadmin],
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ParametresSuperadmin);

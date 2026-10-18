@@ -12,10 +12,9 @@
 
     <!-- ===== SIDEBAR VERTE ===== -->
     <aside class="sidebar" [class.sidebar-open]="isSidebarOpen()">
-      <div class="sidebar-logo-box">
+      <a class="sidebar-logo-box" routerLink="/student/dashboard" title="Accueil espace étudiant" aria-label="CertiUni - accueil">
         <img src="assets/logos/logo2.png" alt="CertiUni" class="brand-logo-sm" />
-        <span class="brand-text">CertiUni</span>
-      </div>
+      </a>
 
       <nav class="sidebar-nav">
         <button class="nav-item" (click)="onSidebarLinkClick('overview'); closeSidebar()">
@@ -60,6 +59,7 @@
               <img src="assets/logos/logo.png" alt="CertiUni" class="topbar-logo-img" />
               <span>CertiUni</span>
             </div>-->
+            <app-theme-toggle></app-theme-toggle>
             <button class="profile-btn" (click)="logout()" title="Déconnexion">
               <mat-icon>account_circle</mat-icon>
             </button>
@@ -79,7 +79,7 @@
                 </span>
               </div>
             </div>
-            <button class="btn-message">
+            <button class="btn-message" (click)="onMessageClick()">
               <mat-icon>mail</mat-icon>
               Message {{ student.first_name }}{{ student.last_name }}
               <mat-icon>arrow_forward</mat-icon>

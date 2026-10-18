@@ -1,6 +1,3 @@
-:root {
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-}
 
 :host {
   --primary: #0DAA6F;
@@ -312,3 +309,6 @@
     padding: 1.25rem;
   }
 }
+/* Outils d'en-tête : retour + mode clair/sombre */
+.header-tools { display: inline-flex; align-items: center; gap: 10px; }
+.top-bar-actions { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }

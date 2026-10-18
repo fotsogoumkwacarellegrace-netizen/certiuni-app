@@ -2,10 +2,10 @@
   <aside class="sidebar">
 
     
-    <div class="sidebar-brand">
+    <a class="sidebar-brand" routerLink="/superadmin/dashboard" title="Accueil CertiUni">
       <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
       <span>CertiUni</span>
-    </div>
+    </a>
 
     <nav class="sidebar-nav">
       <a class="nav-item" routerLink="/superadmin/dashboard" routerLinkActive="is-active">
@@ -32,9 +32,19 @@
 
   <div class="main-column" [class.is-blurred]="showLogoutConfirm()">
     <header class="topbar">
+      <div class="topbar-left">
+        <a class="topbar-brand" routerLink="/superadmin/dashboard" title="Accueil CertiUni">
+          <span class="material-icons" aria-hidden="true">verified_user</span>
+          <span>CertiUni</span>
+        </a>
+        <button type="button" class="topbar-back" (click)="goBack()" title="Page précédente">
+          <span class="material-icons" aria-hidden="true">arrow_back</span>
+        </button>
+      </div>
       <div></div>
       <div class="topbar-user">
         <span class="bell"><span class="material-icons" aria-hidden="true">notifications</span></span>
+        <app-theme-toggle></app-theme-toggle>
         <span class="user-name">{{ superadmin.nom }}</span>
         <span class="material-icons" aria-hidden="true">arrow_drop_down</span>
       </div>

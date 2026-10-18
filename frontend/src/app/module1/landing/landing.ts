@@ -1,4 +1,4 @@
-// frontend/src/app/module1/landing/landing.ts
+﻿// frontend/src/app/module1/landing/landing.ts
 import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -100,17 +100,17 @@ export class Landing implements OnInit, OnDestroy {
 
   goToLogin(): void {
     this.closeMenu();
-    this.router.navigate(['/public/login']);
+    this.router.navigate(['/public/connexion']);
   }
 
   goToInstitutions(): void {
     this.closeMenu();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/admin/login']);
   }
 
   goToEtudiants(): void {
     this.closeMenu();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/student/login']);
   }
 
   goToRecruteurs(): void {

@@ -13,6 +13,8 @@
         <span class="logo-text">CertiUni</span>
       </div>
 
+      <a class="header-back" routerLink="/public/landing" title="Retour au site"><span class="material-symbols-outlined">arrow_back</span></a>
+
       <!-- MENU BURGER -->
       <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()">
         <span class="burger-line"></span>
@@ -204,9 +206,9 @@
         <a (click)="goToLanding()">Vérifier</a>
         <a (click)="goToInstitutions()">Institutions</a>
         <a (click)="goToEtudiants()">Étudiants</a>
-        <a href="#">Confidentialité</a>
-        <a href="#">Conditions</a>
-        <a href="#">Audit de Sécurité</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Confidentialité'}">Confidentialité</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Conditions'}">Conditions</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Audit de sécurité'}">Audit de Sécurité</a>
       </nav>
       <p class="footer-copy">© 2026 CertiUni Cameroun. Tous droits réservés. Portail National de Vérification Académique.</p>
     </div>

@@ -1,5 +1,4 @@
 /* src/app/module1/bulk-upload/bulk-upload.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 * {
   box-sizing: border-box;
@@ -1017,3 +1016,7 @@
     font-size: 20px;
   }
 }
+/* Bouton retour (header) */
+.header-back { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(120,120,140,0.35); background: transparent; color: inherit; cursor: pointer; margin-left: auto; text-decoration: none; }
+.header-back:hover { background: rgba(120,120,140,0.14); color: inherit; }
+.header-brand { text-decoration: none; color: inherit; cursor: pointer; display: flex; align-items: center; gap: 10px; }

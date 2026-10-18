@@ -1,0 +1,52 @@
+﻿<div class="cs-page">
+  <header class="cs-header">
+    <a class="cs-brand" routerLink="/public/landing">
+      <img src="/assets/logos/logo.png" alt="CertiUni" class="cs-logo" />
+      <span class="cs-brand-name">CertiUni</span>
+    </a>
+    <button class="cs-theme" type="button" (click)="goHome()">Accueil</button>
+  </header>
+
+  <main class="cs-body">
+    <div class="cs-card">
+      <div class="cs-icon-badge">
+        <span class="material-symbols-outlined">construction</span>
+      </div>
+      <span class="cs-pill">Fonctionnalite en preparation</span>
+      <h1 class="cs-title">{{ pageTitle }}</h1>
+      <p class="cs-text">
+        Cette page fait partie de l'ecosystème CertiUni et sera disponible des la
+        connexion au backend officiel. Explorez ci-dessous les espaces deja accessibles.
+      </p>
+
+      <div class="cs-grid">
+        <a class="cs-chip green" routerLink="/public/accueil">
+          <span class="material-symbols-outlined">manage_search</span> Espace recruteur
+        </a>
+        <a class="cs-chip gold" routerLink="/student/login">
+          <span class="material-symbols-outlined">badge</span> Espace etudiant
+        </a>
+        <a class="cs-chip green" routerLink="/admin-login">
+          <span class="material-symbols-outlined">account_balance</span> Espace institution
+        </a>
+        <a class="cs-chip dark" routerLink="/superadmin-login">
+          <span class="material-symbols-outlined">verified_user</span> Superadmin
+        </a>
+      </div>
+
+      <div class="cs-actions">
+        <button class="cs-btn ghost" type="button" (click)="goBack()">
+          <span class="material-symbols-outlined">arrow_back</span> Retour
+        </button>
+        <button class="cs-btn primary" type="button" (click)="goHome()">
+          <span class="material-symbols-outlined">home</span> Aller a l'accueil
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="cs-footer">
+    <img src="/assets/logos/logo.png" alt="" class="cs-footer-logo" />
+    <span>CertiUni Cameroon — Plateforme nationale de certification des diplomes</span>
+  </footer>
+</div>

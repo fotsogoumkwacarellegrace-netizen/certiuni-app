@@ -1,13 +1,12 @@
+﻿
+<!-- frontend/src/app/module3-admin/mon-institution/mon-institution.html -->
 <div class="institution-page">
 
-  <!-- En-tête -->
+  <!-- Header -->
   <header class="page-header">
-
     <div>
       <h1>Mon institution</h1>
-      <p>
-        Informations officielles et documents de votre institution.
-      </p>
+      <p>Informations officielles et documents de votre institution.</p>
     </div>
 
     <button
@@ -18,26 +17,20 @@
       <span class="material-icons">edit</span>
       <span>Modifier</span>
     </button>
-
   </header>
 
-
-  <!-- Informations générales -->
+  <!-- General informations -->
   <section class="institution-card">
-
     <div class="card-title">
       <h2>Informations générales</h2>
     </div>
 
     <div class="general-content">
-
       <!-- Logo -->
       <div class="logo-section">
-
         <div class="institution-logo">
           <span class="material-icons">account_balance</span>
         </div>
-
         <button
           type="button"
           class="change-logo"
@@ -45,245 +38,86 @@
         >
           Changer le logo
         </button>
-
       </div>
-
 
       <!-- Informations -->
       <div class="general-info">
-
         <div class="info-row">
           <span class="info-label">Nom officiel</span>
-          <span class="info-value">
-            {{ institution.nomOfficiel }}
-          </span>
+          <span class="info-value">{{ institution.nomOfficiel }}</span>
         </div>
 
         <div class="info-row">
           <span class="info-label">Sigle</span>
-          <span class="info-value">
-            {{ institution.sigle }}
-          </span>
+          <span class="info-value">{{ institution.sigle }}</span>
         </div>
 
         <div class="info-row">
-          <span class="info-label">Type d'établissement</span>
-          <span class="info-value">
-            {{ institution.type }}
-          </span>
+          <span class="info-label">Type</span>
+          <span class="info-value">{{ institution.type }}</span>
         </div>
 
         <div class="info-row">
           <span class="info-label">Date de création</span>
-          <span class="info-value">
-            {{ institution.dateCreation }}
-          </span>
+          <span class="info-value">{{ institution.dateCreation }}</span>
         </div>
 
         <div class="info-row">
           <span class="info-label">Statut</span>
-
-          <span class="status-badge">
-            <span class="material-icons">verified</span>
-            {{ institution.statut }}
-          </span>
+          <span class="info-value">{{ institution.statut }}</span>
         </div>
 
+        <div class="info-row">
+          <span class="info-label">Domaine DNS</span>
+          <span class="info-value">{{ institution.domaineDns }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Adresse</span>
+          <span class="info-value">{{ institution.adresse }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ institution.telephone }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ institution.email }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Site web</span>
+          <a [href]="institution.siteWeb" target="_blank">{{ institution.siteWeb }}</a>
+        </div>
       </div>
-
     </div>
-
   </section>
 
-
-  <!-- Coordonnées + représentant légal -->
-  <div class="two-columns">
-
-    <!-- Coordonnées -->
-    <section class="institution-card">
-
-      <div class="card-title">
-        <h2>Coordonnées</h2>
-      </div>
-
-      <div class="details-list">
-
-        <div class="detail-row">
-          <span class="detail-label">Domaine DNS</span>
-
-          <div class="detail-value-with-badge">
-            <span>{{ institution.domaineDns }}</span>
-
-            
-          </div>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Adresse</span>
-          <span class="detail-value">
-            {{ institution.adresse }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Téléphone</span>
-          <span class="detail-value">
-            {{ institution.telephone }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Email</span>
-          <span class="detail-value">
-            {{ institution.email }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Site web</span>
-          <span class="detail-value">
-            {{ institution.siteWeb }}
-          </span>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- Représentant légal -->
-    <section class="institution-card">
-
-      <div class="card-title">
-        <h2>Représentant légal</h2>
-      </div>
-
-      <div class="details-list">
-
-        <div class="detail-row">
-          <span class="detail-label">Nom complet</span>
-          <span class="detail-value">
-            {{ institution.representant }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Fonction</span>
-          <span class="detail-value">
-            {{ institution.fonction }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Téléphone</span>
-          <span class="detail-value">
-            {{ institution.telephoneRepresentant }}
-          </span>
-        </div>
-
-        <div class="detail-row">
-          <span class="detail-label">Email</span>
-          <span class="detail-value">
-            {{ institution.emailRepresentant }}
-          </span>
-        </div>
-
-        <div class="detail-row signature-row">
-
-          <span class="detail-label">Signature numérique</span>
-
-          <button
-            type="button"
-            class="signature-button"
-          >
-            <span class="material-icons">draw</span>
-            Voir la signature
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </div>
-
-
   <!-- Documents officiels -->
-  <section class="institution-card documents-card">
-
+  <section class="institution-card">
     <div class="card-title">
       <h2>Documents officiels</h2>
     </div>
 
-
     <div class="documents-list">
-
-      @for (document of documents; track document.fichier) {
-
-        <div class="document-row">
-
-          <div class="document-information">
-
-            <div class="document-icon">
-              <span class="material-icons">description</span>
-            </div>
-
-            <div class="document-name">
-              <span class="document-title">
-                {{ document.nom }}
-              </span>
-
-              <span class="document-file">
-                {{ document.fichier }}
-              </span>
-            </div>
-
-          </div>
-
-
-          <div class="document-date">
-            Téléversé le {{ document.dateUpload }}
-          </div>
-
-
-          <div class="document-actions">
-
-            <button
-              type="button"
-              class="icon-button"
-              title="Télécharger"
-              aria-label="Télécharger le document"
-              (click)="telechargerDocument(document)"
-            >
-              <span class="material-icons">download</span>
-            </button>
-
-            <button
-              type="button"
-              class="icon-button"
-              title="Voir"
-              aria-label="Voir le document"
-              (click)="voirDocument(document)"
-            >
-              <span class="material-icons">visibility</span>
-            </button>
-
-          </div>
-
+      <div class="document-item" *ngFor="let doc of documents">
+        <div class="document-header">
+          <span class="material-icons">description</span>
+          <span class="document-name">{{ doc.nom }}</span>
         </div>
-
-      }
-
+        <div class="document-meta">
+          <span class="label">Fichier :</span>
+          <span>{{ doc.fichier }}</span>
+        </div>
+        <div class="document-meta">
+          <span class="label">Date :</span>
+          <span>{{ doc.dateUpload }}</span>
+        </div>
+      </div>
     </div>
-
   </section>
 
-
-  <!-- Navigation -->
-  <div class="page-navigation">
-
-
-  </div>
-
 </div>
+

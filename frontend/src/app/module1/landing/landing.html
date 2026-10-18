@@ -1,4 +1,4 @@
-<!-- frontend/src/app/module1/landing/landing.html -->
+﻿<!-- frontend/src/app/module1/landing/landing.html -->
 <div class="landing-page" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
 
   <!-- HEADER -->
@@ -381,10 +381,10 @@
         <span>Ministère de l'Enseignement Supérieur</span>
       </div>
       <nav class="footer-simple-links">
-        <a href="#">Mentions légales</a>
-        <a href="#">Confidentialité</a>
-        <a href="#">Support technique</a>
-        <a href="#">API</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Mentions légales'}">Mentions légales</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Confidentialité'}">Confidentialité</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'Support technique'}">Support technique</a>
+        <a routerLink="/public/bientot" [queryParams]="{page: 'API CertiUni'}">API</a>
       </nav>
       <p class="footer-simple-copy">© 2026 CertiUni. Tous droits réservés.</p>
     </div>

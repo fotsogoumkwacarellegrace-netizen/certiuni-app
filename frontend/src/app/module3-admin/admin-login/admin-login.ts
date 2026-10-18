@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { BackButton } from '../../shared/ui/back-button';
+import { ThemeToggle } from '../../shared/ui/theme-toggle';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, BackButton, ThemeToggle],
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.css'
 })

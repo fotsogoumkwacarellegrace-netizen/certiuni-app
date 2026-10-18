@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface DocumentOfficiel {
   nom: string;
@@ -10,11 +12,12 @@ interface DocumentOfficiel {
 @Component({
   selector: 'app-mon-institution',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule],
   templateUrl: './mon-institution.html',
   styleUrl: './mon-institution.css'
 })
 export class MonInstitution {
+  private readonly router = inject(Router);
 
   institution = {
     nomOfficiel: 'Université de Yaoundé II',
@@ -32,37 +35,34 @@ export class MonInstitution {
     representant: 'Pr. Jean Bosco NDO',
     fonction: 'Recteur',
     telephoneRepresentant: '+237 6 98 76 54 32',
-    emailRepresentant: 'recteur@uy2.cm'
+    emailRepresentant: 'recteur@uy2.cm',
+    logoImage: ''
   };
 
   documents: DocumentOfficiel[] = [
     {
-      nom: 'Décret ministériel',
-      fichier: 'decret_uy2_2026.pdf',
-      dateUpload: '10/09/2026'
+      nom: "Rattachement à l'Université de Yaoundé II",
+      fichier: 'documents/rattachement.pdf',
+      dateUpload: '2026-01-15'
     },
-    
     {
-      nom: 'Signature numérique du représentant légal',
-      fichier: 'signature_recteur_uy2.pdf',
-      dateUpload: '10/09/2026'
+      nom: 'Justificatif de responsabilite juridique',
+      fichier: 'documents/responsabilite.pdf',
+      dateUpload: '2026-02-01'
     }
   ];
 
+  get logo(): string | null {
+    return this.institution.logoImage ?? null;
+  }
+
   changerLogo(): void {
-    // À connecter plus tard à l'upload réel du logo.
-    console.log('Changer le logo');
+    // Ouvre la page dediee « Changer le logo » (aperçu + import de fichier)
+    this.router.navigate(['/admin/mon-institution/changer-logo']);
   }
 
   modifierInstitution(): void {
-    console.log('Modification de l’institution');
-  }
-
-  voirDocument(document: DocumentOfficiel): void {
-    console.log('Voir le document :', document.fichier);
-  }
-
-  telechargerDocument(document: DocumentOfficiel): void {
-    console.log('Télécharger le document :', document.fichier);
+    alert("Modele de modification de l'institution (simulation)");
   }
 }
+
