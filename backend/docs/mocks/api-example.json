@@ -1,0 +1,193 @@
+{
+  "_info": {
+    "title": "CertiUni API v1 - Exemples de Mocks JSON",
+    "baseUrl": "/api/v1",
+    "dataEncoding": "UTF-8",
+    "authentication": "Header HTTP 'Authorization: Bearer <JWT_TOKEN>'"
+  },
+
+  "_standards": {
+    "successResponseStructure": {
+      "description": "Standard de réponse valide (HTTP 200 / 201 / 202)",
+      "example": {
+        "success": true,
+        "message": "Description lisible de l'action réussie",
+        "data": {}
+      }
+    },
+    "errorResponseStructure": {
+      "description": "Standard de réponse d'erreur (HTTP 400 / 401 / 403 / 404 / 500)",
+      "example": {
+        "success": false,
+        "error": {
+          "code": "CERTIFICATE_NOT_FOUND",
+          "message": "Aucun diplôme ne correspond au hash fourni.",
+          "details": null
+        }
+      }
+    }
+  },
+
+  "modulePublic": {
+    "description": "Module accessible sans authentification pour les recruteurs et le public",
+    
+    "verifyCertificate": {
+      "endpoint": "GET /api/v1/certificates/verify/:hash",
+      "roles": "Écrans 2, 3, 4, 5 (Résultat Feu Vert / Feu Rouge / Anomalie)",
+      "response200": {
+        "success": true,
+        "message": "Diplôme vérifié avec succès",
+        "data": {
+          "status": "VALID",
+          "_comment_status": "Valeurs possibles : 'VALID', 'INVALID', 'REVOKED', 'SUSPICIOUS'",
+          "certificate": {
+            "certificateNumber": "DIP-2025-UY1-0042",
+            "studentName": "Jean Paul NANA",
+            "degreeTitle": "Master en Génie Informatique",
+            "speciality": "Génie Logiciel",
+            "mention": "Très Bien",
+            "graduationYear": 2025,
+            "issueDate": "2025-07-15",
+            "university": {
+              "id": "univ_uy1",
+              "name": "Université de Yaoundé I",
+              "logoUrl": "https://cdn.certiuni.cm/logos/uy1.png"
+            }
+          },
+          "security": {
+            "hashSHA256": "a3f5b789e02c1145879a8bc4512d7890123456789abcdef0123456789abcdef0",
+            "verificationCount": 14
+          }
+        }
+      }
+    },
+
+    "initiatePayment": {
+      "endpoint": "POST /api/v1/payments/initiate",
+      "roles": "Écran 8 (Paiement USSD Mobile Money)",
+      "requestBody": {
+        "certificateHash": "a3f5b789e02c1145879a8bc4512d7890123456789abcdef0123456789abcdef0",
+        "phoneNumber": "237670000000",
+        "paymentMethod": "MTN_MOMO",
+        "_comment_paymentMethod": "Valeurs possibles : 'MTN_MOMO' ou 'ORANGE_MONEY'"
+      },
+      "response200": {
+        "success": true,
+        "message": "Paiement enclenché. Veuillez valider le prompt USSD sur votre téléphone.",
+        "data": {
+          "transactionId": "tx_987654321",
+          "status": "PENDING",
+          "amount": 2000,
+          "currency": "XAF"
+        }
+      }
+    },
+
+    "checkPaymentStatus": {
+      "endpoint": "GET /api/v1/payments/status/:transactionId",
+      "roles": "Écran 9 (Attente de confirmation Webhook)",
+      "response200": {
+        "success": true,
+        "data": {
+          "transactionId": "tx_987654321",
+          "status": "PAID",
+          "_comment_status": "Valeurs possibles : 'PENDING', 'PAID', 'FAILED'",
+          "downloadToken": "dl_token_xyz123"
+        }
+      }
+    }
+  },
+
+  "moduleStudent": {
+    "description": "Module portefeuille académique accessible à l'étudiant",
+
+    "requestMagicLink": {
+      "endpoint": "POST /api/v1/auth/magic-link",
+      "roles": "Écran 11 (Login Étudiant via Lien Magique)",
+      "requestBody": {
+        "identifier": "etudiant@univ-yaounde1.cm"
+      },
+      "response200": {
+        "success": true,
+        "message": "Lien de connexion expédié par email."
+      }
+    },
+
+    "getAcademicWallet": {
+      "endpoint": "GET /api/v1/student/wallet",
+      "headers": {
+        "Authorization": "Bearer <JWT_TOKEN>"
+      },
+      "roles": "Écrans 13, 16, 17 (Portefeuille Numérique Academic Wallet)",
+      "response200": {
+        "success": true,
+        "data": {
+          "studentProfile": {
+            "matricule": "20U12345",
+            "fullName": "Jean Paul NANA",
+            "email": "jean.nana@gmail.com"
+          },
+          "certificates": [
+            {
+              "id": "cert_01",
+              "degreeTitle": "Master en Génie Informatique",
+              "universityName": "Université de Yaoundé I",
+              "issueYear": 2025,
+              "qrCodeUrl": "https://api.certiuni.cm/v1/qr/cert_01.png",
+              "downloadUrl": "/api/v1/certificates/download/cert_01?token=dl_token_xyz123"
+            }
+          ]
+        }
+      }
+    }
+  },
+
+  "moduleAdminMinesup": {
+    "description": "Module restreint aux administrateurs universitaires et au MINESUP (MFA requis)",
+
+    "batchImportCertificates": {
+      "endpoint": "POST /api/v1/admin/certificates/batch-import",
+      "headers": {
+        "Authorization": "Bearer <JWT_ADMIN_TOKEN>",
+        "Content-Type": "multipart/form-data"
+      },
+      "roles": "Écrans 32, 35 (Importation de masse via fichier Excel/CSV)",
+      "formDataField": "file (diplomes_promo_2025.xlsx)",
+      "response202": {
+        "success": true,
+        "message": "Fichier reçu. Traitement en arrière-plan démarré.",
+        "data": {
+          "jobId": "job_import_99",
+          "totalRows": 450,
+          "status": "PROCESSING"
+        }
+      }
+    },
+
+    "getCyberRadarLogs": {
+      "endpoint": "GET /api/v1/admin/cyber-radar/logs",
+      "headers": {
+        "Authorization": "Bearer <JWT_ADMIN_TOKEN>"
+      },
+      "roles": "Écran 37 (Radar Cyber et Sécurité des requêtes)",
+      "response200": {
+        "success": true,
+        "data": {
+          "anomaliesCount24h": 3,
+          "logs": [
+            {
+              "id": "log_001",
+              "timestamp": "2026-08-24T14:30:00Z",
+              "ipAddress": "102.244.10.5",
+              "location": "Douala, Littoral Region, Cameroon",
+              "action": "VERIFY_ATTEMPT",
+              "status": "SUSPICIOUS",
+              "reason": "Hash invalide testé 15 fois en 1 minute (Tentative Bruteforce)",
+              "certificateTargeted": "DIP-2025-UY1-0042"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
