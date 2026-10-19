@@ -1,7 +1,6 @@
 <!-- src/app/module1/ocr-scan/ocr-scan.html -->
 <div class="ocr-page" [class.dark-mode]="isDarkMode()" appDarkMode>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
 
     <!-- SECURE SESSION BANNER -->
@@ -10,8 +9,8 @@
         <span class="material-symbols-outlined lock-icon">lock</span>
       </span>
       <div class="banner-text-group">
-        <span class="banner-title">Session de vérification institutionnelle sécurisée</span>
-        <span class="banner-subtitle">Vos vérifications sont protégées et confidentielles.</span>
+        <span class="banner-title">{{ i18n.t('ocrBannerTitle') }}</span>
+        <span class="banner-subtitle">{{ i18n.t('ocrBannerSubtitle') }}</span>
       </div>
       <span class="material-symbols-outlined shield-watermark">shield</span>
     </div>
@@ -19,7 +18,6 @@
     <!-- CONTENT AREA -->
     <main class="content-area">
 
-      <!-- OCR CARD -->
       <div class="ocr-card">
 
         <!-- Bande jaune -->
@@ -27,28 +25,32 @@
 
         <!-- Card Header -->
         <div class="card-header">
-          <h1>Scanner IA OCR</h1>
+          <h1>{{ i18n.t('ocrTitle') }}</h1>
           <div class="card-header-icon">
             <span class="material-symbols-outlined">image</span>
           </div>
         </div>
 
         <!-- Upload Zone -->
-        <div class="upload-zone" [class.dragging]="isDragging()" [class.scanning]="isScanning()"
-          (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <div class="upload-zone"
+             [class.dragging]="isDragging()"
+             [class.scanning]="isScanning()"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)">
           <div class="scan-beam" [class.active]="isScanning()"></div>
 
           @if (!isScanning()) {
           <div class="upload-content">
             <span class="material-symbols-outlined upload-icon">upload_file</span>
-            <p class="upload-title">Glissez la photo ou le scan du diplôme ici</p>
-            <p class="upload-hint">Formats acceptés : PNG, JPEG, PDF jusqu'à 10 Mo</p>
+            <p class="upload-title">{{ i18n.t('ocrDropTitle') }}</p>
+            <p class="upload-hint">{{ i18n.t('ocrDropHint') }}</p>
           </div>
           } @else {
           <div class="scanning-content">
             <div class="spinner"></div>
-            <p class="scanning-title">Analyse en cours par l'IA...</p>
-            <p class="scanning-hint">Veuillez patienter quelques instants</p>
+            <p class="scanning-title">{{ i18n.t('ocrScanningTitle') }}</p>
+            <p class="scanning-hint">{{ i18n.t('ocrScanningHint') }}</p>
           </div>
           }
         </div>
@@ -59,18 +61,18 @@
             style="display:none;" />
           <button class="browse-btn" (click)="fileInput.click()" [disabled]="isScanning()">
             <span class="material-symbols-outlined">folder_open</span>
-            PARCOURIR LE FICHIER
+            {{ i18n.t('ocrBrowse') }}
           </button>
 
           <!-- Separator -->
           <div class="separator">
             <span class="separator-line"></span>
-            <span class="separator-text">ou</span>
+            <span class="separator-text">{{ i18n.t('ocrSeparator') }}</span>
             <span class="separator-line"></span>
           </div>
 
           <!-- Cancel Link -->
-          <a class="cancel-link" (click)="onCancel()">Annuler et Revenir</a>
+          <a class="cancel-link" (click)="onCancel()">{{ i18n.t('ocrCancel') }}</a>
         </div>
 
       </div>

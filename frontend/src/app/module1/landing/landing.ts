@@ -58,7 +58,7 @@ export class Landing implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly zone = inject(NgZone);
-
+  
   // ===== Données de la page =====
   readonly recruiterPacks = RECRUITER_PACKS;
   readonly freeMonthly = FREE_MONTHLY;
@@ -231,12 +231,13 @@ export class Landing implements AfterViewInit {
   // ============================================
   goToLogin(): void {
     this.closeMenu();
-    this.router.navigate(['/public/login']);
+    this.router.navigate(['/public/espaces']);
   }
 
+  // ✅ MODIFIÉ : "Vérifier un diplôme" mène désormais vers la page login
   goToVerify(): void {
     this.closeMenu();
-    this.router.navigate(['/public/accueil']);
+    this.router.navigate(['/public/login']);
   }
 
   onPlanAction(plan: PricingPlan): void {

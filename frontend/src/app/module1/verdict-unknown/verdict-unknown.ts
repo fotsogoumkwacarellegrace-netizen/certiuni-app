@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { I18nService } from '../../services/i18n.service';
 @Component({
   selector: 'app-verdict-unknown',
   standalone: true,
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class VerdictUnknown implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
+  readonly i18n = inject(I18nService);
   searchedCode = signal('');
   lang = signal<'FR' | 'EN'>('FR');
   isCopied = signal(false);

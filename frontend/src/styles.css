@@ -133,10 +133,13 @@ html {
 }
 
 /* Le body avait la marge par défaut de 8px : elle créait un liseré blanc */
+/* Le body avait la marge par défaut de 8px : elle créait un liseré blanc */
 html, body {
   margin: 0;
   min-height: 100%;
-  overflow-x: hidden;
+  /* "clip" au lieu de "hidden" : n'active pas de conteneur de scroll,
+     ce qui permet à position: sticky (sidebar, topbar) de fonctionner */
+  overflow-x: clip;
 }
 
 body {

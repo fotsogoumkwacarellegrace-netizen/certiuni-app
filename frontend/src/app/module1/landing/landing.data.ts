@@ -263,7 +263,8 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: 'Espace Étudiant / Diplômé', route: '/public/login' },
       { label: 'Pour les établissements', section: 'gestion' },
       { label: 'Foire Aux Questions', section: 'faq' },
-      { label: 'Nous contacter' }
+      { label: 'Nous contacter' },
+      { label: 'Espace Étudiant / Diplômé', route: '/public/espaces' }
     ]
   },
   {

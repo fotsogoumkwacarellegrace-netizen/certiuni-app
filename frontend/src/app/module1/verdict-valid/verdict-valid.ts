@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MockDataService, Student, Certificate } from '../../core/services/mock-data.service';
-
+import { I18nService } from '../../services/i18n.service';
 @Component({
   selector: 'app-verdict-valid',
   standalone: true,
@@ -14,7 +14,7 @@ export class VerdictValid implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mockService = inject(MockDataService);
-
+  readonly i18n = inject(I18nService);
   student = signal<Student | null>(null);
   certificate = signal<Certificate | null>(null);
   isLoading = signal(true);

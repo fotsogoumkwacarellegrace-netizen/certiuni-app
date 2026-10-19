@@ -8,8 +8,8 @@
 
       <div class="page-header">
         <div class="page-title-group">
-          <h1 class="page-title">Vérification par Lot</h1>
-          <p class="page-subtitle">Analysez simultanément plusieurs diplômes à partir d'un fichier CSV ou JSON</p>
+          <h1 class="page-title">{{ i18n.t('bulkTitle') }}</h1>
+          <p class="page-subtitle">{{ i18n.t('bulkSubtitle') }}</p>
         </div>
       </div>
 
@@ -19,37 +19,34 @@
         <div class="upload-left">
           <div class="upload-badge">
             <span class="material-symbols-outlined">groups</span>
-            Recrutement de Masse
+            {{ i18n.t('bulkBadge') }}
           </div>
-          <h2>Vérifiez des centaines de candidats en une seule opération</h2>
-          <p>
-            Rationalisez votre processus d'embauche en vérifiant des dossiers de candidats
-            à la fois dans le registre national. Sécurisé, basé sur API et entièrement conforme.
-          </p>
+          <h2>{{ i18n.t('bulkHeading') }}</h2>
+          <p>{{ i18n.t('bulkDescription') }}</p>
 
           <div class="tags">
             <span class="tag">
               <span class="material-symbols-outlined">description</span>
-              .CSV Supporté
+              {{ i18n.t('bulkCsvSupport') }}
             </span>
             <span class="tag">
               <span class="material-symbols-outlined">data_object</span>
-              .JSON Supporté
+              {{ i18n.t('bulkJsonSupport') }}
             </span>
           </div>
 
           <ul class="upload-steps">
             <li>
               <span class="step-number">1</span>
-              Déposez votre fichier de candidats
+              {{ i18n.t('bulkStep1') }}
             </li>
             <li>
               <span class="step-number">2</span>
-              Notre système analyse chaque diplôme
+              {{ i18n.t('bulkStep2') }}
             </li>
             <li>
               <span class="step-number">3</span>
-              Consultez le rapport détaillé
+              {{ i18n.t('bulkStep3') }}
             </li>
           </ul>
         </div>
@@ -66,60 +63,54 @@
             (drop)="onDrop($event)">
 
             @if (isProcessing()) {
-
             <div class="drop-state">
               <div class="spinner"></div>
-              <span class="drop-title">Analyse du fichier en cours...</span>
+              <span class="drop-title">{{ i18n.t('bulkProcessing') }}</span>
               <span class="drop-hint">{{ fileName() }}</span>
             </div>
-
             } @else if (uploadComplete()) {
-
             <div class="drop-state">
               <span class="material-symbols-outlined drop-icon success">check_circle</span>
-              <span class="drop-title">Analyse terminée !</span>
-              <span class="drop-hint">{{ processedCandidates().length }} candidats traités</span>
+              <span class="drop-title">{{ i18n.t('bulkDone') }}</span>
+              <span class="drop-hint">{{ processedCandidates().length }} {{ i18n.t('bulkCandidates') }}</span>
             </div>
             } @else if (paywall(); as wall) {
-
             <div class="drop-state">
               <span class="material-symbols-outlined drop-icon warn">lock</span>
-              <span class="drop-title">Crédits insuffisants</span>
+              <span class="drop-title">{{ i18n.t('bulkCreditsInsufficient') }}</span>
               <span class="drop-hint">
-                Ce lot comporte <strong>{{ wall.needed }}</strong> vérification(s) facturable(s).
-                Il vous en manque <strong>{{ wall.missing }}</strong>.
+                {{ i18n.t('bulkCreditsNeeded') }} <strong>{{ wall.needed }}</strong> {{ i18n.t('bulkCreditsBillable') }}
+                {{ i18n.t('bulkCreditsMissing') }} <strong>{{ wall.missing }}</strong>.
               </span>
             </div>
             } @else {
-
             <div class="drop-state">
               <span class="material-symbols-outlined drop-icon">cloud_upload</span>
-              <span class="drop-title">Glissez &amp; Déposez vos fichiers</span>
+              <span class="drop-title">{{ i18n.t('bulkDropTitle') }}</span>
               <span class="drop-hint">
-                ou <span class="browse-link" (click)="fileInput.click()">cliquez pour parcourir le stockage local</span>
+                {{ i18n.t('bulkDropHint') }} <span class="browse-link" (click)="fileInput.click()">{{ i18n.t('bulkDropBrowse') }}</span>
               </span>
               <input #fileInput type="file" accept=".xlsx,.xls,.csv,.json" (change)="onFileSelected($event)" style="display:none;" />
             </div>
-
             }
           </div>
           @if (paywall()) {
           <div class="result-actions">
             <button class="secondary-btn" (click)="onReset()">
               <span class="material-symbols-outlined">refresh</span>
-              Changer de fichier
+              {{ i18n.t('bulkChangeFile') }}
             </button>
             <button class="primary-btn" (click)="buyMissing()">
               <span class="material-symbols-outlined">account_balance_wallet</span>
-              Recharger mes crédits
+              {{ i18n.t('bulkRecharge') }}
               <span class="material-symbols-outlined">arrow_forward</span>
             </button>
           </div>
           }
-          
+
           <p class="charge-note">
             <span class="material-symbols-outlined">receipt_long</span>
-            {{ chargedCount() }} vérification(s) débitée(s) · les documents introuvables ne sont pas facturés.
+            {{ chargedCount() }} {{ i18n.t('bulkCharged') }}
           </p>
           @if (uploadComplete()) {
 
@@ -129,21 +120,21 @@
               <span class="material-symbols-outlined">check_circle</span>
               <div>
                 <strong>{{ totalValid() }}</strong>
-                <span>Validés</span>
+                <span>{{ i18n.t('bulkValid') }}</span>
               </div>
             </div>
             <div class="result-stat revoked">
               <span class="material-symbols-outlined">cancel</span>
               <div>
                 <strong>{{ totalRevoked() }}</strong>
-                <span>Révoqués</span>
+                <span>{{ i18n.t('bulkRevoked') }}</span>
               </div>
             </div>
             <div class="result-stat unknown">
               <span class="material-symbols-outlined">help</span>
               <div>
                 <strong>{{ totalUnknown() }}</strong>
-                <span>Inconnus</span>
+                <span>{{ i18n.t('bulkUnknown') }}</span>
               </div>
             </div>
           </div>
@@ -162,11 +153,11 @@
           <div class="result-actions">
             <button class="secondary-btn" (click)="onReset()">
               <span class="material-symbols-outlined">refresh</span>
-              Analyser un autre fichier
+              {{ i18n.t('bulkReset') }}
             </button>
             <button class="primary-btn" (click)="onViewResults()">
               <span class="material-symbols-outlined">visibility</span>
-              Voir les résultats
+              {{ i18n.t('bulkViewResults') }}
               <span class="material-symbols-outlined">arrow_forward</span>
             </button>
           </div>

@@ -7,7 +7,9 @@ import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { Subscription } from 'rxjs';
 import { VerificationGateService } from '../../services/verification-gate.service';
-import{BillingService, isBillable} from '../../services/billing.service';
+import { BillingService, isBillable } from '../../services/billing.service';
+import { I18nService } from '../../services/i18n.service';
+
 @Component({
   selector: 'app-bulk-upload',
   standalone: true,
@@ -22,14 +24,11 @@ export class BulkUpload implements OnDestroy {
   private darkModeSubscription: Subscription = new Subscription();
   private billing = inject(BillingService);
   private gate = inject(VerificationGateService);
+  readonly i18n = inject(I18nService);
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  
 
-  /** Renseigné quand le lot dépasse le solde disponible */
   paywall = signal<{ needed: number; missing: number } | null>(null);
-  /** Nombre de vérifications débitées pour le lot en cours */
   chargedCount = signal(0);
-
 
   isDragging = signal(false);
   isProcessing = signal(false);
@@ -57,10 +56,6 @@ export class BulkUpload implements OnDestroy {
     this.darkModeSubscription.unsubscribe();
   }
 
-  // ============================================
-  // DRAG & DROP
-  // ============================================
-
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     this.isDragging.set(true);
@@ -87,78 +82,54 @@ export class BulkUpload implements OnDestroy {
     }
   }
 
-  // ============================================
-  // TRAITEMENT DU FICHIER
-  // ============================================
+  processFile(file: File): void {
+    if (!this.gate.ensureAllowance(1)) return;
 
-processFile(file: File): void {
-  // Plus rien de disponible : inutile d'analyser
-  if (!this.gate.ensureAllowance(1)) return;
+    this.fileName.set(file.name);
+    this.isProcessing.set(true);
+    this.uploadComplete.set(false);
+    this.paywall.set(null);
 
-  this.fileName.set(file.name);
-  this.isProcessing.set(true);
-  this.uploadComplete.set(false);
-  this.paywall.set(null);
+    this.mockService.processBulkFile(file).subscribe({
+      next: (result) => {
+        this.isProcessing.set(false);
+        this.fileErrors.set(result.errors);
 
-  this.mockService.processBulkFile(file).subscribe({
-    next: (result) => {
-      this.isProcessing.set(false);
-      this.fileErrors.set(result.errors);
+        const needed = result.candidates.filter(c => isBillable(c.status)).length;
 
-      // Seuls les verdicts Valide / Révoqué sont facturés
-      const needed = result.candidates.filter(c => isBillable(c.status)).length;
+        if (!this.billing.canAfford(needed)) {
+          this.paywall.set({ needed, missing: needed - this.billing.available() });
+          return;
+        }
 
-      if (!this.billing.canAfford(needed)) {
-        this.paywall.set({ needed, missing: needed - this.billing.available() });
-        return;
+        this.billing.consume(needed, `Lot · ${file.name}`);
+        this.chargedCount.set(needed);
+        this.processedCandidates.set(result.candidates);
+        this.uploadComplete.set(true);
+      },
+      error: () => {
+        this.isProcessing.set(false);
+        alert('Erreur lors du traitement du fichier.');
       }
+    });
+  }
 
-      this.billing.consume(needed, `Lot · ${file.name}`);
-      this.chargedCount.set(needed);
-      this.processedCandidates.set(result.candidates);
-      this.uploadComplete.set(true);
-    },
-    error: () => {
-      this.isProcessing.set(false);
-      alert('Erreur lors du traitement du fichier.');
-    }
-  });
-}
+  onReset(): void {
+    this.uploadComplete.set(false);
+    this.fileName.set('');
+    this.processedCandidates.set([]);
+    this.fileErrors.set([]);
+    this.paywall.set(null);
+    this.chargedCount.set(0);
+  }
 
-onReset(): void {
-  this.uploadComplete.set(false);
-  this.fileName.set('');
-  this.processedCandidates.set([]);
-  this.fileErrors.set([]);
-  this.paywall.set(null);
-  this.chargedCount.set(0);
-}
-
-buyMissing(): void {
-  this.gate.goToCheckout(this.paywall()?.missing ?? 1);
-}
+  buyMissing(): void {
+    this.gate.goToCheckout(this.paywall()?.missing ?? 1);
+  }
 
   onViewResults(): void {
     this.router.navigate(['/public/bulk-table']);
   }
-
-  // ============================================
-  // NAVIGATION — NAVBAR
-  // ============================================
-
-  goToHistory(event: Event): void {
-    event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
-  }
-goToSettings(event: Event): void {
-  event.preventDefault();
-  this.router.navigate(['/public/settings']);
-}
-
-  goToSupport(): void {
-    alert('Support — fonctionnalité bientôt disponible.');
-  }
-
 
   logout(): void {
     localStorage.removeItem('recruteur_user');
@@ -166,10 +137,6 @@ goToSettings(event: Event): void {
     sessionStorage.clear();
     this.router.navigate(['/public/landing']);
   }
-
-  // ============================================
-  // MENU MOBILE
-  // ============================================
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.set(!this.isMobileMenuOpen());
@@ -185,10 +152,6 @@ goToSettings(event: Event): void {
   onEscapeKey(): void {
     this.closeMobileMenu();
   }
-
-  // ============================================
-  // DARK MODE
-  // ============================================
 
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();

@@ -107,8 +107,8 @@ export class Login implements OnInit, OnDestroy {
     this.showPassword.set(false);
   }
 
-  goBack(): void {
-    this.router.navigate(['/public/landing']);
+   goBack(): void {
+    this.router.navigate(['/public/espaces']);
   }
 
   togglePasswordVisibility(): void {

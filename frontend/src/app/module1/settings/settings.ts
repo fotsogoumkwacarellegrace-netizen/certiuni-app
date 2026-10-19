@@ -4,7 +4,25 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DarkModeService } from '../../services/dark-mode';
+import { I18nService } from '../../services/i18n.service';
 import { Subscription } from 'rxjs';
+
+type TabKey = 'general' | 'security' | 'notifications' | 'billing' | 'about';
+
+interface TabDef {
+  key: TabKey;
+  labelKey: string;
+  icon: string;
+  badge?: string;
+}
+
+const TABS: TabDef[] = [
+  { key: 'general',       labelKey: 'settingsGeneral',       icon: 'tune' },
+  { key: 'security',      labelKey: 'settingsSecurity',      icon: 'security' },
+  { key: 'notifications', labelKey: 'settingsNotifications', icon: 'notifications' },
+  { key: 'billing',       labelKey: 'settingsBilling',       icon: 'payments', badge: '1' },
+  { key: 'about',         labelKey: 'settingsAbout',         icon: 'info' }
+];
 
 @Component({
   selector: 'app-settings',
@@ -18,29 +36,35 @@ export class Settings implements OnInit, OnDestroy {
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
 
+  readonly i18n = inject(I18nService);
+  readonly tabs = TABS;
+
   // UI State
   isDarkMode = signal(false);
-  activeTab = signal('general');
+  activeTab = signal<TabKey>('general');
 
-  // General settings
+  // ===== GENERAL =====
   platformName = 'CertiUni';
   defaultLanguage = 'fr';
   timezone = 'Africa/Douala';
   currency = 'XAF';
 
-  // Institution settings
-  institutionName = 'Université de Douala';
-  institutionAcronym = 'UDS';
-  institutionDomain = '@univ-douala.cm';
-  institutionLogo = '';
-  environmentMode = 'sandbox';
-
-  // Security settings
+  // ===== SECURITY =====
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
   twoFactorApp = false;
   twoFactorYubiKey = false;
   twoFactorSms = false;
 
-  // Billing settings
+  // ===== NOTIFICATIONS =====
+  notifEmail = true;
+  notifSecurity = true;
+  notifPayments = true;
+  notifCertificates = true;
+  notifReports = false;
+
+  // ===== BILLING =====
   billingPlan = 'Institutionnel';
   billingStatus = 'Actif';
   nextBillingDate = '15 Septembre 2026';
@@ -48,28 +72,6 @@ export class Settings implements OnInit, OnDestroy {
   paymentMethod = 'mtn';
   billingPhone = '+237 6XX XXX XXX';
   billingAddress = 'Université de Douala, BP 2701 Douala';
-
-  // AI settings
-  aiOcrModel = 'gpt-4-vision';
-  aiDesignModel = 'gpt-4';
-  aiTemperature = 70;
-  aiMaxTokens = 80;
-  aiAutoInspect = true;
-  aiDesignSuggestions = true;
-
-  // Notification settings
-  notifEmail = true;
-  notifSecurity = true;
-  notifPayments = true;
-  notifCertificates = true;
-  notifReports = false;
-
-  // API settings
-  apiPublicKey = 'pub_certiuni_abc123xyz789';
-  apiPrivateKey = 'priv_certiuni_xyz789abc123';
-  webhookUrl = '';
-  integrateLinkedin = true;
-  integrateOpenStreetMap = true;
 
   constructor() {
     this.isDarkMode.set(this.darkModeService.isDarkMode$);
@@ -85,43 +87,37 @@ export class Settings implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit() {
-    // Load saved settings from localStorage
+  ngOnInit(): void {
     this.loadSettings();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.darkModeSubscription.unsubscribe();
   }
 
   // ============================================
-  // TAB MANAGEMENT
+  // ONGLETS
   // ============================================
-
-  setActiveTab(tab: string): void {
+  setActiveTab(tab: TabKey): void {
     this.activeTab.set(tab);
   }
 
   // ============================================
   // NAVIGATION
   // ============================================
-
   goBack(): void {
     this.router.navigate(['/public/accueil']);
   }
 
   // ============================================
-  // SETTINGS ACTIONS
+  // PERSISTANCE
   // ============================================
-
   saveSettings(section: string): void {
-    console.log(`Saving ${section} settings...`);
-    
     const btn = document.querySelector('.btn-primary');
-    const originalText = btn?.textContent || 'Enregistrer';
+    const originalText = btn?.textContent || this.i18n.t('settingsSave');
 
     if (btn) {
-      btn.textContent = '⏳ Enregistrement...';
+      btn.textContent = `⏳ ${this.i18n.t('settingsSaving')}`;
       btn.setAttribute('disabled', 'true');
     }
 
@@ -131,182 +127,117 @@ export class Settings implements OnInit, OnDestroy {
         defaultLanguage: this.defaultLanguage,
         timezone: this.timezone,
         currency: this.currency,
-        institutionName: this.institutionName,
-        institutionAcronym: this.institutionAcronym,
-        institutionDomain: this.institutionDomain,
-        environmentMode: this.environmentMode,
         twoFactorApp: this.twoFactorApp,
         twoFactorYubiKey: this.twoFactorYubiKey,
         twoFactorSms: this.twoFactorSms,
         paymentMethod: this.paymentMethod,
         billingPhone: this.billingPhone,
         billingAddress: this.billingAddress,
-        aiOcrModel: this.aiOcrModel,
-        aiDesignModel: this.aiDesignModel,
-        aiTemperature: this.aiTemperature,
-        aiMaxTokens: this.aiMaxTokens,
-        aiAutoInspect: this.aiAutoInspect,
-        aiDesignSuggestions: this.aiDesignSuggestions,
         notifEmail: this.notifEmail,
         notifSecurity: this.notifSecurity,
         notifPayments: this.notifPayments,
         notifCertificates: this.notifCertificates,
-        notifReports: this.notifReports,
-        webhookUrl: this.webhookUrl,
-        integrateLinkedin: this.integrateLinkedin,
-        integrateOpenStreetMap: this.integrateOpenStreetMap
+        notifReports: this.notifReports
       };
 
       localStorage.setItem('certiuni_settings', JSON.stringify(settings));
 
       if (btn) {
-        btn.textContent = '✅ Enregistré !';
+        btn.textContent = `✅ ${this.i18n.t('settingsSaved')}`;
         btn.removeAttribute('disabled');
         setTimeout(() => {
           btn.textContent = originalText;
         }, 1500);
       }
 
-      alert(`✅ Paramètres "${section}" enregistrés avec succès !`);
-    }, 1000);
+      alert(`✅ ${section} — ${this.i18n.t('settingsSavedMsg')}`);
+    }, 900);
   }
 
   loadSettings(): void {
     const saved = localStorage.getItem('certiuni_settings');
-    if (saved) {
-      try {
-        const settings = JSON.parse(saved);
-        Object.assign(this, settings);
-      } catch (e) {
-        console.error('Erreur lors du chargement des paramètres', e);
-      }
+    if (!saved) return;
+    try {
+      const settings = JSON.parse(saved);
+      Object.assign(this, settings);
+    } catch (e) {
+      console.error('Erreur lors du chargement des paramètres', e);
     }
   }
 
   resetSettings(section: string): void {
-    if (confirm(`Voulez-vous réinitialiser les paramètres "${section}" ?`)) {
-      switch (section) {
-        case 'general':
-          this.platformName = 'CertiUni';
-          this.defaultLanguage = 'fr';
-          this.timezone = 'Africa/Douala';
-          this.currency = 'XAF';
-          break;
-        case 'institution':
-          this.institutionName = 'Université de Douala';
-          this.institutionAcronym = 'UDS';
-          this.institutionDomain = '@univ-douala.cm';
-          this.institutionLogo = '';
-          this.environmentMode = 'sandbox';
-          break;
-        case 'security':
-          this.twoFactorApp = false;
-          this.twoFactorYubiKey = false;
-          this.twoFactorSms = false;
-          break;
-        case 'billing':
-          this.paymentMethod = 'mtn';
-          this.billingPhone = '+237 6XX XXX XXX';
-          this.billingAddress = 'Université de Douala, BP 2701 Douala';
-          break;
-        case 'ai':
-          this.aiOcrModel = 'gpt-4-vision';
-          this.aiDesignModel = 'gpt-4';
-          this.aiTemperature = 70;
-          this.aiMaxTokens = 80;
-          this.aiAutoInspect = true;
-          this.aiDesignSuggestions = true;
-          break;
-        case 'notifications':
-          this.notifEmail = true;
-          this.notifSecurity = true;
-          this.notifPayments = true;
-          this.notifCertificates = true;
-          this.notifReports = false;
-          break;
-        case 'api':
-          this.apiPublicKey = 'pub_certiuni_abc123xyz789';
-          this.apiPrivateKey = 'priv_certiuni_xyz789abc123';
-          this.webhookUrl = '';
-          this.integrateLinkedin = true;
-          this.integrateOpenStreetMap = true;
-          break;
-      }
-      alert(`✅ Paramètres "${section}" réinitialisés !`);
-      this.saveSettings(section);
+    if (!confirm(this.i18n.t('settingsResetConfirm'))) return;
+
+    switch (section) {
+      case 'general':
+        this.platformName = 'CertiUni';
+        this.defaultLanguage = 'fr';
+        this.timezone = 'Africa/Douala';
+        this.currency = 'XAF';
+        break;
+      case 'security':
+        this.twoFactorApp = false;
+        this.twoFactorYubiKey = false;
+        this.twoFactorSms = false;
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+        break;
+      case 'notifications':
+        this.notifEmail = true;
+        this.notifSecurity = true;
+        this.notifPayments = true;
+        this.notifCertificates = true;
+        this.notifReports = false;
+        break;
+      case 'billing':
+        this.paymentMethod = 'mtn';
+        this.billingPhone = '+237 6XX XXX XXX';
+        this.billingAddress = 'Université de Douala, BP 2701 Douala';
+        break;
+    }
+    alert(`✅ ${this.i18n.t('settingsResetMsg')}`);
+    this.saveSettings(section);
+  }
+
+  // ============================================
+  // SÉCURITÉ
+  // ============================================
+  updatePassword(): void {
+    if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+      alert(this.i18n.t('settingsPwdFillAll'));
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      alert(this.i18n.t('settingsPwdMismatch'));
+      return;
+    }
+    if (this.newPassword.length < 8) {
+      alert(this.i18n.t('settingsPwdTooShort'));
+      return;
+    }
+    this.currentPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+    alert(this.i18n.t('settingsPwdUpdated'));
+  }
+
+  logoutAllSessions(): void {
+    if (confirm(this.i18n.t('settingsLogoutConfirm'))) {
+      alert(this.i18n.t('settingsLogoutDone'));
     }
   }
 
   // ============================================
-  // INSTITUTION
+  // FACTURATION
   // ============================================
-
-  uploadLogo(): void {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/png,image/jpeg';
-    input.onchange = (e: any) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event: any) => {
-          this.institutionLogo = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    input.click();
-  }
-
-  removeLogo(): void {
-    if (confirm('Voulez-vous supprimer le logo ?')) {
-      this.institutionLogo = '';
-    }
-  }
-
-  // ============================================
-  // BILLING
-  // ============================================
-
   viewInvoices(): void {
-    alert('📄 Redirection vers l\'archive des factures...');
-  }
-
-  // ============================================
-  // AI
-  // ============================================
-
-  testAIConnection(): void {
-    alert('🔌 Test de connexion IA en cours...\n✅ Connexion établie avec succès !');
-  }
-
-  // ============================================
-  // API
-  // ============================================
-
-  copyApiKey(): void {
-    navigator.clipboard?.writeText(this.apiPublicKey).then(() => {
-      alert('📋 Clé API copiée dans le presse-papier !');
-    }).catch(() => {
-      alert('📋 Clé API: ' + this.apiPublicKey);
-    });
-  }
-
-  regenerateApiKey(): void {
-    if (confirm('⚠️ Voulez-vous régénérer la clé API privée ? Cette action est irréversible.')) {
-      this.apiPrivateKey = 'priv_certiuni_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 10);
-      alert('🔑 Nouvelle clé API générée avec succès !');
-    }
-  }
-
-  testApiConnection(): void {
-    alert('🔌 Test de connexion API...\n✅ API accessible et fonctionnelle !');
+    alert(this.i18n.t('settingsInvoicesMsg'));
   }
 
   // ============================================
   // DARK MODE
   // ============================================
-
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();
   }

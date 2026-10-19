@@ -7,6 +7,8 @@ import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { Subscription } from 'rxjs';
 import { VerificationGateService } from '../../services/verification-gate.service';
+import { I18nService } from '../../services/i18n.service';
+
 @Component({
   selector: 'app-ocr-scan',
   standalone: true,
@@ -20,6 +22,8 @@ export class OcrScan implements OnDestroy {
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
   private gate = inject(VerificationGateService);
+  readonly i18n = inject(I18nService);
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   isDragging = signal(false);
@@ -39,10 +43,6 @@ export class OcrScan implements OnDestroy {
   ngOnDestroy(): void {
     this.darkModeSubscription.unsubscribe();
   }
-
-  // ============================================
-  // DRAG & DROP
-  // ============================================
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -66,10 +66,6 @@ export class OcrScan implements OnDestroy {
     }
   }
 
-  // ============================================
-  // FILE SELECTION
-  // ============================================
-
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -77,78 +73,40 @@ export class OcrScan implements OnDestroy {
     }
   }
 
-  // ============================================
-  // FILE PROCESSING
-  // ============================================
-
-processFile(file: File): void {
-  const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-  if (!validTypes.includes(file.type)) {
-    alert('Format de fichier non supporté. Utilisez PNG, JPEG ou PDF.');
-    return;
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    alert('Le fichier est trop volumineux. Taille maximum : 10 Mo.');
-    return;
-  }
-
-  // Plus de gratuit ni de crédit : redirection avant l'analyse
-  if (!this.gate.ensureAllowance(1)) return;
-
-  this.isScanning.set(true);
-
-  this.mockService.simulateOCR(file).subscribe({
-    next: async (result) => {
-      try {
-        await this.gate.verifyAndRoute(result.uuid);
-      } finally {
-        this.isScanning.set(false);
-      }
-    },
-    error: () => {
-      this.isScanning.set(false);
-      alert('Erreur lors de l\'analyse du document. Veuillez réessayer.');
+  processFile(file: File): void {
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+    if (!validTypes.includes(file.type)) {
+      alert(this.i18n.t('ocrErrorFormat'));
+      return;
     }
-  });
-}
 
-  // ============================================
-  // NAVIGATION — NAVBAR
-  // ============================================
+    if (file.size > 10 * 1024 * 1024) {
+      alert(this.i18n.t('ocrErrorSize'));
+      return;
+    }
 
-  /**
-   * Retourne à l'accueil des recruteurs
-   */
-  goToRecruteurAccueil(): void {
-    this.router.navigate(['/public/ecran-accueil']);
+    if (!this.gate.ensureAllowance(1)) return;
+
+    this.isScanning.set(true);
+
+    this.mockService.simulateOCR(file).subscribe({
+      next: async (result) => {
+        try {
+          await this.gate.verifyAndRoute(result.uuid);
+        } finally {
+          this.isScanning.set(false);
+        }
+      },
+      error: () => {
+        this.isScanning.set(false);
+        alert(this.i18n.t('ocrErrorAnalysis'));
+      }
+    });
   }
 
   onCancel(): void {
     this.router.navigate(['/public/ecran-accueil']);
   }
-
-  goToHistory(event: Event): void {
-    event.preventDefault();
-    alert('Historique — fonctionnalité bientôt disponible.');
-  }
-
- goToSettings(event: Event): void {
-  event.preventDefault();
-  this.router.navigate(['/public/settings']);
-}
-  /**
-   * Déconnexion de l'utilisateur
-   */
-   logout(): void {
-    localStorage.removeItem('recruteur_user');
-    localStorage.removeItem('recruteur_remember');
-    sessionStorage.clear();
-    this.router.navigate(['/public/landing']);
-  }
-  // ============================================
-  // MENU BURGER
-  // ============================================
 
   toggleMenu(): void {
     this.isMenuOpen.set(!this.isMenuOpen());
@@ -164,10 +122,6 @@ processFile(file: File): void {
   onEscapeKey(): void {
     this.closeMenu();
   }
-
-  // ============================================
-  // DARK MODE
-  // ============================================
 
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();

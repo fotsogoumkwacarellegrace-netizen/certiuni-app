@@ -15,6 +15,10 @@ export const MODULE1_ROUTES: Routes = [
         loadComponent: () => import('./landing/landing').then(m => m.Landing)
       },
       {
+        path: 'espaces',
+        loadComponent: () => import('./espaces/espaces').then(m => m.Espaces)
+      },
+      {
         path: 'login',
         loadComponent: () => import('./login/login').then(m => m.Login)
       },
