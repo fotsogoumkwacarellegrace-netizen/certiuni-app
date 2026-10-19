@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-intro">
+      <span class="shield-icon" aria-hidden="true"><span class="material-icons">security</span></span>
+      <h1>CertiUni — Super Admin</h1>
+      <p>Espace réservé à l'administration nationale MINESUP.</p>
+    </div>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      @if (errorMessage()) {
+        <div class="form-alert" role="alert">{{ errorMessage() }}</div>
+      }
+
+      <div class="form-field">
+        <label for="identifiant">Identifiant Super Admin *</label>
+        <input
+          id="identifiant"
+          type="text"
+          formControlName="identifiant"
+          placeholder="Entrez votre identifiant"
+          [class.has-error]="isInvalid('identifiant')"
+        />
+        @if (isInvalid('identifiant')) {
+          <span class="field-error">L'identifiant est requis.</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="motDePasse">Mot de passe *</label>
+        <div class="password-wrapper">
+          <input
+            id="motDePasse"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="motDePasse"
+            placeholder="Entrez votre mot de passe"
+            [class.has-error]="isInvalid('motDePasse')"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+          >
+            <span class="material-icons">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        @if (isInvalid('motDePasse')) {
+          <span class="field-error">Le mot de passe est requis.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="submitting()">
+        {{ submitting() ? 'Connexion en cours…' : 'Se connecter' }}
+      </button>
+    </form>
+  </div>
+</div>

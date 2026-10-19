@@ -1,0 +1,62 @@
+<div class="wizard-page">
+  <a class="back-link" routerLink="/admin/creer-diplomes/importer">← Retour</a>
+  <h1>Validation du CSV</h1>
+
+  @if (validation(); as v) {
+    <p class="file-name">Fichier : {{ v.fichier }}</p>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="summary-value">{{ v.lignesDetectees }}</span>
+        <span class="summary-label">Lignes détectées</span>
+      </div>
+      <div class="summary-card is-success">
+        <span class="summary-value">{{ v.lignesValides }}</span>
+        <span class="summary-label">Lignes valides</span>
+      </div>
+      <div class="summary-card is-error">
+        <span class="summary-value">{{ v.lignesAvecErreurs }}</span>
+        <span class="summary-label">Lignes avec erreurs</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Détails des erreurs</h2>
+
+    <div class="table-wrapper">
+      <table class="errors-table">
+        <thead>
+          <tr>
+            <th>Ligne</th>
+            <th>Colonne</th>
+            <th>Valeur trouvée</th>
+            <th>Erreur</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (erreur of v.erreurs; track erreur.ligne) {
+            <tr>
+              <td>{{ erreur.ligne }}</td>
+              <td>{{ erreur.colonne }}</td>
+              <td>{{ erreur.valeurTrouvee || '—' }}</td>
+              <td class="error-text">{{ erreur.erreur }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn-secondary" (click)="telechargerRapport()">
+        Télécharger le rapport d'erreurs
+      </button>
+      <button type="button" class="btn-secondary" (click)="corrigerLeFichier()">
+        Corriger le fichier
+      </button>
+      <button type="button" class="btn-primary" (click)="suivant()">Suivant</button>
+    </div>
+  } @else {
+    <p class="empty-state">
+      Aucune validation en cours. Retournez à l'étape précédente pour importer un fichier CSV.
+    </p>
+  }
+</div>

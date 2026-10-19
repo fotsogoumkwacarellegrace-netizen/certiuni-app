@@ -13,6 +13,8 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve"
+        "target": "ES2022",
+        "module": "preserve"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

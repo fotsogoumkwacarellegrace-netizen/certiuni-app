@@ -1,0 +1,79 @@
+<div class="page">
+  <h1>Logs de vérification</h1>
+
+  <div class="filters-bar">
+    <div class="search-box">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input
+        type="search"
+        placeholder="Rechercher par n° diplôme ou nom…"
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+
+    <select [value]="typeFiltre()" (change)="typeFiltre.set($any($event.target).value)">
+      <option value="">Type de vérification</option>
+      @for (type of types; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+
+    <select [value]="statutFiltre()" (change)="statutFiltre.set($any($event.target).value)">
+      <option value="">Statut</option>
+      @for (statut of statuts; track statut) {
+        <option [value]="statut">{{ statut }}</option>
+      }
+    </select>
+
+    <div class="date-range">
+      <input type="date" [value]="dateDebut()" (change)="dateDebut.set($any($event.target).value)" />
+      <span>—</span>
+      <input type="date" [value]="dateFin()" (change)="dateFin.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="logs-table">
+      <thead>
+        <tr>
+          <th>Date / Heure</th>
+          <th>N° Diplôme</th>
+          <th>Vérifié par</th>
+          <th>Localisation</th>
+          <th>Statut</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logsFiltres(); track log.date + log.heure + log.numeroDiplome) {
+          <tr>
+            <td>{{ log.date }} {{ log.heure }}</td>
+            <td>{{ log.numeroDiplome }}</td>
+            <td>{{ log.verifiePar }}</td>
+            <td>{{ log.localisation }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [class.is-authentic]="log.statut === 'Authentique'"
+                [class.is-revoked]="log.statut === 'Révoqué'"
+                [class.is-invalid]="log.statut === 'Non validé'"
+              >
+                {{ log.statut }}
+              </span>
+            </td>
+            <td>{{ log.type }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-row">Aucun résultat pour ces filtres.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      1-{{ logsFiltres().length }} sur {{ logs.length }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,231 @@
+:root { @import url('https://fonts.googleapis.com/icon?family=Material+Icons'); }
+
+:root {
+  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+}
+
+:host {
+  --primary: #0DAA6F;
+  --primary-dark: #0b8f58;
+  --primary-tint: #e8faf0;
+  --secondary-blue: #080b32;
+  --secondary-blue-tint: #e9eaf8;
+  --secondary-red: #ce1126;
+  --secondary-yellow: #fcd116;
+  --gray-50: #f7f8f8;
+  --gray-100: #eef0f0;
+  --gray-200: #e1e4e4;
+  --gray-400: #9aa3a3;
+  --gray-600: #5c6666;
+  --gray-800: #23292a;
+  --black-soft: #17191a;
+
+  display: block;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--black-soft);
+}
+
+.material-icons { font-family: 'Material Icons'; }
+.search-box .material-icons { font-size: 18px; }
+.stepper-dot .material-icons { font-size: 18px; }
+
+.wizard-page h1 {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+}
+
+.stepper {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: 1rem;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--gray-400);
+}
+
+.stepper-item.is-active {
+  color: var(--black-soft);
+  font-weight: 600;
+}
+
+.stepper-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+}
+
+.stepper-item.is-active .stepper-dot {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.toolbar h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  min-width: 220px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  font-size: 0.85rem;
+  width: 100%;
+  background: transparent;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.template-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.template-intitule {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.template-filiere {
+  font-size: 0.85rem;
+  color: var(--gray-800);
+}
+
+.template-version {
+  font-size: 0.78rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.template-date {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin-bottom: 0.9rem;
+}
+
+.btn-secondary {
+  margin-top: auto;
+  background: var(--primary-tint);
+  color: var(--primary-dark);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.template-card-new {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  color: var(--gray-600);
+  text-decoration: none;
+  border-style: dashed;
+  border-color: var(--gray-200);
+}
+
+.template-card-new:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.new-icon {
+  font-size: 1.4rem;
+  color: var(--primary);
+}
+
+.empty-state {
+  color: var(--gray-600);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    min-width: 0;
+  }
+
+  .stepper {
+    gap: 1rem;
+    overflow-x: auto;
+  }
+}

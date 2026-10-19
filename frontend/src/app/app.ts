@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import {AdminLogin} from './module3-admin/admin-login/admin-login';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +13,11 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   title = 'CertiUni';
+}
+  imports: [RouterOutlet, AdminLogin],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
+})
+export class App {
+  protected readonly title = signal('certiuni-frontend');
 }

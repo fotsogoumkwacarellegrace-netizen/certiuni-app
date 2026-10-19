@@ -1,0 +1,88 @@
+<div class="page">
+  <h1>Institutions</h1>
+  <p class="page-subtitle">Institutions validées, actives ou suspendues.</p>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input
+        type="search"
+        placeholder="Rechercher une institution…"
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="institutions-table">
+      <thead>
+        <tr>
+          <th>Institution</th>
+          <th>Type</th>
+          <th>Région</th>
+          <th>Statut</th>
+          <th>Date d'inscription</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (institution of institutionsFiltrees(); track institution.id) {
+          <tr>
+            <td>{{ institution.nom }}</td>
+            <td>{{ institution.type }}</td>
+            <td>{{ institution.region }}</td>
+            <td>
+              <span class="status-badge" [class.is-suspended]="institution.statut === 'Suspendue'">
+                {{ institution.statut }}
+              </span>
+            </td>
+            <td>{{ institution.dateInscription }}</td>
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="voirDetails(institution)"
+                [attr.aria-label]="'Voir les détails de ' + institution.nom"
+              >
+                <span class="material-icons" aria-hidden="true">visibility</span>
+              </button>
+              <button
+                type="button"
+                class="icon-btn icon-btn-danger"
+                (click)="demanderSuppression(institution)"
+                [attr.aria-label]="'Supprimer ' + institution.nom"
+              >
+                <span class="material-icons" aria-hidden="true">delete</span>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-row">Aucune institution validée trouvée.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      1-{{ institutionsFiltrees().length }} sur {{ institutions().length }}
+    </div>
+  </div>
+
+  @if (institutionASupprimer(); as cible) {
+    <div class="confirm-overlay">
+      <div class="confirm-dialog">
+        <h2>Supprimer cette institution ?</h2>
+        <p>
+          <strong>{{ cible.nom }}</strong> sera définitivement retirée de la liste des institutions.
+          Cette action est irréversible.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-secondary" (click)="annulerSuppression()">Annuler</button>
+          <button type="button" class="btn-danger" (click)="confirmerSuppression()">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
