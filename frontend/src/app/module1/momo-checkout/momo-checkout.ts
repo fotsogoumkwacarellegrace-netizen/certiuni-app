@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { MockDataService } from '../../core/services/mock-data.service';
 import { BillingService, CreditPack } from '../../services/billing.service';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
+import { BackButton } from '../../shared/ui/back-button';
 
 type Operator = 'mtn' | 'orange';
 type Step = 'form' | 'pending' | 'success';
@@ -33,7 +34,7 @@ const OPERATOR_LABEL: Record<Operator, string> = { mtn: 'MTN MoMo', orange: 'Ora
 @Component({
   selector: 'app-momo-checkout',
   standalone: true,
-  imports: [DatePipe, DarkModeDirective],
+  imports: [DatePipe, DarkModeDirective, BackButton],
   templateUrl: './momo-checkout.html',
   styleUrl: './momo-checkout.css'
 })
