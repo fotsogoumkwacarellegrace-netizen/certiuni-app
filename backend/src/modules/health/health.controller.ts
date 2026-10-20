@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Public } from '../../common/decorators/public.decorator';
 import {
     HealthCheckService,
     HealthCheck,
@@ -16,6 +17,7 @@ import { PrismaService } from '../../common/prisma/prisma.service';
  * - Seuils mémoire: heap 300MB, RSS 500MB (voir HEALTH_MEMORY_HEAP_THRESHOLD).
  */
 @ApiTags('Health')
+@Public() // Sonde publique pour K8s/Docker/LB — pas d'auth requise
 @Controller('health')
 export class HealthController {
     constructor(
