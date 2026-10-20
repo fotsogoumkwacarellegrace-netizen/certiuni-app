@@ -2,10 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../services/i18n.service';
+import { BackButton } from '../../shared/ui/back-button';
 @Component({
   selector: 'app-verdict-unknown',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BackButton],
   templateUrl: './verdict-unknown.html',
   styleUrl: './verdict-unknown.css'
 })
