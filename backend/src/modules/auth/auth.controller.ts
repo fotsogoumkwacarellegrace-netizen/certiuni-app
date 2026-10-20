@@ -8,7 +8,9 @@ import { Public } from '../../common/decorators/public.decorator';
 import { GetUser } from '../../common/decorators/get-user.decorator';
 
 @ApiTags('Auth')
-@Controller('v1/auth')
+// Pas de 'v1' en dur : le versioning URI global (/api/v1) s'en charge.
+// Un 'v1' ici produirait /api/v1/v1/auth (cf. main.ts).
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 

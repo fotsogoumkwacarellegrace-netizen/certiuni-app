@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -26,12 +26,14 @@ async function bootstrap() {
 
     // 2. Préfixe Global de l'API & Versionning URI
     app.setGlobalPrefix('api');
-    // App Versioning disabled (route conflicts on AuthController POST /login —
-    // controllers already hardcode 'v1' in their @Controller() path)
-    // app.enableVersioning({
-    //     type: VersioningType.URI,
-    //     defaultVersion: '1',
-    // });
+    // Le versioning URI est ACTIF : toutes les routes du frontend et du legacy
+    // Express (src/app.ts) sont appelées en /api/v1/... .
+    // Les contrôleurs ne doivent PAS hardcoder 'v1' dans leur @Controller()
+    // (sinon double préfixe : /api/v1/v1/auth).
+    app.enableVersioning({
+        type: VersioningType.URI,
+        defaultVersion: '1',
+    });
 
     // 3. Middlewares Globaux de Sécurité & Performance
     app.use(helmet());
