@@ -1,4 +1,6 @@
 .ai-code-tracker.json
 .env
+*.env
+data.env
 *.pem
 *.key
