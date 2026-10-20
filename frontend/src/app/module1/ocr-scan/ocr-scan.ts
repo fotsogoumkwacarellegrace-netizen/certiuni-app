@@ -105,7 +105,7 @@ export class OcrScan implements OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigate(['/public/ecran-accueil']);
+    this.router.navigate(['/public/accueil']);
   }
 
   toggleMenu(): void {

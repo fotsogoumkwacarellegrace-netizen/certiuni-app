@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api.certiuni.cm/api/v1',
-  useMock: true, // Vercel ne peut pas joindre le backend local de la démo : mocks servis côté client
+  useMock: true,
+  useMockApi: true, // alias explicite (spec Phase 3) : mocks servis cote client
 };

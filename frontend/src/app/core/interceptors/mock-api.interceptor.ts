@@ -32,7 +32,8 @@ export class MockApiInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Si le mode simulation est désactivé, on transmet la requête au vrai backend.
-    if (!environment.useMock) {
+    const mockEnabled = environment.useMockApi ?? environment.useMock;
+    if (!mockEnabled) {
       return next.handle(req);
     }
 

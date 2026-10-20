@@ -46,6 +46,11 @@ export const MODULE1_ROUTES: Routes = [
         path: 'pdf-viewer/:id',
         loadComponent: () => import('./pdf-viewer/pdf-viewer').then(m => m.PdfViewer)
       },
+      {
+        // Page « fonctionnalite en preparation » (liens sans page dediee).
+        path: 'bientot',
+        loadComponent: () => import('../shared/coming-soon/coming-soon').then(m => m.ComingSoon)
+      },
 
       // ===== Pages avec sidebar (Shell) =====
       {
