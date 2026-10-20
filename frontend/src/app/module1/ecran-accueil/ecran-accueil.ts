@@ -1,13 +1,6 @@
-﻿// src/app/module1/ecran-accueil/ecran-accueil.ts
+// src/app/module1/ecran-accueil/ecran-accueil.ts
 import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  HostListener
+  Component, inject, signal, OnInit, OnDestroy, ViewChild, ElementRef, HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -18,46 +11,32 @@ import { MockDataService } from '../../core/services/mock-data.service';
 import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { ScrollToTopDirective } from '../../directives/scroll-to-top';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-ecran-accueil',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    DarkModeDirective,
-    ScrollToTopDirective
-  ],
+  imports: [CommonModule, RouterModule, FormsModule, DarkModeDirective, ScrollToTopDirective],
   templateUrl: './ecran-accueil.html',
   styleUrl: './ecran-accueil.css'
 })
 export class EcranAccueil implements OnInit, OnDestroy {
-  // ============================================
-  // INJECTIONS
-  // ============================================
   private router = inject(Router);
   private mockService = inject(MockDataService);
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
+  readonly i18n = inject(I18nService);
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // ============================================
-  // ÉTAT DE L'INTERFACE (Signaux)
-  // ============================================
   searchQuery = signal('');
   lang = signal<'FR' | 'EN'>('FR');
   isDarkMode = signal(false);
   isMenuOpen = signal(false);
   isProcessing = signal(false);
 
-  // ============================================
-  // CYCLE DE VIE
-  // ============================================
   ngOnInit(): void {
     this.isDarkMode.set(this.darkModeService.isDarkMode$);
-
     this.darkModeSubscription = this.darkModeService.getDarkModeObservable().subscribe(
       (isDark: boolean) => {
         this.isDarkMode.set(isDark);
@@ -74,16 +53,10 @@ export class EcranAccueil implements OnInit, OnDestroy {
     this.darkModeSubscription.unsubscribe();
   }
 
-  // ============================================
-  // DARK MODE
-  // ============================================
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();
   }
 
-  // ============================================
-  // MENU MOBILE
-  // ============================================
   toggleMenu(): void {
     this.isMenuOpen.set(!this.isMenuOpen());
     if (this.isMenuOpen()) {
@@ -103,16 +76,10 @@ export class EcranAccueil implements OnInit, OnDestroy {
     this.closeMenu();
   }
 
-  // ============================================
-  // LANGUE
-  // ============================================
   setLang(l: 'FR' | 'EN'): void {
     this.lang.set(l);
   }
 
-  // ============================================
-  // RECHERCHE
-  // ============================================
   onSearchSubmit(): void {
     const query = this.searchQuery().trim();
     if (!query || this.isProcessing()) return;
@@ -141,9 +108,6 @@ export class EcranAccueil implements OnInit, OnDestroy {
     });
   }
 
-  // ============================================
-  // NAVIGATION â€” CARTES DE LA PAGE
-  // ============================================
   openCameraScan(): void {
     this.closeMenu();
     this.router.navigate(['/public/camera-scan']);
@@ -159,9 +123,6 @@ export class EcranAccueil implements OnInit, OnDestroy {
     this.router.navigate(['/public/bulk-upload']);
   }
 
-  // ============================================
-  // NAVIGATION â€” NAVBAR (mêmes 6 liens que ocr-scan)
-  // ============================================
   goToLanding(): void {
     this.closeMenu();
     this.router.navigate(['/public/landing']);
@@ -169,7 +130,7 @@ export class EcranAccueil implements OnInit, OnDestroy {
 
   goToHistory(event: Event): void {
     event.preventDefault();
-    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
+    alert('Historique — fonctionnalité bientôt disponible.');
   }
 
   goToSettings(event: Event): void {
@@ -177,9 +138,6 @@ export class EcranAccueil implements OnInit, OnDestroy {
     this.router.navigate(['/public/settings']);
   }
 
-  // ============================================
-  // DÉCONNEXION
-  // ============================================
   logout(): void {
     localStorage.removeItem('recruteur_user');
     localStorage.removeItem('recruteur_remember');
@@ -187,27 +145,20 @@ export class EcranAccueil implements OnInit, OnDestroy {
     this.router.navigate(['/public/landing']);
   }
 
-  // ============================================
-  // NAVIGATION â€” FOOTER
-  // ============================================
   goToInstitutions(): void {
     this.closeMenu();
-    this.router.navigate(['/admin/login']);
+    this.router.navigate(['/public/accueil']);
   }
 
   goToEtudiants(): void {
     this.closeMenu();
-    this.router.navigate(['/student/login']);
+    this.router.navigate(['/public/accueil']);
   }
 
   goToRecruteurs(): void {
     this.closeMenu();
-    this.router.navigate(['/public/login']);
   }
 
-  // ============================================
-  // UTILITAIRES
-  // ============================================
   getStatusColor(status: string): string {
     switch (status) {
       case 'VALID': return 'bg-emerald-100 text-emerald-700';

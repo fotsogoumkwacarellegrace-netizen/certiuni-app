@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { VerificationGateService } from '../../services/verification-gate.service';
 import { BackButton } from '../../shared/ui/back-button';
 
 @Component({
@@ -12,11 +13,12 @@ import { BackButton } from '../../shared/ui/back-button';
 export class CameraScan implements OnInit, OnDestroy {
   @ViewChild('videoElement') videoElement?: ElementRef<HTMLVideoElement>;
 
+  private readonly router = inject(Router);
+  private readonly gate = inject(VerificationGateService);
+
   private stream: MediaStream | null = null;
   cameraAvailable = signal(true);
   isCapturing = signal(false);
-
-  constructor(private router: Router) {}
 
   async ngOnInit() {
     await this.startCamera();
@@ -35,8 +37,8 @@ export class CameraScan implements OnInit, OnDestroy {
         this.videoElement.nativeElement.srcObject = this.stream;
       }
       this.cameraAvailable.set(true);
-    } catch (err) {
-      // Pas de caméra dispo (PC sans webcam, permission refusée...) → mode simulation
+    } catch {
+      // Pas de caméra (PC sans webcam, permission refusée…) → mode simulation
       this.cameraAvailable.set(false);
     }
   }
@@ -47,22 +49,25 @@ export class CameraScan implements OnInit, OnDestroy {
 
   onCapture() {
     if (this.isCapturing()) return;
+
+    // Plus de gratuit ni de crédit : on redirige avant même de scanner
+    if (!this.gate.ensureAllowance(1)) {
+      this.stopCamera();
+      return;
+    }
+
     this.isCapturing.set(true);
 
-    // Simule le temps de lecture du QR code (comme prévu au cahier des charges)
-    setTimeout(() => {
+    // Simule la lecture du QR code
+    setTimeout(async () => {
       this.stopCamera();
-      // UUID de démo (Marie Ngo) — en conditions réelles ce serait décodé du QR
-      this.router.navigate(['/public/verify', 'f81d4fae-7dec-11d0-a765-00a0c91e6bf6']);
+      // UUID de démo (Marie Ngo) — en conditions réelles : décodé du QR
+      await this.gate.verifyAndRoute('f81d4fae-7dec-11d0-a765-00a0c91e6bf6');
     }, 3000);
   }
 
   onClose() {
     this.stopCamera();
     this.router.navigate(['/public/accueil']);
-  }
-
-  onRotateCamera() {
-    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Rotation camera' } });
   }
 }

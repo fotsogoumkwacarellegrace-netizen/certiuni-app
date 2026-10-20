@@ -1,5 +1,5 @@
-﻿import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
@@ -14,7 +14,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    // withViewTransitions() : ajout du redesign module1 (transitions visuelles).
+    provideRouter(routes, withViewTransitions()),
     provideHttpClient(withInterceptorsFromDi()),
     // Mode mock en local (environment.useMock), laisse passer en production.
     { provide: HTTP_INTERCEPTORS, useClass: MockApiInterceptor, multi: true },

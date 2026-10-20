@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { SuperadminLayout } from './superadmin-layout/superadmin-layout';
 import { SuperadminLogin } from './superadmin-login/superadmin-login';

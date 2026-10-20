@@ -1,4 +1,4 @@
-﻿// src/app/module1/bulk-upload/bulk-upload.ts
+// src/app/module1/bulk-upload/bulk-upload.ts
 import { Component, inject, signal, computed, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -6,6 +6,9 @@ import { MockDataService, BulkCandidate } from '../../core/services/mock-data.se
 import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { Subscription } from 'rxjs';
+import { VerificationGateService } from '../../services/verification-gate.service';
+import { BillingService, isBillable } from '../../services/billing.service';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-bulk-upload',
@@ -19,8 +22,13 @@ export class BulkUpload implements OnDestroy {
   private mockService = inject(MockDataService);
   private darkModeService = inject(DarkModeService);
   private darkModeSubscription: Subscription = new Subscription();
-
+  private billing = inject(BillingService);
+  private gate = inject(VerificationGateService);
+  readonly i18n = inject(I18nService);
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  paywall = signal<{ needed: number; missing: number } | null>(null);
+  chargedCount = signal(0);
 
   isDragging = signal(false);
   isProcessing = signal(false);
@@ -48,10 +56,6 @@ export class BulkUpload implements OnDestroy {
     this.darkModeSubscription.unsubscribe();
   }
 
-  // ============================================
-  // DRAG & DROP
-  // ============================================
-
   onDragOver(event: DragEvent): void {
     event.preventDefault();
     this.isDragging.set(true);
@@ -78,21 +82,30 @@ export class BulkUpload implements OnDestroy {
     }
   }
 
-  // ============================================
-  // TRAITEMENT DU FICHIER
-  // ============================================
-
   processFile(file: File): void {
+    if (!this.gate.ensureAllowance(1)) return;
+
     this.fileName.set(file.name);
     this.isProcessing.set(true);
     this.uploadComplete.set(false);
+    this.paywall.set(null);
 
     this.mockService.processBulkFile(file).subscribe({
       next: (result) => {
         this.isProcessing.set(false);
-        this.uploadComplete.set(true);
-        this.processedCandidates.set(result.candidates);
         this.fileErrors.set(result.errors);
+
+        const needed = result.candidates.filter(c => isBillable(c.status)).length;
+
+        if (!this.billing.canAfford(needed)) {
+          this.paywall.set({ needed, missing: needed - this.billing.available() });
+          return;
+        }
+
+        this.billing.consume(needed, `Lot · ${file.name}`);
+        this.chargedCount.set(needed);
+        this.processedCandidates.set(result.candidates);
+        this.uploadComplete.set(true);
       },
       error: () => {
         this.isProcessing.set(false);
@@ -106,29 +119,17 @@ export class BulkUpload implements OnDestroy {
     this.fileName.set('');
     this.processedCandidates.set([]);
     this.fileErrors.set([]);
+    this.paywall.set(null);
+    this.chargedCount.set(0);
+  }
+
+  buyMissing(): void {
+    this.gate.goToCheckout(this.paywall()?.missing ?? 1);
   }
 
   onViewResults(): void {
     this.router.navigate(['/public/bulk-table']);
   }
-
-  // ============================================
-  // NAVIGATION â€” NAVBAR
-  // ============================================
-
-  goToHistory(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Historique des verifications' } });
-  }
-goToSettings(event: Event): void {
-  event.preventDefault();
-  this.router.navigate(['/public/settings']);
-}
-
-  goToSupport(): void {
-    this.router.navigate(['/public/bientot'], { queryParams: { page: 'Support technique' } });
-  }
-
 
   logout(): void {
     localStorage.removeItem('recruteur_user');
@@ -136,10 +137,6 @@ goToSettings(event: Event): void {
     sessionStorage.clear();
     this.router.navigate(['/public/landing']);
   }
-
-  // ============================================
-  // MENU MOBILE
-  // ============================================
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.set(!this.isMobileMenuOpen());
@@ -155,10 +152,6 @@ goToSettings(event: Event): void {
   onEscapeKey(): void {
     this.closeMobileMenu();
   }
-
-  // ============================================
-  // DARK MODE
-  // ============================================
 
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();
