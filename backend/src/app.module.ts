@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { BullModule } from '@nestjs/bullmq';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 // Config & Common
 // Verify exported names in ./config/database and ./config/env.config
@@ -59,19 +58,13 @@ import { RequestsModule } from './modules/requests/requests.module';            
       validate: validateEnv, // Bloque le démarrage si des variables obligatoires manquent
     }),
 
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-        const dbConfig = configService.get<TypeOrmModuleOptions>('database');
-        if (!dbConfig) {
-          throw new Error('Database configuration is missing');
-        }
-        return dbConfig;
-      },
-    }),
+// NOTE: TypeORM retiré du démarrage — aucune entité/repository (@Entity/@Column/
+// forFeature = 0 dans le code), Prisma est la seule couche de persistance
+// (DATABASE_URL). Le forRootAsync ci-dessous recevait `databaseConfig` (forme
+// {url,logging,ssl,pool}) sans clé `type` → MissingDriverError au boot.
+// Réintroduire TypeORM uniquement avec un vrai useFactory (type + url valides).
 
-    // 2. Protection contre les attaques Brute-Force / Rate Limiting
+// 2. Protection contre les attaques Brute-Force / Rate Limiting
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
