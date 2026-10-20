@@ -1,4 +1,4 @@
-﻿// frontend/src/app/module1/bulk-table/bulk-table.ts
+// frontend/src/app/module1/bulk-table/bulk-table.ts
 import { Component, inject, signal, computed, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';

@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AdminLayout } from './admin-layout/admin-layout';
 import { InstitutionRegistration } from './institution-registration/institution-registration';

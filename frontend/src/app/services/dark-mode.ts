@@ -1,4 +1,4 @@
-﻿// src/app/services/dark-mode.ts
+// src/app/services/dark-mode.ts
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 

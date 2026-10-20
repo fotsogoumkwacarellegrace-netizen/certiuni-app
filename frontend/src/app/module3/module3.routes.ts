@@ -1,4 +1,4 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { Login } from './student-pages/login/login';
 import { Dashboard } from './student-pages/dashboard/dashboard';
