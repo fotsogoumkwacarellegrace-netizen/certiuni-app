@@ -1,12 +1,11 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockDataService } from '../../core/services/mock-data.service';
-import { BackButton } from '../../shared/ui/back-button';
-
+import { I18nService } from '../../services/i18n.service';
 @Component({
   selector: 'app-verdict-revoked',
   standalone: true,
-  imports: [BackButton],
+  imports: [],
   templateUrl: './verdict-revoked.html',
   styleUrl: './verdict-revoked.css'
 })
@@ -14,7 +13,7 @@ export class VerdictRevoked implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mockService = inject(MockDataService);
-
+  readonly i18n = inject(I18nService);
   studentName = signal('Étudiant Inconnu');
   diplomaLine = signal('Master en Cybersécurité et Réseaux');
   institutionName = signal('Université Virtuelle de Yaoundé');

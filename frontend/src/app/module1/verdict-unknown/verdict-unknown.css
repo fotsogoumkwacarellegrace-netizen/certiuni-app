@@ -564,3 +564,62 @@
     grid-template-columns: 1fr;
   }
 }
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+}
+
+/* ===== Responsive moderne (écrase les anciennes règles) ===== */
+.header {
+  padding: calc(6px + env(safe-area-inset-top)) clamp(12px, 3vw, 28px) 6px;
+}
+
+.body {
+  max-width: 720px;
+  padding: clamp(16px, 3vw, 28px) clamp(14px, 4vw, 24px) calc(40px + env(safe-area-inset-bottom));
+}
+
+.status-card,
+.success-card {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding: clamp(24px, 5vw, 36px) clamp(16px, 4vw, 32px);
+}
+
+.certiuni-logo {
+  width: clamp(52px, 12vw, 88px);
+  height: clamp(52px, 12vw, 88px);
+}
+
+.brand-text { font-size: clamp(1.25rem, 4vw, 1.6rem); }
+
+@media (max-width: 480px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .brand-tagline { font-size: 0.62rem; }
+  .attestation-header { align-items: flex-start; }
+}

@@ -1,19 +1,18 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BackButton } from '../../shared/ui/back-button';
-
+import { I18nService } from '../../services/i18n.service';
 @Component({
   selector: 'app-verdict-unknown',
   standalone: true,
-  imports: [CommonModule, BackButton],
+  imports: [CommonModule],
   templateUrl: './verdict-unknown.html',
   styleUrl: './verdict-unknown.css'
 })
 export class VerdictUnknown implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
+  readonly i18n = inject(I18nService);
   searchedCode = signal('');
   lang = signal<'FR' | 'EN'>('FR');
   isCopied = signal(false);

@@ -1,623 +1,451 @@
-﻿<!-- frontend/src/app/module1/settings/settings.html -->
+<!-- frontend/src/app/module1/settings/settings.html -->
 <div class="settings-page" [class.dark-mode]="isDarkMode()">
-
-  <!-- HEADER -->
-  <header class="settings-header">
-    <div class="header-inner">
-      <div class="brand" (click)="goBack()">
-        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
-        <span class="brand-text">CertiUni</span>
-      </div>
-
-      <div class="header-actions">
-        <button class="btn-back" (click)="goBack()">
-          <span class="material-symbols-outlined">arrow_back</span>
-          <span>Retour</span>
-        </button>
-        <button class="theme-toggle" (click)="toggleDarkMode()" aria-label="Changer le thème">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
 
   <!-- MAIN -->
   <main class="settings-main">
 
-    <div class="settings-title">
-      <span class="material-symbols-outlined">settings</span>
-      <h1>Paramètres</h1>
-    </div>
-    <p class="settings-subtitle">Gérez la configuration de votre plateforme CertiUni</p>
-
     <div class="settings-grid">
 
       <!-- SIDEBAR -->
-      <nav class="settings-sidebar">
-        <button class="sidebar-item" [class.active]="activeTab() === 'general'" (click)="setActiveTab('general')">
-          <span class="material-symbols-outlined">tune</span>
-          Général
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'institution'" (click)="setActiveTab('institution')">
-          <span class="material-symbols-outlined">account_balance</span>
-          Institution
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'security'" (click)="setActiveTab('security')">
-          <span class="material-symbols-outlined">security</span>
-          Sécurité
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'billing'" (click)="setActiveTab('billing')">
-          <span class="material-symbols-outlined">payments</span>
-          Facturation
-          <span class="badge">1</span>
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'ai'" (click)="setActiveTab('ai')">
-          <span class="material-symbols-outlined">smart_toy</span>
-          Intelligence Artificielle
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'notifications'" (click)="setActiveTab('notifications')">
-          <span class="material-symbols-outlined">notifications</span>
-          Notifications
-        </button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-item" [class.active]="activeTab() === 'api'" (click)="setActiveTab('api')">
-          <span class="material-symbols-outlined">code</span>
-          API & Intégrations
-        </button>
-        <button class="sidebar-item" [class.active]="activeTab() === 'about'" (click)="setActiveTab('about')">
-          <span class="material-symbols-outlined">info</span>
-          À propos
-        </button>
+      <nav class="settings-sidebar" [attr.aria-label]="i18n.t('settings')">
+        @for (tab of tabs; track tab.key) {
+          <button
+            type="button"
+            class="sidebar-item"
+            [class.active]="activeTab() === tab.key"
+            (click)="setActiveTab(tab.key)">
+            <span class="material-symbols-outlined">{{ tab.icon }}</span>
+            <span class="sidebar-label">{{ i18n.t(tab.labelKey) }}</span>
+            @if (tab.badge) {
+              <span class="badge">{{ tab.badge }}</span>
+            }
+          </button>
+        }
       </nav>
 
       <!-- CONTENT -->
       <div class="settings-content">
 
-        <!-- GENERAL -->
+        <!-- ================= GENERAL ================= -->
         @if (activeTab() === 'general') {
-        <div class="section-header">
-          <h2>Paramètres Généraux</h2>
-          <p>Configurez les options de base de votre plateforme</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Nom de la plateforme</label>
-          <input type="text" class="form-input" [(ngModel)]="platformName" placeholder="CertiUni" />
-          <span class="form-hint">Ce nom apparaîtra dans l'en-tête et les communications</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Langue par défaut</label>
-          <select class="form-select" [(ngModel)]="defaultLanguage">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Fuseau horaire</label>
-          <select class="form-select" [(ngModel)]="timezone">
-            <option value="Africa/Douala">Afrique/Douala (GMT+1)</option>
-            <option value="Africa/Yaounde">Afrique/Yaoundé (GMT+1)</option>
-            <option value="UTC">UTC</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Devise</label>
-          <select class="form-select" [(ngModel)]="currency">
-            <option value="XAF">FCFA (XAF)</option>
-            <option value="USD">Dollar US (USD)</option>
-            <option value="EUR">Euro (EUR)</option>
-          </select>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('general')">
-            <span class="material-symbols-outlined">save</span>
-            Enregistrer les modifications
-          </button>
-          <button class="btn-secondary" (click)="resetSettings('general')">
-            <span class="material-symbols-outlined">refresh</span>
-            Réinitialiser
-          </button>
-        </div>
-        }
-
-        <!-- INSTITUTION -->
-        @if (activeTab() === 'institution') {
-        <div class="section-header">
-          <h2>Informations Institutionnelles</h2>
-          <p>Gérez les données de votre établissement</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Nom de l'institution <span class="required">*</span></label>
-          <input type="text" class="form-input" [(ngModel)]="institutionName" placeholder="Ex: Université de Douala" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Sigle <span class="required">*</span></label>
-          <input type="text" class="form-input" [(ngModel)]="institutionAcronym" placeholder="Ex: UDS" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Domaine email officiel <span class="required">*</span></label>
-          <input type="text" class="form-input" [(ngModel)]="institutionDomain" placeholder="Ex: @univ-douala.cm" />
-          <span class="form-hint">Seuls les emails avec ce domaine pourront créer des comptes administrateur</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Logo de l'institution</label>
-          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-            <div style="width:80px; height:80px; border:2px dashed var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--bg); overflow:hidden;">
-              @if (institutionLogo) {
-              <img [src]="institutionLogo" alt="Logo" style="max-width:100%; max-height:100%; object-fit:contain;" />
-              } @else {
-              <span class="material-symbols-outlined" style="color:var(--text-light); font-size:32px;">image</span>
-              }
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">tune</span>
             </div>
             <div>
-              <button class="btn-secondary" (click)="uploadLogo()">
-                <span class="material-symbols-outlined">upload</span>
-                Télécharger
-              </button>
-              @if (institutionLogo) {
-              <button class="btn-secondary" (click)="removeLogo()" style="margin-left:8px; color:var(--destructive);">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-              }
-              <span class="form-hint" style="display:block; margin-top:4px;">Formats: PNG, JPG (max 2MB)</span>
+              <h2>{{ i18n.t('settingsGeneralTitle') }}</h2>
+              <p>{{ i18n.t('settingsGeneralDesc') }}</p>
             </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Mode de fonctionnement</label>
-          <select class="form-select" [(ngModel)]="environmentMode">
-            <option value="sandbox">Sandbox (Test - filigrane SPÉCIMEN)</option>
-            <option value="production">Production (Officiel)</option>
-          </select>
-          <span class="form-hint">En mode Sandbox, tous les documents générés porteront un filigrane "SPÉCIMEN"</span>
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="platformName">{{ i18n.t('settingsPlatformName') }}</label>
+            <input
+              id="platformName"
+              type="text"
+              class="form-input"
+              [(ngModel)]="platformName"
+              [placeholder]="i18n.t('settingsPlatformNamePh')" />
+            <span class="form-hint">{{ i18n.t('settingsPlatformNameHint') }}</span>
+          </div>
 
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('institution')">
-            <span class="material-symbols-outlined">save</span>
-            Enregistrer
-          </button>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="defaultLanguage">{{ i18n.t('settingsDefaultLang') }}</label>
+              <select id="defaultLanguage" class="form-select" [(ngModel)]="defaultLanguage">
+                <option value="fr">{{ i18n.t('settingsLangFr') }}</option>
+                <option value="en">{{ i18n.t('settingsLangEn') }}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="timezone">{{ i18n.t('settingsTimezone') }}</label>
+              <select id="timezone" class="form-select" [(ngModel)]="timezone">
+                <option value="Africa/Douala">{{ i18n.t('settingsTzDouala') }}</option>
+                <option value="Africa/Yaounde">{{ i18n.t('settingsTzYaounde') }}</option>
+                <option value="UTC">{{ i18n.t('settingsTzUtc') }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="currency">{{ i18n.t('settingsCurrency') }}</label>
+            <select id="currency" class="form-select" [(ngModel)]="currency">
+              <option value="XAF">{{ i18n.t('settingsCurrencyXaf') }}</option>
+              <option value="USD">{{ i18n.t('settingsCurrencyUsd') }}</option>
+              <option value="EUR">{{ i18n.t('settingsCurrencyEur') }}</option>
+            </select>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('general')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSave') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('general')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
         }
 
-        <!-- SECURITY -->
+        <!-- ================= SECURITY ================= -->
         @if (activeTab() === 'security') {
-        <div class="section-header">
-          <h2>Sécurité et Authentification</h2>
-          <p>Protégez votre compte et vos données</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Mot de passe actuel</label>
-          <input type="password" class="form-input" placeholder="••••••••" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Nouveau mot de passe</label>
-          <input type="password" class="form-input" placeholder="••••••••" />
-          <span class="form-hint">Minimum 8 caractères, avec une majuscule, une minuscule et un chiffre</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Confirmer le nouveau mot de passe</label>
-          <input type="password" class="form-input" placeholder="••••••••" />
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:24px; margin-top:8px;">
-          <h3 style="font-size:1rem; font-weight:600; color:var(--text); margin-bottom:16px;">Authentification à deux facteurs (2FA)</h3>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">Authentification par application</span>
-              <span class="toggle-desc">Utilisez Google Authenticator ou Authy</span>
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">security</span>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="twoFactorApp" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">Clé de sécurité FIDO2 / YubiKey</span>
-              <span class="toggle-desc">Protection physique renforcée</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="twoFactorYubiKey" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">SMS de vérification</span>
-              <span class="toggle-desc">Recevez un code par SMS à chaque connexion</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="twoFactorSms" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:24px; margin-top:16px;">
-          <h3 style="font-size:1rem; font-weight:600; color:var(--text); margin-bottom:16px;">Sessions actives</h3>
-
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
-              <div>
-                <div style="font-weight:600; color:var(--text);">Chrome - Windows</div>
-                <div style="font-size:0.75rem; color:var(--text-light);">Douala, Cameroun · Actif maintenant</div>
-              </div>
-              <span style="font-size:0.7rem; padding:4px 12px; border-radius:12px; background:rgba(25,118,74,0.12); color:var(--primary); font-weight:600;">Actif</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--bg); border-radius:10px; border:1px solid var(--border); opacity:0.6;">
-              <div>
-                <div style="font-weight:600; color:var(--text);">Safari - iPhone</div>
-                <div style="font-size:0.75rem; color:var(--text-light);">Yaoundé, Cameroun · Il y a 2 heures</div>
-              </div>
-              <span style="font-size:0.7rem; padding:4px 12px; border-radius:12px; background:rgba(220,40,40,0.08); color:var(--destructive); font-weight:600;">Expirée</span>
-            </div>
-          </div>
-
-          <button class="btn-secondary" style="margin-top:12px;">
-            <span class="material-symbols-outlined">logout</span>
-            Déconnecter toutes les sessions
-          </button>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('security')">
-            <span class="material-symbols-outlined">save</span>
-            Mettre à jour
-          </button>
-        </div>
-        }
-
-        <!-- BILLING -->
-        @if (activeTab() === 'billing') {
-        <div class="section-header">
-          <h2>Facturation et Abonnement</h2>
-          <p>Gérez votre abonnement et vos méthodes de paiement</p>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
-          <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px;">
-            <div style="font-size:0.72rem; color:var(--text-light); text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Plan actuel</div>
-            <div style="font-size:1.2rem; font-weight:700; color:var(--text); margin:4px 0;">{{ billingPlan }}</div>
-            <div style="font-size:0.82rem; color:var(--text-secondary);">{{ billingStatus }}</div>
-          </div>
-          <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px;">
-            <div style="font-size:0.72rem; color:var(--text-light); text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">Prochaine facturation</div>
-            <div style="font-size:1.2rem; font-weight:700; color:var(--text); margin:4px 0;">{{ nextBillingDate }}</div>
-            <div style="font-size:0.82rem; color:var(--text-secondary);">{{ nextBillingAmount }}</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Méthode de paiement</label>
-          <select class="form-select" [(ngModel)]="paymentMethod">
-            <option value="mtn">MTN Mobile Money</option>
-            <option value="orange">Orange Money</option>
-            <option value="card">Carte Bancaire</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Numéro de téléphone (pour Mobile Money)</label>
-          <input type="tel" class="form-input" [(ngModel)]="billingPhone" placeholder="+237 6XX XXX XXX" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Adresse de facturation</label>
-          <input type="text" class="form-input" [(ngModel)]="billingAddress" placeholder="Ex: Université de Douala, BP 2701 Douala" />
-        </div>
-
-        <div class="info-card">
-          <span class="material-symbols-outlined">info</span>
-          <div class="info-text">
-            <strong>Facturation automatique</strong><br />
-            Votre abonnement sera renouvelé automatiquement à chaque période. Vous recevrez un reçu par email après chaque prélèvement.
-          </div>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('billing')">
-            <span class="material-symbols-outlined">save</span>
-            Mettre à jour
-          </button>
-          <button class="btn-secondary" (click)="viewInvoices()">
-            <span class="material-symbols-outlined">receipt</span>
-            Voir les factures
-          </button>
-        </div>
-        }
-
-        <!-- AI -->
-        @if (activeTab() === 'ai') {
-        <div class="section-header">
-          <h2>Intelligence Artificielle</h2>
-          <p>Configurez les paramètres des modèles d'IA de CertiUni</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Modèle d'IA pour l'OCR</label>
-          <select class="form-select" [(ngModel)]="aiOcrModel">
-            <option value="gpt-4-vision">GPT-4 Vision</option>
-            <option value="claude-3-opus">Claude 3 Opus</option>
-            <option value="gemini-pro-vision">Gemini Pro Vision</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Modèle d'IA pour le Design</label>
-          <select class="form-select" [(ngModel)]="aiDesignModel">
-            <option value="gpt-4">GPT-4</option>
-            <option value="claude-3-sonnet">Claude 3 Sonnet</option>
-            <option value="gemini-pro">Gemini Pro</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Température créative</label>
-          <div style="display:flex; align-items:center; gap:16px;">
-            <input type="range" min="0" max="100" class="form-range" [(ngModel)]="aiTemperature" style="flex:1; accent-color:var(--primary);" />
-            <span style="font-weight:600; color:var(--text); min-width:40px;">{{ aiTemperature }}%</span>
-          </div>
-          <span class="form-hint">Plus la température est élevée, plus les réponses de l'IA sont créatives</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Limite de tokens</label>
-          <div style="display:flex; align-items:center; gap:16px;">
-            <input type="range" min="0" max="100" class="form-range" [(ngModel)]="aiMaxTokens" style="flex:1; accent-color:var(--primary);" />
-            <span style="font-weight:600; color:var(--text); min-width:40px;">{{ aiMaxTokens }}%</span>
-          </div>
-          <span class="form-hint">Limite la longueur des réponses de l'IA</span>
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:20px; margin-top:8px;">
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">Inspecteur d'erreurs automatique</span>
-              <span class="toggle-desc">L'IA analyse automatiquement les fichiers Excel importés</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="aiAutoInspect" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">Suggestions de design</span>
-              <span class="toggle-desc">L'IA propose des améliorations pour vos templates de diplômes</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="aiDesignSuggestions" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('ai')">
-            <span class="material-symbols-outlined">save</span>
-            Enregistrer
-          </button>
-          <button class="btn-secondary" (click)="testAIConnection()">
-            <span class="material-symbols-outlined">wifi_tethering</span>
-            Tester la connexion
-          </button>
-        </div>
-        }
-
-        <!-- NOTIFICATIONS -->
-        @if (activeTab() === 'notifications') {
-        <div class="section-header">
-          <h2>Notifications</h2>
-          <p>Configurez vos préférences de notifications</p>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-info">
-            <span class="toggle-title">Notifications par email</span>
-            <span class="toggle-desc">Recevez les alertes importantes par email</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" [(ngModel)]="notifEmail" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-info">
-            <span class="toggle-title">Alertes de sécurité</span>
-            <span class="toggle-desc">Soyez informé des tentatives de connexion suspectes</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" [(ngModel)]="notifSecurity" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-info">
-            <span class="toggle-title">Paiements reçus</span>
-            <span class="toggle-desc">Recevez une notification lors de chaque paiement étudiant</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" [(ngModel)]="notifPayments" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-info">
-            <span class="toggle-title">Nouveaux certificats</span>
-            <span class="toggle-desc">Soyez alerté lors de l'émission de nouveaux diplômes</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" [(ngModel)]="notifCertificates" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-info">
-            <span class="toggle-title">Rapports hebdomadaires</span>
-            <span class="toggle-desc">Recevez un résumé des activités de la semaine</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" [(ngModel)]="notifReports" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('notifications')">
-            <span class="material-symbols-outlined">save</span>
-            Enregistrer
-          </button>
-        </div>
-        }
-
-        <!-- API -->
-        @if (activeTab() === 'api') {
-        <div class="section-header">
-          <h2>API et Intégrations</h2>
-          <p>Gérez vos clés API et vos intégrations tierces</p>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Clé API publique</label>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" class="form-input" [value]="apiPublicKey" readonly style="font-family:monospace; background:var(--bg);" />
-            <button class="btn-secondary" (click)="copyApiKey()" style="padding:8px 12px;">
-              <span class="material-symbols-outlined" style="font-size:18px;">content_copy</span>
-            </button>
-          </div>
-          <span class="form-hint">Utilisez cette clé pour les requêtes publiques (vérification, etc.)</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Clé API privée</label>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="password" class="form-input" [value]="apiPrivateKey" readonly style="font-family:monospace; background:var(--bg);" />
-            <button class="btn-secondary" (click)="regenerateApiKey()" style="padding:8px 12px;">
-              <span class="material-symbols-outlined" style="font-size:18px;">refresh</span>
-            </button>
-          </div>
-          <span class="form-hint">Gardez cette clé secrète. Ne la partagez jamais.</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Webhooks</label>
-          <input type="url" class="form-input" [(ngModel)]="webhookUrl" placeholder="https://votre-serveur.com/webhook" />
-          <span class="form-hint">Recevez des notifications en temps réel sur vos événements</span>
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:20px; margin-top:8px;">
-          <h3 style="font-size:1rem; font-weight:600; color:var(--text); margin-bottom:12px;">Intégrations</h3>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">LinkedIn</span>
-              <span class="toggle-desc">Permet le partage automatique des certifications</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="integrateLinkedin" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-group">
-            <div class="toggle-info">
-              <span class="toggle-title">OpenStreetMap</span>
-              <span class="toggle-desc">Géolocalisation des vérifications</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" [(ngModel)]="integrateOpenStreetMap" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="btn-actions">
-          <button class="btn-primary" (click)="saveSettings('api')">
-            <span class="material-symbols-outlined">save</span>
-            Enregistrer
-          </button>
-          <button class="btn-secondary" (click)="testApiConnection()">
-            <span class="material-symbols-outlined">wifi_tethering</span>
-            Tester la connexion API
-          </button>
-        </div>
-        }
-
-        <!-- ABOUT -->
-        @if (activeTab() === 'about') {
-        <div class="section-header">
-          <h2>À propos de CertiUni</h2>
-          <p>Informations sur la plateforme</p>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:20px;">
-          <div style="display:flex; align-items:center; gap:16px; padding:16px; background:var(--bg); border-radius:12px; border:1px solid var(--border);">
-            <img src="images/logo.png" alt="CertiUni" style="height:60px; width:auto;" />
             <div>
-              <div style="font-size:1.2rem; font-weight:800; color:var(--primary);">CertiUni</div>
-              <div style="font-size:0.82rem; color:var(--text-secondary);">Plateforme nationale de certification académique</div>
+              <h2>{{ i18n.t('settingsSecurityTitle') }}</h2>
+              <p>{{ i18n.t('settingsSecurityDesc') }}</p>
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
-              <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Version</div>
-              <div style="font-weight:600; color:var(--text);">v3.0.0</div>
+          <!-- Mot de passe -->
+          <div class="block-title">
+            <span class="material-symbols-outlined">lock</span>
+            {{ i18n.t('settingsPassword') }}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="currentPassword">{{ i18n.t('settingsCurrentPassword') }}</label>
+            <input
+              id="currentPassword"
+              type="password"
+              class="form-input"
+              placeholder="••••••••"
+              [(ngModel)]="currentPassword" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newPassword">{{ i18n.t('settingsNewPassword') }}</label>
+              <input
+                id="newPassword"
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="newPassword" />
+              <span class="form-hint">{{ i18n.t('settingsPasswordHint') }}</span>
             </div>
-            <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
-              <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Environnement</div>
-              <div style="font-weight:600; color:var(--text);">{{ environmentMode === 'production' ? 'Production' : 'Sandbox' }}</div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">{{ i18n.t('settingsConfirmPassword') }}</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="confirmPassword" />
             </div>
           </div>
 
-          <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
-            <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Fonctionnalités</div>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-              <span style="padding:4px 12px; background:rgba(25,118,74,0.1); color:var(--primary); border-radius:20px; font-size:0.75rem; font-weight:500;">Multi-Tenant</span>
-              <span style="padding:4px 12px; background:rgba(25,118,74,0.1); color:var(--primary); border-radius:20px; font-size:0.75rem; font-weight:500;">Blockchain</span>
-              <span style="padding:4px 12px; background:rgba(25,118,74,0.1); color:var(--primary); border-radius:20px; font-size:0.75rem; font-weight:500;">IA OCR</span>
-              <span style="padding:4px 12px; background:rgba(25,118,74,0.1); color:var(--primary); border-radius:20px; font-size:0.75rem; font-weight:500;">Mobile Money</span>
-              <span style="padding:4px 12px; background:rgba(25,118,74,0.1); color:var(--primary); border-radius:20px; font-size:0.75rem; font-weight:500;">QR Code</span>
+          <div class="btn-actions" style="margin-top: 0;">
+            <button type="button" class="btn-primary" (click)="updatePassword()">
+              <span class="material-symbols-outlined">key</span>
+              {{ i18n.t('settingsUpdatePassword') }}
+            </button>
+          </div>
+
+          <!-- 2FA -->
+          <div class="divider-block">
+            <div class="block-title">
+              <span class="material-symbols-outlined">verified_user</span>
+              {{ i18n.t('settings2faTitle') }}
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faApp') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faAppDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorApp" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faYubiKey') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faYubiKeyDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorYubiKey" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faSms') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faSmsDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorSms" />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
           </div>
 
-          <div style="padding:12px 16px; background:var(--bg); border-radius:10px; border:1px solid var(--border);">
-            <div style="font-size:0.7rem; color:var(--text-light); text-transform:uppercase; font-weight:600;">Liens utiles</div>
-            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
-              <a routerLink="/public/bientot" [queryParams]="{page: 'Documentation'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Documentation</a>
-              <a routerLink="/public/bientot" [queryParams]="{page: 'API Reference'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">API Reference</a>
-              <a routerLink="/public/bientot" [queryParams]="{page: 'Support technique'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Support</a>
-              <a routerLink="/public/bientot" [queryParams]="{page: 'Statut de la plateforme'}" style="color:var(--primary); text-decoration:none; font-size:0.85rem; font-weight:500;">Statut</a>
+          <!-- Sessions actives -->
+          <div class="divider-block">
+            <div class="block-title">
+              <span class="material-symbols-outlined">devices</span>
+              {{ i18n.t('settingsActiveSessions') }}
+            </div>
+
+            <div class="session-list">
+              <div class="session-item">
+                <div class="session-info">
+                  <span class="material-symbols-outlined session-icon">computer</span>
+                  <div>
+                    <strong>{{ i18n.t('settingsSessionChrome') }}</strong>
+                    <small>{{ i18n.t('settingsSessionChromeInfo') }}</small>
+                  </div>
+                </div>
+                <span class="session-pill session-pill--active">{{ i18n.t('settingsSessionActive') }}</span>
+              </div>
+
+              <div class="session-item session-item--muted">
+                <div class="session-info">
+                  <span class="material-symbols-outlined session-icon">smartphone</span>
+                  <div>
+                    <strong>{{ i18n.t('settingsSessionSafari') }}</strong>
+                    <small>{{ i18n.t('settingsSessionSafariInfo') }}</small>
+                  </div>
+                </div>
+                <span class="session-pill session-pill--expired">{{ i18n.t('settingsSessionExpired') }}</span>
+              </div>
+            </div>
+
+            <button type="button" class="btn-secondary" (click)="logoutAllSessions()">
+              <span class="material-symbols-outlined">logout</span>
+              {{ i18n.t('settingsLogoutAll') }}
+            </button>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('security')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSavePreferences') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('security')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= NOTIFICATIONS ================= -->
+        @if (activeTab() === 'notifications') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">notifications</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsNotificationsTitle') }}</h2>
+              <p>{{ i18n.t('settingsNotificationsDesc') }}</p>
             </div>
           </div>
 
-          <div style="text-align:center; font-size:0.75rem; color:var(--text-light); padding-top:8px; border-top:1px solid var(--border);">
-            © 2026 CertiUni Cameroun. Tous droits réservés.
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifEmail') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifEmailDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifEmail" />
+              <span class="toggle-slider"></span>
+            </label>
           </div>
-        </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifSecurity') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifSecurityDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifSecurity" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifPayments') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifPaymentsDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifPayments" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifCertificates') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifCertificatesDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifCertificates" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifReports') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifReportsDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifReports" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('notifications')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSave') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('notifications')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= BILLING ================= -->
+        @if (activeTab() === 'billing') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">payments</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsBillingTitle') }}</h2>
+              <p>{{ i18n.t('settingsBillingDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsCurrentPlan') }}</span>
+              <span class="stat-value">{{ billingPlan }}</span>
+              <span class="stat-hint">{{ billingStatus }}</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsNextBilling') }}</span>
+              <span class="stat-value">{{ nextBillingDate }}</span>
+              <span class="stat-hint">{{ nextBillingAmount }}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="paymentMethod">{{ i18n.t('settingsPaymentMethod') }}</label>
+            <select id="paymentMethod" class="form-select" [(ngModel)]="paymentMethod">
+              <option value="mtn">{{ i18n.t('settingsPaymentMtn') }}</option>
+              <option value="orange">{{ i18n.t('settingsPaymentOrange') }}</option>
+              <option value="card">{{ i18n.t('settingsPaymentCard') }}</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="billingPhone">{{ i18n.t('settingsBillingPhone') }}</label>
+              <input
+                id="billingPhone"
+                type="tel"
+                class="form-input"
+                [(ngModel)]="billingPhone"
+                placeholder="+237 6XX XXX XXX" />
+              <span class="form-hint">{{ i18n.t('settingsBillingPhoneHint') }}</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="billingAddress">{{ i18n.t('settingsBillingAddress') }}</label>
+              <input
+                id="billingAddress"
+                type="text"
+                class="form-input"
+                [(ngModel)]="billingAddress"
+                [placeholder]="i18n.t('settingsBillingAddressPh')" />
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="material-symbols-outlined">info</span>
+            <div class="info-text">
+              <strong>{{ i18n.t('settingsAutoBilling') }}</strong><br />
+              {{ i18n.t('settingsAutoBillingDesc') }}
+            </div>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('billing')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsUpdate') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="viewInvoices()">
+              <span class="material-symbols-outlined">receipt</span>
+              {{ i18n.t('settingsViewInvoices') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= ABOUT ================= -->
+        @if (activeTab() === 'about') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">info</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsAboutTitle') }}</h2>
+              <p>{{ i18n.t('settingsAboutDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="about-brand">
+            <img src="images/logo.png" alt="CertiUni" class="about-logo" />
+            <div>
+              <div class="about-name">CertiUni</div>
+              <div class="about-desc">{{ i18n.t('settingsAboutTagline') }}</div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsVersion') }}</span>
+              <span class="stat-value">v3.0.0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsEnvironment') }}</span>
+              <span class="stat-value">{{ i18n.t('settingsProduction') }}</span>
+            </div>
+          </div>
+
+          <div class="feature-tags">
+            <span class="feature-tag">Multi-Tenant</span>
+            <span class="feature-tag">Blockchain</span>
+            <span class="feature-tag">IA OCR</span>
+            <span class="feature-tag">Mobile Money</span>
+            <span class="feature-tag">QR Code</span>
+            <span class="feature-tag">SHA-256</span>
+          </div>
+
+          <div class="links-block">
+            <span class="links-label">{{ i18n.t('settingsUsefulLinks') }}</span>
+            <div class="links-list">
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkDocs') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkApi') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkSupport') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkStatus') }}</a>
+            </div>
+          </div>
+
+          <div class="about-footer">
+            {{ i18n.t('settingsCopyright') }}
+          </div>
         }
 
       </div>

@@ -6,7 +6,7 @@ import { MockDataService, BulkCandidate, VerificationResult, Grade } from '../..
 import { DarkModeService } from '../../services/dark-mode';
 import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { Subscription } from 'rxjs';
-
+import { I18nService } from '../../services/i18n.service';
 interface PanelData {
   status: 'VALID' | 'REVOKED' | 'NOT_FOUND';
   studentName: string;
@@ -30,6 +30,7 @@ interface PanelData {
   styleUrl: './bulk-table.css'
 })
 export class BulkTable implements OnInit, OnDestroy {
+  readonly i18n = inject(I18nService);
   private router = inject(Router);
   private mockService = inject(MockDataService);
   private darkModeService = inject(DarkModeService);

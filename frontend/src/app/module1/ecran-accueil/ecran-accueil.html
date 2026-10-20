@@ -1,135 +1,13 @@
 <!-- src/app/module1/ecran-accueil/ecran-accueil.html -->
 <div class="accueil-container" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
 
-  <!-- ============================================ -->
-  <!-- HEADER - PLEINE LARGEUR -->
-  <!-- ============================================ -->
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo-container">
-        <a class="logo-link" (click)="goToLanding()">
-          <img src="images/logo.png" alt="CertiUni" class="logo-img" />
-        </a>
-        <span class="logo-text">CertiUni</span>
-      </div>
-
-      <a class="header-back" routerLink="/public/landing" title="Retour au site"><span class="material-symbols-outlined">arrow_back</span></a>
-
-      <!-- MENU BURGER -->
-      <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()">
-        <span class="burger-line"></span>
-        <span class="burger-line"></span>
-        <span class="burger-line"></span>
-      </button>
-
-      <!-- NAVIGATION DESKTOP — mêmes 6 liens que ocr-scan -->
-      <nav class="nav-links desktop-nav">
-        <a routerLink="/public/accueil" routerLinkActive="active">
-          <span class="material-symbols-outlined">home</span>
-          Accueil
-        </a>
-        <a routerLink="/public/camera-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">qr_code_scanner</span>
-          Scanner
-        </a>
-        <a routerLink="/public/ocr-scan" routerLinkActive="active">
-          <span class="material-symbols-outlined">document_scanner</span>
-          Analyse
-        </a>
-        <a routerLink="/public/bulk-upload" routerLinkActive="active">
-          <span class="material-symbols-outlined">checklist_rtl</span>
-          Lot
-        </a>
-        <a href="#" (click)="goToHistory($event)">
-          <span class="material-symbols-outlined">history</span>
-          Historique
-        </a>
-        <a href="#" (click)="goToSettings($event)">
-          <span class="material-symbols-outlined">settings</span>
-          Paramètres
-        </a>
-      </nav>
-
-      <div class="header-actions">
-        <!-- Thème -->
-        <button class="theme-toggle" (click)="toggleDarkMode()" title="Changer le thème">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
-
-        <!-- Déconnexion -->
-        <div class="avatar" (click)="logout()" title="Déconnexion">
-          <span class="avatar-initials">AD</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- OVERLAY POUR LE MENU MOBILE -->
-  <div class="menu-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
-
-  <!-- MENU MOBILE — mêmes 6 liens + footer -->
-  <nav class="mobile-menu" [class.open]="isMenuOpen()">
-    <div class="mobile-menu-header">
-      <span class="mobile-menu-title">Navigation</span>
-      <button class="mobile-menu-close" (click)="closeMenu()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <div class="mobile-menu-body">
-      <a routerLink="/public/accueil" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">home</span>
-        Accueil
-      </a>
-      <a routerLink="/public/camera-scan" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        Scanner
-      </a>
-      <a routerLink="/public/ocr-scan" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">document_scanner</span>
-        Analyse
-      </a>
-      <a routerLink="/public/bulk-upload" routerLinkActive="active" (click)="closeMenu()">
-        <span class="material-symbols-outlined">checklist_rtl</span>
-        Lot
-      </a>
-      <a (click)="goToHistory($event); closeMenu()">
-        <span class="material-symbols-outlined">history</span>
-        Historique
-      </a>
-      <a (click)="goToSettings($event); closeMenu()">
-        <span class="material-symbols-outlined">settings</span>
-        Paramètres
-      </a>
-    </div>
-
-    <div class="mobile-menu-footer">
-      <button class="mobile-btn-institutional" (click)="goToInstitutions(); closeMenu()">
-        <span class="material-symbols-outlined">business</span>
-        Accès Institutionnel
-      </button>
-      <div class="mobile-lang-toggle">
-        <button [class.active]="lang() === 'FR'" (click)="setLang('FR')">FR</button>
-        <button [class.active]="lang() === 'EN'" (click)="setLang('EN')">EN</button>
-      </div>
-      <div class="mobile-social">
-        <span class="material-symbols-outlined">shield</span>
-        <span>Portail sécurisé</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ============================================ -->
-  <!-- HERO - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
 
       <h1 class="hero-title">
-        Portail de<br />
-        <span class="highlight">Vérification Académique</span>
+        {{ i18n.t('homeTitlePrefix') }}<br />
+        <span class="highlight">{{ i18n.t('homeTitleHighlight') }}</span>
       </h1>
 
       <div class="search-box">
@@ -138,21 +16,19 @@
           <input
             type="text"
             class="search-input"
-            placeholder="Entrez le matricule ou l'UUID du certificat..."
+            [placeholder]="i18n.t('homeSearchPh')"
             [(ngModel)]="searchQuery"
             (keyup.enter)="onSearchSubmit()"
           />
           <button class="search-btn" (click)="onSearchSubmit()" [disabled]="isProcessing()">
-            {{ isProcessing() ? 'Vérification...' : 'Vérifier' }}
+            {{ isProcessing() ? i18n.t('homeChecking') : i18n.t('verify') }}
           </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================================ -->
-  <!-- CARDS - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- CARTES -->
   <section class="cards-section">
     <div class="cards-grid">
       <div class="card" (click)="openCameraScan()">
@@ -160,10 +36,10 @@
         <div class="card-icon green">
           <span class="material-symbols-outlined">qr_code_scanner</span>
         </div>
-        <h3>Scan QR Code</h3>
-        <p>Vérifiez instantanément les documents physiques avec le code QR sécurisé CertiUni.</p>
+        <h3>{{ i18n.t('homeScan') }}</h3>
+        <p>{{ i18n.t('homeScanDesc') }}</p>
         <div class="card-link">
-          Lancer le scanner
+          {{ i18n.t('homeScanLink') }}
           <span class="material-symbols-outlined">arrow_forward</span>
         </div>
       </div>
@@ -173,10 +49,10 @@
         <div class="card-icon yellow">
           <span class="material-symbols-outlined">document_scanner</span>
         </div>
-        <h3>Analyse de Document</h3>
-        <p>Téléchargez des relevés de notes PDF pour une vérification automatisée de la signature.</p>
+        <h3>{{ i18n.t('homeOcr') }}</h3>
+        <p>{{ i18n.t('homeOcrDesc') }}</p>
         <div class="card-link">
-          Uploader un document
+          {{ i18n.t('homeOcrLink') }}
           <span class="material-symbols-outlined">arrow_forward</span>
         </div>
       </div>
@@ -186,31 +62,29 @@
         <div class="card-icon red">
           <span class="material-symbols-outlined">checklist_rtl</span>
         </div>
-        <h3>Vérification par Lot</h3>
-        <p>Vérifiez simultanément plusieurs informations d'identification institutionnelles.</p>
+        <h3>{{ i18n.t('homeBulk') }}</h3>
+        <p>{{ i18n.t('homeBulkDesc') }}</p>
         <div class="card-link">
-          Accéder à l'outil
+          {{ i18n.t('homeBulkLink') }}
           <span class="material-symbols-outlined">arrow_forward</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================================ -->
-  <!-- FOOTER - PLEINE LARGEUR -->
-  <!-- ============================================ -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
       <img src="images/logo.png" alt="CertiUni" class="footer-logo" />
       <nav class="footer-nav">
-        <a (click)="goToLanding()">Vérifier</a>
-        <a (click)="goToInstitutions()">Institutions</a>
-        <a (click)="goToEtudiants()">Étudiants</a>
-        <a routerLink="/public/bientot" [queryParams]="{page: 'Confidentialité'}">Confidentialité</a>
-        <a routerLink="/public/bientot" [queryParams]="{page: 'Conditions'}">Conditions</a>
-        <a routerLink="/public/bientot" [queryParams]="{page: 'Audit de sécurité'}">Audit de Sécurité</a>
+        <a (click)="goToLanding()">{{ i18n.t('homeFooterVerify') }}</a>
+        <a (click)="goToInstitutions()">{{ i18n.t('homeFooterInstitutions') }}</a>
+        <a (click)="goToEtudiants()">{{ i18n.t('homeFooterStudents') }}</a>
+        <a href="#">{{ i18n.t('homeFooterPrivacy') }}</a>
+        <a href="#">{{ i18n.t('homeFooterTerms') }}</a>
+        <a href="#">{{ i18n.t('homeFooterAudit') }}</a>
       </nav>
-      <p class="footer-copy">© 2026 CertiUni Cameroun. Tous droits réservés. Portail National de Vérification Académique.</p>
+      <p class="footer-copy">{{ i18n.t('homeFooterCopy') }}</p>
     </div>
   </footer>
 </div>
