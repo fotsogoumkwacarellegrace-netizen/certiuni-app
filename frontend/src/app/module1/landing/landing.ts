@@ -167,6 +167,9 @@ export class Landing implements AfterViewInit {
   }
 
   private initScrollSpy(): void {
+    // IntersectionObserver peut etre absent (ex. environnement de test sans DOM complet)
+    if (typeof IntersectionObserver === 'undefined') return;
+
     const ids = ['accueil', 'fonctionnalites', 'gestion', 'securite', 'audit', 'tarifs', 'faq', 'a-propos'];
 
     const observer = new IntersectionObserver(
@@ -189,7 +192,9 @@ export class Landing implements AfterViewInit {
   scrollTo(id: string, event?: Event): void {
     event?.preventDefault();
     this.closeMenu();
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.getElementById(id)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
   }
 

@@ -48,7 +48,10 @@ export class RevealDirective implements AfterViewInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
 
     // Accessibilité : on laisse le contenu visible tel quel
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // (matchMedia peut etre absent hors navigateur — ex. environnement de test)
+    const reduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced || !('IntersectionObserver' in window)) return;
 
     const variant: RevealType = this.type || 'up';
