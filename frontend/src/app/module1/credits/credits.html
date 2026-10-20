@@ -1,10 +1,25 @@
 <!-- src/app/module1/credits/credits.html -->
 <div class="page">
 
-  <header class="head">
-    <div>
+  <header class="head" appDarkMode>
+    <div class="head__left">
+      <button type="button" class="back" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>{{ c().back }}</span>
+      </button>
+      <a class="brand" href="#" (click)="$event.preventDefault(); goBack()" aria-label="CertiUni">
+        <img src="images/logo.png" alt="" class="brand__logo" />
+        <strong>CertiUni</strong>
+      </a>
+    </div>
+    <div class="head__center">
       <h1>{{ c().title }}</h1>
       <p>{{ c().subtitle }}</p>
+    </div>
+    <div class="head__right">
+      <button type="button" class="tool tool--theme" (click)="toggleDarkMode()" [attr.aria-label]="c().theme">
+        <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
     </div>
     <span class="rule">
       <span class="material-symbols-outlined">verified</span>

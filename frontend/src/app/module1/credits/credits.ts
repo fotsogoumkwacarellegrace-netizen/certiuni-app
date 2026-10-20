@@ -1,7 +1,10 @@
 // src/app/module1/credits/credits.ts
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
+import { DarkModeService } from '../../services/dark-mode';
+import { DarkModeDirective } from '../../directives/dark-mode.directive';
 import { BillingService, CreditPack, UNIT_PRICE } from '../../services/billing.service';
 import { I18nService, Lang } from '../../services/i18n.service';
 
@@ -23,6 +26,10 @@ interface Copy {
   checks: string;
   momo: string;
   buy: string;
+  theme: string;
+  language: string;
+  footer: string;
+  back: string;
 }
 
 const COPY: Record<Lang, Copy> = {
@@ -43,7 +50,11 @@ const COPY: Record<Lang, Copy> = {
     check: 'vérification',
     checks: 'vérifications',
     momo: 'MTN MoMo & Orange Money',
-    buy: 'Acheter'
+    buy: 'Acheter',
+    theme: 'Changer le thème',
+    language: 'Changer la langue',
+    footer: 'CertiUni Cameroun — Plateforme nationale de certification des diplômes',
+    back: 'Retour'
   },
   EN: {
     title: 'Credits & plans',
@@ -62,14 +73,18 @@ const COPY: Record<Lang, Copy> = {
     check: 'verification',
     checks: 'verifications',
     momo: 'MTN MoMo & Orange Money',
-    buy: 'Buy'
+    buy: 'Buy',
+    theme: 'Toggle theme',
+    language: 'Change language',
+    footer: 'CertiUni Cameroon — National diploma certification platform',
+    back: 'Back'
   }
 };
 
 @Component({
   selector: 'app-credits',
   standalone: true,
-  imports: [],
+  imports: [DarkModeDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './credits.html',
   styleUrl: './credits.css'
@@ -77,9 +92,15 @@ const COPY: Record<Lang, Copy> = {
 export class Credits {
   private readonly router = inject(Router);
   private readonly i18n = inject(I18nService);
+  private readonly darkModeService = inject(DarkModeService);
+  private readonly destroyRef = inject(DestroyRef);
   readonly billing = inject(BillingService);
 
   readonly c = computed(() => COPY[this.i18n.lang()]);
+
+  readonly isDarkMode = toSignal(this.darkModeService.getDarkModeObservable(), {
+    initialValue: this.darkModeService.isDarkMode$
+  });
 
   readonly freePercent = computed(() => (this.billing.freeRemaining() / this.billing.freeQuota) * 100);
 
@@ -105,6 +126,14 @@ export class Credits {
 
   savings(pack: CreditPack): number {
     return Math.round((1 - pack.price / (pack.credits * UNIT_PRICE)) * 100);
+  }
+
+  goBack(): void {
+    void this.router.navigate(['/public/landing']);
+  }
+
+  toggleDarkMode(): void {
+    this.darkModeService.toggleDarkMode();
   }
 
   buy(pack: CreditPack): void {
