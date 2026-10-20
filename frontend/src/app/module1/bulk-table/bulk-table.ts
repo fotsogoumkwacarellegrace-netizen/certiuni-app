@@ -66,7 +66,7 @@ export class BulkTable implements OnInit, OnDestroy {
       const notes = cert.notes ?? [];
       const average = notes.length
         ? (notes.reduce((sum, n) => sum + n.note, 0) / notes.length).toFixed(1)
-        : 'â€”';
+        : '—”';
       const totalCredits = notes.reduce((sum, n) => sum + (n.credits ?? 0), 0);
 
       return {
@@ -244,7 +244,7 @@ export class BulkTable implements OnInit, OnDestroy {
   // ============================================
   getMention(finalGrade: string): string {
     const match = finalGrade.match(/\(([^)]+)\)/);
-    return match ? match[1].replace('Mention ', '') : 'â€”';
+    return match ? match[1].replace('Mention ', '') : '—”';
   }
 
   copyHash(hash: string | undefined): void {
