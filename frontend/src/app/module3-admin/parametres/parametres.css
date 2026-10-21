@@ -22,6 +22,13 @@
   vertical-align: middle;
 }
 
+.page{
+  margin-top: 5%;
+  width: 100%;
+}
+
+
+
 .page h1 {
   display: flex;
   align-items: center;
@@ -38,8 +45,9 @@
   background: #fff;
   border: 1px solid var(--gray-200);
   border-radius: 8px;
-  max-width: 560px;
+ 
   overflow: hidden;
+  width: 100%;
 }
 
 .setting-row {
@@ -49,7 +57,7 @@
   gap: 1rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--gray-200);
-  width: 100%;
+  width: 90%;
   background: none;
   border-left: none;
   border-right: none;

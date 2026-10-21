@@ -1,6 +1,8 @@
 :host {
-  --primary: #19764a;
-  --primary-dark: #12633d;
+  --primary: #19764A;
+  --primary-dark: #00543f;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
   --primary-tint: #e6f3ee;
   --secondary: #edeff3;
   --accent: #f9c31f;
@@ -19,10 +21,19 @@
   color: var(--black-soft);
 }
 
+.page{
+  margin-top: 5%;
+}
+
 .material-icons {
   font-size: 1.15rem;
   line-height: 1;
   vertical-align: middle;
+}
+
+.page h1 {
+    margin: 0 0 1.25rem;
+  font-size: 1.25rem;
 }
 
 .filters-bar {

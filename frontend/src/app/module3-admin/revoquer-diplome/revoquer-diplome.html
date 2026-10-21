@@ -1,11 +1,12 @@
 <div class="page">
-  <a class="back-link" routerLink="/admin/diplomes-emis">
-    <span class="material-icons" aria-hidden="true">arrow_back</span> Retour à la liste
-  </a>
 
   @if (diplome; as d) {
     <div class="revoke-card">
-      <h1>Révoquer le diplôme {{ d.numero }}</h1>
+      <a class="back-link" routerLink="/admin/diplomes-emis">
+    <span class="material-icons" aria-hidden="true">arrow_back</span> Retour à la liste
+  </a>
+  <h1>Révoquer le diplôme {{ d.numero }}</h1>
+      
 
       <div class="warning-banner">
         <span class="material-icons" aria-hidden="true">warning</span>

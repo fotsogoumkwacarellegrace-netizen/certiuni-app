@@ -4,7 +4,7 @@
   --primary-tint: #e6f3ee;
   --secondary: #edeff3;
   --accent: #f9c31f;
-  --accent-tint: #fef6dc;
+  --accent-tint: #fbeea1;
   --destructive: #dc2828;
   --destructive-tint: #fceaea;
   --gray-50: #fafbfb;
@@ -23,6 +23,11 @@
   font-size: 1.1rem;
   line-height: 1;
   vertical-align: middle;
+}
+
+.page{
+  margin-top: 5%;
+  width: 100%
 }
 
 .page h1 {
@@ -128,7 +133,8 @@
 
 .status-badge.is-invalid {
   background: var(--accent-tint);
-  color: var(--gray-800);
+  color: var(--secondary-yellow);
+  
 }
 
 .empty-row {

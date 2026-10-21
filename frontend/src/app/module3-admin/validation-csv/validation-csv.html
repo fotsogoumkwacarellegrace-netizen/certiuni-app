@@ -1,12 +1,23 @@
 <div class="wizard-page">
-  <a class="back-link" routerLink="/admin/creer-diplomes/importer">← Retour</a>
   <h1>Validation du CSV</h1>
+
+  <ol class="stepper">
+    <li class="stepper-item is-done">
+      <span class="stepper-dot"><span class="material-icons">check_circle</span></span> Choisir le type
+    </li>
+    <li class="stepper-item is-active">
+      <span class="stepper-dot">2</span> Importer CSV
+    </li>
+    <li class="stepper-item">
+      <span class="stepper-dot">3</span> Prévisualiser &amp; Générer
+    </li>
+  </ol>
 
   @if (validation(); as v) {
     <p class="file-name">Fichier : {{ v.fichier }}</p>
 
     <div class="summary-grid">
-      <div class="summary-card">
+      <div class="summary-card is-ok">
         <span class="summary-value">{{ v.lignesDetectees }}</span>
         <span class="summary-label">Lignes détectées</span>
       </div>
@@ -50,7 +61,7 @@
         Télécharger le rapport d'erreurs
       </button>
       <button type="button" class="btn-secondary" (click)="corrigerLeFichier()">
-        Corriger le fichier
+        Changer le fichier
       </button>
       <button type="button" class="btn-primary" (click)="suivant()">Suivant</button>
     </div>

@@ -1,6 +1,6 @@
 <div class="studio-page">
-  <a class="back-link" routerLink="/admin/creer-diplomes">← Retour</a>
-  <h1>Créer un nouveau design (AI Design Studio)</h1>
+  <a class="back-link" routerLink="/admin/creer-diplomes"><h1>← Créer un nouveau design (AI Design Studio)</h1></a>
+  
 
   <div class="studio-layout">
     <div class="studio-panel">
@@ -14,7 +14,7 @@
       ></textarea>
 
       <button type="button" class="btn-primary" (click)="genererAvecIA()" [disabled]="generating()">
-        {{ generating() ? 'Génération en cours…' : 'Générer avec l\'IA ✨' }}
+        {{ generating() ? 'Génération en cours…' : 'Générer avec l\'IA ' }}
       </button>
 
       <h2 class="options-title">Options</h2>
