@@ -24,7 +24,8 @@
               { "glob": "**/*", "input": "public" },
               "src/assets"
             ],
-            "styles": ["src/styles.css"]
+            "styles": ["src/styles.css"],
+            "outputPath": "dist/certiuni-frontend"
           },
           "configurations": {
             "production": {
