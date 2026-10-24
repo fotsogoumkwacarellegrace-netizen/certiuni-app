@@ -1,5 +1,5 @@
 # Étape 1 : Build
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
@@ -15,12 +15,13 @@ RUN npx prisma generate
 COPY . .
 
 # Étape 2 : Production
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Copie des fichiers de dépendances
 COPY package*.json ./
 COPY prisma ./prisma/
 
@@ -28,7 +29,6 @@ COPY prisma ./prisma/
 RUN npm ci --only=production
 RUN npx prisma generate
 
-# Copie du code compilé ou des fichiers sources
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/tsconfig.json ./
 
