@@ -24,6 +24,7 @@ import { AdminLogin } from './module3-admin/admin-login/admin-login';
 
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'admin-login', pathMatch: 'full' },
   { path: 'institution-registration', component: InstitutionRegistration },
   { path: 'admin-login', component: AdminLogin },   // ← cette ligne manquait
   {
