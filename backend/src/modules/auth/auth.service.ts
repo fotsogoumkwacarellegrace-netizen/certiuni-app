@@ -1,21 +1,37 @@
-import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  ServiceUnavailableException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-// argon2 removed (using bcrypt)
+import { createHash, timingSafeEqual } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
-import { env } from '../../config/env.config';
+import { env, requireJwtAccessSecret, requireJwtRefreshSecret } from '../../config/env.config';
 import { refreshTokenConfig } from '../../config/jwt.config';
-
+import { AuthProvider } from '../integrations/providers/auth/auth-provider.interface';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements AuthProvider {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
   ) { }
 
+  get configured(): boolean {
+    return Boolean(env.JWT_ACCESS_SECRET && env.JWT_REFRESH_SECRET);
+  }
+
   async login(loginDto: LoginDto) {
+    if (!env.JWT_ACCESS_SECRET || !env.JWT_REFRESH_SECRET) {
+      throw new ServiceUnavailableException({
+        error: 'not_configured',
+        feature: 'jwt',
+      });
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
@@ -45,14 +61,16 @@ export class AuthService {
 
   private async generateTokens(userId: string, email: string, role: string) {
     const payload = { sub: userId, email, role };
+    const accessSecret = requireJwtAccessSecret();
+    const refreshSecret = requireJwtRefreshSecret();
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: env.JWT_ACCESS_SECRET,
+        secret: accessSecret,
         expiresIn: env.JWT_ACCESS_EXPIRES_IN,
       }),
       this.jwtService.signAsync(payload, {
-        secret: refreshTokenConfig.secret,
+        secret: refreshSecret,
         expiresIn: refreshTokenConfig.expiresIn,
       }),
     ]);
@@ -63,38 +81,65 @@ export class AuthService {
     };
   }
 
-  private async updateRefreshToken(userId: string, refreshToken: string) {
-    const hash = await bcrypt.hash(refreshToken, 10);
+  private async updateRefreshToken(userId: string, refreshToken: string | null) {
     await this.prisma.user.update({
       where: { id: userId },
-      data: { passwordHash: hash },
+      data: {
+        refreshTokenHash: refreshToken ? this.hashRefreshToken(refreshToken) : null,
+      },
     });
   }
 
   async logout(userId: string) {
+    await this.updateRefreshToken(userId, null);
     return { success: true };
   }
 
   async refreshToken(refreshTokenValue: string) {
+    if (!env.JWT_REFRESH_SECRET) {
+      throw new ServiceUnavailableException({
+        error: 'not_configured',
+        feature: 'jwt-refresh',
+      });
+    }
+
+    let payload: { sub?: string };
     try {
-      const payload = await this.jwtService.verifyAsync(refreshTokenValue, {
-        secret: refreshTokenConfig.secret,
+      payload = await this.jwtService.verifyAsync(refreshTokenValue, {
+        secret: requireJwtRefreshSecret(),
       });
-
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub },
-      });
-
-      if (!user) {
-        throw new ForbiddenException('Accès refusé');
-      }
-
-      const tokens = await this.generateTokens(user.id, user.email, user.role);
-      await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-      return tokens;
     } catch {
       throw new ForbiddenException('Jeton expiré ou invalide');
     }
+
+    if (!payload.sub) {
+      throw new ForbiddenException('Jeton expiré ou invalide');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: payload.sub },
+    });
+
+    if (
+      !user?.refreshTokenHash ||
+      !this.matchesRefreshToken(refreshTokenValue, user.refreshTokenHash)
+    ) {
+      throw new ForbiddenException('Jeton expiré ou invalide');
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  private hashRefreshToken(refreshToken: string): string {
+    return createHash('sha256').update(refreshToken).digest('hex');
+  }
+
+  private matchesRefreshToken(refreshToken: string, storedHash: string): boolean {
+    const expected = Buffer.from(storedHash, 'hex');
+    const actual = Buffer.from(this.hashRefreshToken(refreshToken), 'hex');
+    return expected.length === actual.length && timingSafeEqual(expected, actual);
   }
 }

@@ -1,6 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env.config';
+import {
+    env,
+    requireJwtAccessSecret,
+    requireJwtRefreshSecret,
+} from '../config/env.config';
 import redisClient from '../config/redis.config';
 import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
@@ -13,11 +17,11 @@ export class AuthService {
         @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
     ) { }
     public static generateTokens(payload: { id: string; email: string; role: string; universityId?: string | null }) {
-        const accessToken = jwt.sign(payload, env.JWT_ACCESS_SECRET, {
+        const accessToken = jwt.sign(payload, requireJwtAccessSecret(), {
             expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions['expiresIn'],
         });
 
-        const refreshToken = jwt.sign({ id: payload.id }, env.JWT_REFRESH_SECRET, {
+        const refreshToken = jwt.sign({ id: payload.id }, requireJwtRefreshSecret(), {
             expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions['expiresIn'],
         });
 
