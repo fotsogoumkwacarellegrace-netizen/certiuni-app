@@ -4,7 +4,8 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { PaymentStatus, RequestStatus, UserRole } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import {
@@ -54,12 +55,23 @@ export class ServiceRequestsService {
 
         const service = await this.prisma.service.findUnique({
             where: { id: dto.serviceId },
+            include: {
+                pricings: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1,
+                },
+            },
         });
 
         if (!service) {
             throw new NotFoundException(
                 'Le service demandé n\'est pas disponible ou est inactif.',
             );
+        }
+
+        const pricing = service.pricings[0];
+        if (!pricing) {
+            throw new BadRequestException('Aucun tarif actif n\'est défini pour ce service.');
         }
 
         if (dto.enrollmentId) {
@@ -74,13 +86,17 @@ export class ServiceRequestsService {
             }
         }
 
-        return (this.prisma as any).serviceRequest.create({
+        return this.prisma.request.create({
             data: {
+                requestNumber: `REQ-${randomUUID()}`,
                 studentId: student.id,
-                serviceId: dto.serviceId,
+                serviceId: service.id,
                 enrollmentId: dto.enrollmentId,
                 notes: dto.notes?.trim(),
-                status: ServiceRequestStatus.PENDING,
+                amount: pricing.isFree ? 0 : pricing.amount,
+                currency: pricing.currency,
+                paymentStatus: pricing.isFree ? PaymentStatus.FREE : PaymentStatus.UNPAID,
+                status: RequestStatus.PENDING,
             },
             include: this.requestInclude,
         });
@@ -95,7 +111,7 @@ export class ServiceRequestsService {
             return [];
         }
 
-        return (this.prisma as any).serviceRequest.findMany({
+        return this.prisma.request.findMany({
             where: { studentId: student.id },
             include: this.requestInclude,
             orderBy: { createdAt: 'desc' },
@@ -103,15 +119,19 @@ export class ServiceRequestsService {
     }
 
     async findAll(status?: ServiceRequestStatus) {
-        return (this.prisma as any).serviceRequest.findMany({
-            where: status ? { status } : {},
+        const requestStatus = status === ServiceRequestStatus.PROCESSING
+            ? RequestStatus.IN_PROGRESS
+            : status;
+
+        return this.prisma.request.findMany({
+            where: requestStatus ? { status: requestStatus } : {},
             include: this.requestInclude,
             orderBy: { createdAt: 'desc' },
         });
     }
 
     async findOne(id: string, currentUser: { id: string; role: UserRole }) {
-        const request = await (this.prisma as any).serviceRequest.findUnique({
+        const request = await this.prisma.request.findUnique({
             where: { id },
             include: this.requestInclude,
         });
@@ -122,7 +142,7 @@ export class ServiceRequestsService {
 
         if (
             currentUser.role === UserRole.STUDENT &&
-            request.student.user.id !== currentUser.id
+            request.student.user?.id !== currentUser.id
         ) {
             throw new ForbiddenException(
                 'Vous n\'avez pas la permission de consulter cette demande.',
@@ -133,15 +153,19 @@ export class ServiceRequestsService {
     }
 
     async updateStatus(id: string, dto: UpdateRequestStatusDto) {
-        await (this.prisma as any).serviceRequest.findUniqueOrThrow({
+        const status = dto.status === ServiceRequestStatus.PROCESSING
+            ? RequestStatus.IN_PROGRESS
+            : dto.status;
+
+        await this.prisma.request.findUniqueOrThrow({
             where: { id },
             select: { id: true },
         });
 
-        return (this.prisma as any).serviceRequest.update({
+        return this.prisma.request.update({
             where: { id },
             data: {
-                status: dto.status,
+                status,
                 adminNotes: dto.adminNotes?.trim(),
             },
             include: this.requestInclude,
@@ -149,7 +173,7 @@ export class ServiceRequestsService {
     }
 
     async cancelByStudent(id: string, userId: string) {
-        const request = await (this.prisma as any).serviceRequest.findUnique({
+        const request = await this.prisma.request.findUnique({
             where: { id },
             include: { student: true },
         });
@@ -164,15 +188,15 @@ export class ServiceRequestsService {
             );
         }
 
-        if (request.status !== ServiceRequestStatus.PENDING) {
+        if (request.status !== RequestStatus.PENDING) {
             throw new BadRequestException(
                 'Impossible d\'annuler une demande déjà en cours de traitement ou finalisée.',
             );
         }
 
-        return (this.prisma as any).serviceRequest.update({
+        return this.prisma.request.update({
             where: { id },
-            data: { status: ServiceRequestStatus.CANCELLED },
+            data: { status: RequestStatus.CANCELLED },
             include: this.requestInclude,
         });
     }
