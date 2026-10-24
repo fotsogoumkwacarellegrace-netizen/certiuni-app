@@ -6,6 +6,9 @@ import {
     MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { env } from '../../config/env.config';
+import { IntegrationsRegistryService } from '../integrations/integrations-registry.service';
+import { Public } from '../../common/decorators/public.decorator';
 
 /**
  * HealthController — sondes liveness/readiness pour K8s, Docker et LB.
@@ -16,12 +19,14 @@ import { PrismaService } from '../../common/prisma/prisma.service';
  * - Seuils mémoire: heap 300MB, RSS 500MB (voir HEALTH_MEMORY_HEAP_THRESHOLD).
  */
 @ApiTags('Health')
+@Public()
 @Controller('health')
 export class HealthController {
     constructor(
         private readonly health: HealthCheckService,
         private readonly memory: MemoryHealthIndicator,
         private readonly prisma: PrismaService,
+        private readonly integrationsRegistry: IntegrationsRegistryService,
     ) { }
 
     @Get()
@@ -38,28 +43,21 @@ export class HealthController {
             () =>
                 this.memory.checkHeap(
                     'memory_heap',
-                    HealthController.threshold('HEALTH_MEMORY_HEAP_THRESHOLD', 300 * 1024 * 1024),
+                    env.HEALTH_MEMORY_HEAP_THRESHOLD,
                 ),
 
             // 3. Vérification de la mémoire RSS attribuée au processus (défaut : 500 MB)
             () =>
                 this.memory.checkRSS(
                     'memory_rss',
-                    HealthController.threshold('HEALTH_MEMORY_RSS_THRESHOLD', 500 * 1024 * 1024),
+                    env.HEALTH_MEMORY_RSS_THRESHOLD,
                 ),
         ]);
     }
 
-    /**
-     * Lit un seuil mémoire exprimé en OCTETS depuis l'environnement
-     * (cf. `.env.example` : HEALTH_MEMORY_HEAP_THRESHOLD=150000000).
-     * - Non défini / invalide → valeur par défaut en bytes.
-     * Les tests e2e surchargent ces variables pour éviter les 503 dûs à la
-     * consommation mémoire des workers Jest.
-     */
-    private static threshold(envVar: string, defaultBytes: number): number {
-        const raw = process.env[envVar];
-        const parsed = raw !== undefined ? parseInt(raw, 10) : NaN;
-        return Number.isFinite(parsed) && parsed > 0 ? parsed : defaultBytes;
+    @Get('capabilities')
+    @ApiOperation({ summary: 'Lister les capacités configurées sans exposer les secrets' })
+    capabilities() {
+        return this.integrationsRegistry.getCapabilities();
     }
 }

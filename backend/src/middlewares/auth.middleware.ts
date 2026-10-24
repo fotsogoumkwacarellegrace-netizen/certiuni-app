@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma';
 import { AppError, UnauthorizedError } from '../errors/app.error';
+import { requireJwtAccessSecret } from '../config/env.config';
 
 /** req.user est typé globalement via src/@types (Express.User). */
 
@@ -30,7 +31,6 @@ export interface JwtPayload {
  * 5. Passe à `next()` ou renvoie une erreur 401.
  *
  * @security Le secret de signature provient de JWT_ACCESS_SECRET (env).
- * @security Le fallback est uniquement pour le développement local.
  */
 export const authenticateJwt = async (
     req: Request,
@@ -51,7 +51,7 @@ export const authenticateJwt = async (
 
         const decoded = jwt.verify(
             token,
-            process.env.JWT_ACCESS_SECRET || 'certiuni-dev-secret',
+            requireJwtAccessSecret(),
         ) as JwtPayload;
 
         const user = await prisma.user.findUnique({
@@ -75,4 +75,3 @@ export const authenticateJwt = async (
 };
 
 export const authenticateJWT = authenticateJwt;
-

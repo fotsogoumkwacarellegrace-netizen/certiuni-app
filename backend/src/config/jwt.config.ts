@@ -5,7 +5,7 @@ import { env } from './env.config';
 export interface JwtConfigOptions {
     access: JwtModuleOptions;
     refresh: {
-        secret: string;
+        secret?: string;
         expiresIn: string;
     };
 }

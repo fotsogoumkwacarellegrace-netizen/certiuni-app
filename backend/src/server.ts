@@ -1,16 +1,14 @@
-import dotenv from 'dotenv';
 import app from './app';
 import logger from './common/utils/logger.util';
+import { env } from './config/env.config';
 
-dotenv.config();
-
-const PORT = Number(process.env.PORT || 3000);
+const PORT = env.PORT;
 
 const server = app.listen(PORT, '0.0.0.0', () => {
     logger.log(
         `CertiUni backend demarre sur http://localhost:${PORT}`,
         'ServerBootstrap',
-        { port: PORT, environment: process.env.NODE_ENV },
+        { port: PORT, environment: env.NODE_ENV },
     );
     logger.log(`Health check: http://localhost:${PORT}/api/v1/health`, 'ServerBootstrap');
 });

@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { env } from '../../config/env.config';
 
 /**
  * PrismaService — client Prisma singleton (pattern NestJS officiel).
@@ -21,7 +22,7 @@ export class PrismaService
 
     constructor() {
         super({
-            log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
+            log: env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
         });
     }
 
@@ -30,7 +31,7 @@ export class PrismaService
             await this.$connect();
             this.logger.log('Prisma connected');
         } catch (err) {
-            this.logger.error(`Prisma connect failed: ${(err as Error).message}`);
+            this.logger.error('Prisma connect failed');
             throw err;
         }
     }

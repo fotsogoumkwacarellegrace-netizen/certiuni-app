@@ -3,13 +3,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 
 // Middlewares et gestion des erreurs
 import { globalErrorHandler } from './middlewares/error.middleware';
 import { correlationIdMiddleware } from './middlewares/correlationId.middleware';
 import { requestLoggingMiddleware } from './middlewares/requestLogging.middleware';
 import { NotFoundError } from './errors/app.error';
+import { env } from './config/env.config';
 
 // Routeurs API (Express)
 import healthRouter from './routes/health.router';
@@ -20,8 +20,6 @@ import verifyRouter from './routes/V1/verify.router';
 import paymentRouter from './routes/V1/payment.router';
 import universityRouter from './routes/V1/university.router';
 import securityRouter from './routes/V1/security.router';
-
-dotenv.config();
 
 const app: Application = express();
 
@@ -49,7 +47,7 @@ app.use(
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || '*',
+        origin: env.FRONTEND_URL,
         credentials: true,
     }),
 );

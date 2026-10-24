@@ -6,15 +6,15 @@
  *   (config validation, JWT, Prisma) n'échoue jamais en CI sans secrets.
  * - Désactive les logs applicatifs bruyants pendant les tests.
  */
+import { randomBytes } from 'crypto';
 
 process.env.NODE_ENV = 'test';
 
 process.env.NEST_APP_PORT = process.env.NEST_APP_PORT || '3001';
 process.env.PORT = process.env.PORT || '3001';
 
-process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-e2e';
-process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'test-secret-e2e';
-process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test-secret-refresh-e2e';
+process.env.JWT_ACCESS_SECRET ??= randomBytes(48).toString('hex');
+process.env.JWT_REFRESH_SECRET ??= randomBytes(48).toString('hex');
 
 process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://user:pass@localhost:5432/certiuni_test';
 process.env.REDIS_HOST = process.env.REDIS_HOST || 'localhost';

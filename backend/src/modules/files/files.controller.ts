@@ -55,6 +55,7 @@ export class FilesController {
         },
     })
     @ApiResponse({ status: 201, description: 'Fichier téléversé avec succès.' })
+    @ApiResponse({ status: 501, description: 'Stockage non configuré.' })
     @UseInterceptors(FileInterceptor('file'))
     uploadFile(
         @UploadedFile(

@@ -1,4 +1,5 @@
 import {
+    Inject,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -8,10 +9,14 @@ import {
     SendNotificationDto,
 } from './dto/send-notification.dto';
 import { ReceiveNotificationDto } from './dto/receive-notification.dto';
+import { MAIL_PROVIDER, MailProvider } from '../integrations/providers/mail/mail-provider.interface';
 
 @Injectable()
 export class NotificationsService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        @Inject(MAIL_PROVIDER) private readonly emailService: MailProvider,
+    ) { }
 
     async send(dto: SendNotificationDto) {
         const recipient = await this.prisma.user.findUnique({
@@ -25,7 +30,11 @@ export class NotificationsService {
         const channelType = dto.type || NotificationType.IN_APP;
 
         if (channelType === NotificationType.EMAIL || channelType === NotificationType.BOTH) {
-            await this.sendEmail(recipient.email, dto.title, dto.message);
+            await this.emailService.sendEmail({
+                to: recipient.email,
+                subject: dto.title,
+                html: dto.message,
+            });
         }
 
         return this.prisma.notification.create({
@@ -38,8 +47,6 @@ export class NotificationsService {
             },
         });
     }
-
-    // À ajouter/mettre à jour dans NotificationsService :
     async findAllForUser(userId: string, query?: ReceiveNotificationDto) {
         const { isRead, type, limit = 20, offset = 0 } = query || {};
 
@@ -75,11 +82,5 @@ export class NotificationsService {
             where: { userId, isRead: false },
             data: { isRead: true },
         });
-    }
-
-    private async sendEmail(email: string, title: string, message: string) {
-        // Intégration du service SMTP / Nodemailer / SendGrid / Resend
-        // Log de simulation d'envoi en environnement de développement
-        console.log(`[Email Envoyé] À: ${email} | Sujet: ${title} | Contenu: ${message}`);
     }
 }

@@ -1,44 +1,68 @@
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import nodemailer from 'nodemailer';
+import { MailMessage, MailProvider } from '../modules/integrations/providers/mail/mail-provider.interface';
 import { env } from '../config/env.config';
 import logger from '../common/utils/logger.util';
 
-export interface EmailPayload {
-    to: string;
-    subject: string;
-    html: string;
-    attachments?: any[];
-}
+@Injectable()
+export class EmailService implements MailProvider {
+    private readonly transporter?: nodemailer.Transporter;
 
-export class EmailService {
-    private transporter = nodemailer.createTransport({
-        host: env.SMTP_HOST || 'smtp.mailtrap.io',
-        port: Number(env.SMTP_PORT) || 2525,
-        auth: {
-            user: env.SMTP_USER,
-            pass: env.SMTP_PASS,
-        },
-    });
-
-    async sendEmail(payload: EmailPayload): Promise<boolean> {
-        try {
-            const result = await this.transporter.sendMail({
-                from: env.MAIL_FROM || 'noreply@certiuni.app',
-                to: payload.to,
-                subject: payload.subject,
-                html: payload.html,
-                attachments: payload.attachments,
+    constructor() {
+        if (
+            env.SMTP_HOST &&
+            env.SMTP_PORT &&
+            env.SMTP_USER &&
+            env.SMTP_PASS &&
+            env.MAIL_FROM
+        ) {
+            this.transporter = nodemailer.createTransport({
+                host: env.SMTP_HOST,
+                port: env.SMTP_PORT,
+                secure: env.SMTP_PORT === 465,
+                connectionTimeout: 10000,
+                greetingTimeout: 10000,
+                socketTimeout: 20000,
+                auth: {
+                    user: env.SMTP_USER,
+                    pass: env.SMTP_PASS,
+                },
             });
-
-            logger.info(`Email sent successfully to ${payload.to}`, { messageId: result.messageId });
-            return true;
-        } catch (error) {
-            logger.error(`Failed to send email to ${payload.to}`, { error });
-            return false;
         }
     }
 
+    get configured(): boolean {
+        return Boolean(this.transporter && env.MAIL_FROM);
+    }
+
+    async verifyConnection(): Promise<void> {
+        await this.requireTransporter().verify();
+    }
+
+    async sendEmail(payload: MailMessage): Promise<boolean> {
+        const transporter = this.requireTransporter();
+        const from = env.MAIL_FROM;
+        if (!from) {
+            throw new ServiceUnavailableException({
+                error: 'not_configured',
+                feature: 'smtp',
+            });
+        }
+
+        const result = await transporter.sendMail({
+            from,
+            to: payload.to,
+            subject: payload.subject,
+            html: payload.html,
+            attachments: payload.attachments,
+        });
+
+        logger.info(`Email delivered to ${payload.to}`, { messageId: result.messageId });
+        return true;
+    }
+
     async sendMagicLinkEmail(email: string, token: string): Promise<boolean> {
-        const magicLink = `${env.FRONTEND_URL || 'https://certiuni.app'}/login?token=${token}`;
+        const magicLink = `${env.FRONTEND_URL}/login?token=${encodeURIComponent(token)}`;
         const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Connexion à CertiUni</h2>
@@ -63,7 +87,7 @@ export class EmailService {
         <h2>Votre diplôme a été émis</h2>
         <p>Bonjour ${studentName},</p>
         <p>Votre diplôme a été émis avec succès sur la plateforme CertiUni.</p>
-        <p><a href="${env.FRONTEND_URL || 'https://certiuni.app'}/verify" style="display: inline-block; background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Vérifier mon diplôme</a></p>
+        <p><a href="${env.FRONTEND_URL}/verify" style="display: inline-block; background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Vérifier mon diplôme</a></p>
         <p>ID du certificat: ${certificateId}</p>
       </div>
     `;
@@ -103,6 +127,16 @@ export class EmailService {
             subject: 'Reçu de paiement - CertiUni',
             html,
         });
+    }
+
+    private requireTransporter(): nodemailer.Transporter {
+        if (!this.configured || !this.transporter) {
+            throw new ServiceUnavailableException({
+                error: 'not_configured',
+                feature: 'smtp',
+            });
+        }
+        return this.transporter;
     }
 }
 

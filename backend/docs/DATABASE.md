@@ -64,9 +64,10 @@ DATABASE_URL="postgresql://USER:PASS@pgbouncer:6543/certiuni_db?schema=public&pg
 # run: DATABASE_URL="<direct :5432 URL>" npx prisma migrate deploy
 ```
 
-`src/config/database.ts` rebuilds a fallback URL from `DB_HOST/PORT/USER/PASS/NAME`
-if `DATABASE_URL` is missing, and re-exports the `src/lib/prisma.ts` singleton
-for legacy `from '../config/database'` imports.
+`DATABASE_URL` is the sole database connection setting and is validated by
+`src/config/env.config.ts`. `src/config/database.ts` re-exports the
+`src/lib/prisma.ts` singleton for legacy `from '../config/database'` imports;
+there is no fallback assembled from `DB_HOST/PORT/USER/PASS/NAME`.
 
 ## 4. Seed
 

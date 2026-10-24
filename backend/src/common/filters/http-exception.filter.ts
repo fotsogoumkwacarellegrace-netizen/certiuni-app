@@ -7,6 +7,7 @@ import {
     Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { env } from '../../config/env.config';
 
 /**
  * HttpExceptionFilter — filtre global NestJS (alias Express: globalErrorHandler).
@@ -82,7 +83,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             path: request.url,
             ...(correlationId ? { correlationId } : {}),
             timestamp: new Date().toISOString(),
-            ...(process.env.NODE_ENV === 'development' && exception instanceof Error ? { stack: exception.stack } : {}),
+            ...(env.NODE_ENV === 'development' && exception instanceof Error ? { stack: exception.stack } : {}),
         });
     }
 }

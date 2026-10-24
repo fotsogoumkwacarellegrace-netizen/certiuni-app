@@ -6,6 +6,7 @@
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },
+  "setupFiles": ["<rootDir>/jest.setup.js"],
   "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"],
   "moduleNameMapper": {
     "^@auth/(.*)$": "<rootDir>/../src/auth/$1",

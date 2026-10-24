@@ -4,7 +4,6 @@ import puppeteer from 'puppeteer';
 import { redisClient } from '../../config/redis';
 import { prisma } from '../../config/database';
 import { generateQrCodeDataUrl } from '../../services/qr.service';
-import { uploadCertificatePdfToS3 } from '../../services/s3.service';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { PDF_QUEUE_NAME, PdfJobPayload, PdfJobData } from '../queues/pdf.queue';
 // import { PdfService } from '../../services/pdf.service';

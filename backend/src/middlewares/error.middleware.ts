@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 import { AppError } from '../errors/app.error';
 import logger from '../common/utils/logger.util';
+import { env } from '../config/env.config';
 
 /**
  * Middleware global de gestion des erreurs Express.
@@ -95,7 +96,7 @@ export const globalErrorHandler = (
         ...baseLogMeta,
         errorType: err.name,
         errorMessage: err.message,
-        stack: process.env.NODE_ENV !== 'production' ? err.stack : undefined,
+        stack: env.NODE_ENV !== 'production' ? err.stack : undefined,
         statusCode,
     });
 
@@ -103,7 +104,7 @@ export const globalErrorHandler = (
         status,
         message,
         ...(errors ? { errors } : {}),
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+        ...(env.NODE_ENV === 'development' && { stack: err.stack }),
     });
 };
 

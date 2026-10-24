@@ -1,5 +1,4 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // compression disabled (not installed);
@@ -7,17 +6,18 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
+import { env } from './config/env.config';
 
 async function bootstrap() {
     // 1. Instanciation du serveur NestJS
     const app = await NestFactory.create(AppModule, {
         logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+        rawBody: true,
     });
 
-    const configService = app.get(ConfigService);
     const logger = new Logger('Bootstrap');
-    const port = configService.get<number>('PORT', 3000);
-    const environment = configService.get<string>('NODE_ENV', 'development');
+    const port = env.PORT;
+    const environment = env.NODE_ENV;
 
     // Arrêt propre (graceful shutdown) hors environnement Windows
     if (process.platform !== 'win32') {
@@ -37,8 +37,7 @@ async function bootstrap() {
     // app.use(compression()) // disabled;
 
     // 4. Configuration CORS Dynamique
-    const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:4200');
-    const allowedOrigins = frontendUrl.split(',').map((origin) => origin.trim());
+    const allowedOrigins = env.FRONTEND_URL.split(',').map((origin) => origin.trim());
 
     app.enableCors({
         origin: (origin, callback) => {
@@ -65,9 +64,9 @@ async function bootstrap() {
     );
 
     // 6. Configuration de la Documentation Swagger / OpenAPI
-    const isSwaggerEnabled = configService.get<boolean>('SWAGGER_ENABLE', true);
+    const isSwaggerEnabled = env.SWAGGER_ENABLE;
     if (environment !== 'production' || isSwaggerEnabled) {
-        const swaggerPath = configService.get<string>('SWAGGER_PATH', 'docs');
+        const swaggerPath = env.SWAGGER_PATH;
 
         const swaggerConfig = new DocumentBuilder()
             .setTitle('CertiUni Platform API')

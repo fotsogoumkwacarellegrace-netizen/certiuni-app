@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { BullModule } from '@nestjs/bullmq';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 // Config & Common
 // Verify exported names in ./config/database and ./config/env.config
-import { DatabaseConfig, databaseConfig } from './config/database';
-import validateEnv from './config/env.config';
+import { env, validateEnv } from './config/env.config';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseTransformInterceptor } from './common/interceptors/reponse-transform.interceptor';
@@ -55,52 +52,22 @@ import { RequestsModule } from './modules/requests/requests.module';            
     // 1. Configuration Globale de l'Environnement
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig],
+      load: [() => env],
       validate: validateEnv, // Bloque le démarrage si des variables obligatoires manquent
     }),
 
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-        const dbConfig = configService.get<TypeOrmModuleOptions>('database');
-        if (!dbConfig) {
-          throw new Error('Database configuration is missing');
-        }
-        return dbConfig;
-      },
-    }),
-
     // 2. Protection contre les attaques Brute-Force / Rate Limiting
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => [
-        {
-          ttl: configService.get<number>('THROTTLE_TTL', 60000), // 60 secondes
-          limit: configService.get<number>('THROTTLE_LIMIT', 100), // 100 requêtes
-        },
-      ],
+    ThrottlerModule.forRoot([
+      {
+        ttl: env.THROTTLE_TTL,
+        limit: env.THROTTLE_LIMIT,
+      },
+    ]),
 
-    }),
-
-    // 3. Connexion globale Redis / BullMQ pour les files d'attente
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        connection: {
-          host: configService.get<string>('REDIS_HOST', 'localhost'),
-          port: configService.get<number>('REDIS_PORT', 6379),
-          password: configService.get<string>('REDIS_PASSWORD', ''),
-        },
-      }),
-    }),
-
-    // 4. Persistence de données globale
+    // 3. Persistence de données globale
     PrismaModule,
 
-    // 5. Enregistrement des 31 modules métier
+    // 4. Enregistrement des modules métier
     AuthModule,
     UsersModule,
     RolesModule,
