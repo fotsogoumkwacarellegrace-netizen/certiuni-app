@@ -17,7 +17,7 @@ export class VerificationController {
     @ApiResponse({ status: 200, description: 'Document vérifié (Authentique ou Révoqué).' })
     @ApiResponse({ status: 404, description: 'Aucun document trouvé pour ce hash.' })
     verifyHash(@Body() dto: VerifyHashDto): Promise<VerificationResult> {
-        return this.verificationService.verifyByHash(dto);
+        return this.verificationService.verifyHash(dto);
     }
 
     @Post('qr')
@@ -28,6 +28,6 @@ export class VerificationController {
     @ApiResponse({ status: 200, description: 'Document vérifié (Authentique ou Révoqué).' })
     @ApiResponse({ status: 404, description: 'Numéro de certificat introuvable.' })
     verifyQr(@Body() dto: VerifyQrDto): Promise<VerificationResult> {
-        return this.verificationService.verifyByQr(dto);
+        return this.verificationService.verifyQr(dto);
     }
 }

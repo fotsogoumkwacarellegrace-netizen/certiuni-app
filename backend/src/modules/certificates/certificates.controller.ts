@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   Patch,
+  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -13,7 +14,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles, Role } from '../../common/decorators/roles.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { CertificatesService } from './certificates.service';
 import { IssueCertificateDto } from './dto/issue-certificate.dto';
 import { RevokeCertificateDto } from './dto/revoke-certificate.dto';
@@ -27,23 +28,13 @@ export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) { }
 
   @Get('verify/:publicIdentifier')
-  @ApiOperation({ summary: 'Vérification publique d un diplôme (Accès libre)' })
-  async verifyPublic(@Param('publicIdentifier') publicIdentifier: string) {
-    return this.certificatesService.verifyCertificatePublic(publicIdentifier);
-  }
-
-  // Accessible par n'importe qui (sans jeton JWT)
   @Public()
-  @Get('verify/:identifier')
-  verifyPublicly(@Param('identifier') identifier: string) {
-    return { identifier, status: 'VALID' };
-  }
-
-  // Réservé uniquement aux émetteurs et super-admins
-  @Roles(Role.SUPER_ADMIN, Role.ISSUER)
-  @Post()
-  issueCertificate(@GetUser('id') issuerId: string, @Body() dto: any) {
-    return { message: 'Diplôme émis', createdBy: issuerId };
+  @ApiOperation({ summary: 'Vérification publique d un diplôme (Accès libre)' })
+  async verifyPublic(
+    @Param('publicIdentifier') publicIdentifier: string,
+    @Query('signature') signature?: string,
+  ) {
+    return this.certificatesService.verifyCertificatePublic(publicIdentifier, signature);
   }
 
   @Post()

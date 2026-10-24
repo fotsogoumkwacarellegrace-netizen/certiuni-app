@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class VerifyQrDto {
     @ApiProperty({
@@ -7,9 +7,7 @@ export class VerifyQrDto {
         description: 'Numéro de certificat ou contenu encodé dans le QR Code',
     })
     @IsString()
+    @MaxLength(2048)
     @IsNotEmpty({ message: 'Le numéro de certificat ou la donnée QR est obligatoire.' })
-    @Matches(/^[A-Z0-9\-_:/.]+$/i, {
-        message: 'Format de numéro ou donnée de vérification invalide.',
-    })
     qrData: string;
 }

@@ -5,6 +5,7 @@ import { CryptoService } from '../services/crypto.service';
 import { addPdfJobToQueue } from '../jobs/queues/pdf.queue';
 import { AuditService, AuditAction } from '../services/audit.service';
 import { NotFoundError, BadRequestError, ForbiddenError } from '../errors/app.error';
+import { createSignedCertificateVerificationUrl } from '../common/utils/qr-signature.util';
 
 /**
  * Émet un nouveau diplôme de manière asynchrone via BullMQ
@@ -54,7 +55,7 @@ export const issueCertificate = async (req: Request, res: Response) => {
 
     // Identifiant public unique pour la vérification (ex: URL QR code)
     const publicIdentifier = `CERT-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-    const verificationUrl = `${process.env.FRONTEND_URL || 'https://certiuni.app'}/verify/${publicIdentifier}`;
+    const verificationUrl = createSignedCertificateVerificationUrl(publicIdentifier);
 
     // 3. Création de l'enregistrement en BDD au statut PENDING
     const certificate = await prisma.certificate.create({
