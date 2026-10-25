@@ -17,7 +17,7 @@
     "seed": "tsx prisma/seeds/seed.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:deploy": "node scripts/prisma-migrate.cjs",
     "prisma:studio": "prisma studio",
     "test": "jest --config jest.unit.config.js --silent",
     "test:watch": "jest --watch",

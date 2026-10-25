@@ -2,74 +2,66 @@
 
 ## Prérequis
 
-- Node.js 24 LTS pour les commandes locales.
-- PostgreSQL accessible via `DATABASE_URL` (connexion directe recommandée, car le conteneur exécute `prisma migrate deploy` avant le démarrage).
-- Configuration des intégrations requises dans le gestionnaire de secrets de la plateforme : JWT, chiffrement, signature QR, Stripe et SMTP.
-- Copier les seuls noms de variables depuis [`.env.example`](./.env.example), puis fournir les vraies valeurs hors du dépôt. Ne pas committer `backend/.env`.
+- Node.js 24.
+- Une base PostgreSQL et les variables d'environnement de production configurées dans le tableau de bord de la plateforme.
+- `DATABASE_URL` pour les connexions de l'application et `DIRECT_URL` pour les migrations. Si `DIRECT_URL` n'est pas défini, Prisma utilise `DATABASE_URL`.
+- `FRONTEND_URL` peut contenir plusieurs origines séparées par des virgules, par exemple `https://app.example.com,http://localhost:4200`.
 
-En production, l'application refuse de démarrer si une variable MVP requise manque ou est invalide. `GET /api/v1/health` vérifie PostgreSQL et la mémoire ; `GET /api/v1/health/capabilities` indique les intégrations activées sans retourner de valeur sensible.
+Ne commitez pas `backend/.env` et ne placez aucune valeur secrète dans les fichiers de configuration suivis par Git.
 
-## Vérifier les intégrations
+## Vérification des intégrations avant déploiement
 
-Après avoir injecté la configuration dans l'environnement cible, exécuter
-`npm run verify:integrations` depuis `backend/`. Le script affiche uniquement
-des statuts et des noms de variables invalides ou absentes, jamais leurs
-valeurs. Il vérifie PostgreSQL (y compris une transaction en lecture seule),
-JWT, QR, Stripe en mode test, SMTP et S3 si ce dernier est configuré.
-Pour Stripe, il crée puis expire une session Checkout de test ; il ne débite
-aucun paiement.
+Depuis `backend/`, exécutez :
 
-## Construire et lancer avec Docker
+```powershell
+.\scripts\predeploy.ps1
+```
 
-Depuis la racine du dépôt :
+Le script vérifie Node.js 24, affiche les noms des variables à configurer, demande confirmation, applique `prisma migrate deploy` en utilisant `DIRECT_URL`, puis lance `npm run verify:integrations`. Il ne déploie pas l'application et ne dépend d'aucune CLI propriétaire.
 
-```sh
-docker build -t certiuni-backend:local ./backend
-docker run --rm --name certiuni-backend \
-  --env-file backend/.env \
-  -p 3000:3000 \
+Pour afficher les actions prévues sans modifier la base :
+
+```powershell
+.\scripts\predeploy.ps1 -DryRun
+```
+
+## Northflank
+
+1. Créez un service depuis le dépôt et sélectionnez `backend/` comme répertoire de build.
+2. Configurez la construction avec le `Dockerfile` du backend et le port HTTP `3000` (ou le `PORT` fourni par la plateforme).
+3. Ajoutez les variables requises dans le tableau de bord Northflank ; utilisez une URL PostgreSQL directe dans `DIRECT_URL` pour les migrations et l'URL applicative dans `DATABASE_URL`.
+4. Lancez `scripts/predeploy.ps1` depuis un environnement disposant des accès de base, puis déployez l'image.
+5. Vérifiez `/api/v1/health` et `/api/v1/health/capabilities`.
+
+## Render (secours)
+
+1. Créez un Web Service lié au dépôt et définissez `backend/` comme répertoire racine.
+2. Choisissez le déploiement Docker pour utiliser `backend/Dockerfile`.
+3. Définissez les variables d'environnement et secrets dans le tableau de bord Render. Configurez `DATABASE_URL`, `DIRECT_URL`, `FRONTEND_URL`, `APP_URL`, `PUBLIC_VERIFY_URL`, les secrets JWT/chiffrement/QR, Stripe et SMTP.
+4. Exécutez le pré-déploiement et les migrations avant de promouvoir le nouveau service.
+5. Vérifiez `/api/v1/health` et `/api/v1/health/capabilities` après le démarrage.
+
+## Entrée et commandes de production
+
+`npm start` lance `nest start`, dont le point d'entrée est `src/main.ts` (Nest CLI, `sourceRoot: src`). Le Dockerfile démarre `node dist/src/main.js` après les migrations. `src/app.ts` est conservé pour les tests d'intégration historiques et n'est pas l'entrée de production.
+
+Le serveur applique Helmet, les cookies, CORS et `trust proxy`. Le contrôle CORS autorise chaque origine de `FRONTEND_URL`, séparée par des virgules.
+
+## Construire et vérifier l'image localement
+
+Depuis `backend/` :
+
+```powershell
+docker build --progress=plain -t certiuni-backend:local .
+docker run --rm --name certiuni-backend -p 3000:3000 `
+  -e DATABASE_URL -e DIRECT_URL -e NODE_ENV -e FRONTEND_URL `
   certiuni-backend:local
+curl.exe --fail http://localhost:3000/api/v1/health
+curl.exe --fail http://localhost:3000/api/v1/health/capabilities
 ```
 
-L'image utilise Node 24, exécute `prisma generate`, applique `prisma migrate deploy`, puis lance `dist/src/main.js` avec l'utilisateur non-root `node`.
-
-Vérifier le conteneur :
-
-```sh
-curl --fail http://localhost:3000/api/v1/health
-curl --fail http://localhost:3000/api/v1/health/capabilities
-```
-
-Ne publiez pas les sorties de diagnostic contenant des données de requête. Les commandes ci-dessus ne nécessitent aucun affichage de valeur d'environnement.
-
-## Google Cloud Run
-
-1. Créer une base PostgreSQL et stocker chaque variable requise dans Secret Manager.
-2. Construire et publier l'image dans Artifact Registry.
-3. Déployer le conteneur en laissant Cloud Run fournir `PORT` et en définissant les secrets par références Secret Manager, jamais par leur valeur dans l'historique du terminal.
-4. Accorder au service uniquement les droits de lecture des secrets utilisés.
-5. Vérifier les sondes `/api/v1/health` et `/api/v1/health/capabilities` après déploiement.
-
-Le conteneur écoute sur `PORT` (3000 par défaut). Les migrations s'exécutent avant le serveur ; une migration en échec empêche le démarrage.
-
-## Hugging Face Spaces
-
-Utiliser un Space Docker et exposer le port 7860. Définir `PORT=7860` dans les variables du Space et injecter les secrets requis via les paramètres secrets du Space. Ne pas placer de secret dans le Dockerfile ou dans les fichiers du dépôt.
-
-## PostgreSQL sur Neon ou Supabase
-
-- Fournir à `DATABASE_URL` une URL PostgreSQL complète ; ne pas reconstituer les connexions depuis des variables `DB_HOST`, `DB_USER` ou équivalentes.
-- Le conteneur exécute les migrations au démarrage : utiliser une connexion directe compatible avec les migrations Prisma. Éviter une URL transaction-pooler pour `DATABASE_URL`.
-- Sauvegarder la base avant une mise à jour de schéma et vérifier le statut de `prisma migrate deploy`.
-- Restreindre l'accès réseau et les rôles de base aux permissions minimales nécessaires.
-
-## Exposition via Cloudflare Tunnel
-
-Faire pointer le tunnel vers le port local du conteneur (par exemple `http://localhost:3000`). Terminer TLS au niveau du tunnel et définir `FRONTEND_URL`, `APP_URL` et `PUBLIC_VERIFY_URL` avec les origines publiques réellement utilisées. Le tunnel ne remplace ni l'authentification, ni la validation des signatures Stripe.
+Passez les variables de votre environnement de façon à ne pas inclure de guillemets littéraux autour de leurs valeurs : `--env-file` transmet les caractères de guillemet présents dans le fichier au conteneur. Ne publiez jamais de valeur de secret dans un journal ou une sortie de diagnostic.
 
 ## Retour arrière
 
-1. Arrêter le déploiement courant et redéployer l'image applicative précédente.
-2. Vérifier `/api/v1/health` et `/api/v1/health/capabilities`.
-3. Les migrations Prisma ne sont pas automatiquement annulées. Si un schéma a été modifié de façon destructive, restaurer une sauvegarde PostgreSQL approuvée avant de relancer l'ancienne image.
-4. Ne pas supprimer une migration déjà appliquée ; les corrections de schéma doivent être ajoutées dans une nouvelle migration.
+Redéployez l'image précédente puis vérifiez les deux sondes de santé. Prisma ne défait pas automatiquement les migrations ; restaurez une sauvegarde approuvée avant de relancer une ancienne version si une migration destructive l'exige.

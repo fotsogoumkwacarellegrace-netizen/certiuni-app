@@ -7,7 +7,7 @@ COPY prisma ./prisma/
 RUN npm ci
 
 COPY . .
-RUN npx prisma generate
+RUN DATABASE_URL=postgresql://build:build@localhost:5432/build npx prisma generate
 RUN npm run build
 
 FROM node:24-alpine AS runner
@@ -18,11 +18,12 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm ci --omit=dev
-RUN npx prisma generate
+RUN DATABASE_URL=postgresql://build:build@localhost:5432/build npx prisma generate
 
 COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --chown=node:node scripts/prisma-migrate.cjs ./scripts/prisma-migrate.cjs
 USER node
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
+CMD ["sh", "-c", "npm run prisma:migrate:deploy && node dist/src/main.js"]

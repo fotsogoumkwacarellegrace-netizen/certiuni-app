@@ -47,7 +47,7 @@ app.use(
 
 app.use(
     cors({
-        origin: env.FRONTEND_URL,
+        origin: env.FRONTEND_URL.split(',').map((origin) => origin.trim()),
         credentials: true,
     }),
 );

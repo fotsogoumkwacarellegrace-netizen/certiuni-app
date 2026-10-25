@@ -25,7 +25,7 @@ export const envSchema = z.object({
     SMTP_USER: optionalString,
     SMTP_PASS: optionalString,
     MAIL_FROM: z.string().email().optional(),
-    FRONTEND_URL: z.string().default('http://localhost:4200'),
+    FRONTEND_URL: z.string().default('http://localhost:4200,http://127.0.0.1:4200'),
     APP_URL: z.string().url().optional(),
     PUBLIC_VERIFY_URL: z.string().url().optional(),
     REDIS_URL: z.string().url().optional(),

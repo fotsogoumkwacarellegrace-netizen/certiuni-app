@@ -1,8 +1,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // NOTE(prod): route pooled connection via PgBouncer when DATABASE_URL points to :6543.
-  // Keep direct migrations on :5432 via `prisma migrate deploy` before switching the pool.
+  // The migration runner substitutes DIRECT_URL into DATABASE_URL when it is set.
 }
 
 generator client {

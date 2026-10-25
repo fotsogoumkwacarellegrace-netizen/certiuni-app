@@ -5,6 +5,7 @@ import request from 'supertest';
 // Modules minimaux nécessaires pour le health check
 import { HealthModule } from '../src/modules/health/health.module';
 import { PrismaService } from '../src/common/prisma/prisma.service';
+import { configureHttp } from '../src/config/http.config';
 
 /**
  * Smoke-test e2e du endpoint /health.
@@ -40,6 +41,7 @@ describe('Health (e2e)', () => {
                 transform: true,
             }),
         );
+        configureHttp(app, 'http://localhost:4200,http://127.0.0.1:4200');
 
         await app.init();
     });
@@ -56,6 +58,16 @@ describe('Health (e2e)', () => {
             .expect(200)
             .expect((res) => {
                 expect(res.body.status).toBe('ok');
+            });
+
+            it('autorise les requêtes CORS depuis le frontend local', () => {
+                return request(app.getHttpServer())
+                    .options('/health')
+                    .set('Origin', 'http://localhost:4200')
+                    .set('Access-Control-Request-Method', 'GET')
+                    .expect(204)
+                    .expect('access-control-allow-origin', 'http://localhost:4200')
+                    .expect('access-control-allow-credentials', 'true');
             });
     });
 

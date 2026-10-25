@@ -2,11 +2,10 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // compression disabled (not installed);
-import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { env } from './config/env.config';
+import { configureHttp } from './config/http.config';
 
 async function bootstrap() {
     // 1. Instanciation du serveur NestJS
@@ -14,6 +13,8 @@ async function bootstrap() {
         logger: ['error', 'warn', 'log', 'debug', 'verbose'],
         rawBody: true,
     });
+
+    configureHttp(app, env.FRONTEND_URL);
 
     const logger = new Logger('Bootstrap');
     const port = env.PORT;
@@ -29,26 +30,6 @@ async function bootstrap() {
     app.enableVersioning({
         type: VersioningType.URI,
         defaultVersion: '1',
-    });
-
-    // 3. Middlewares Globaux de Sécurité & Performance
-    app.use(helmet());
-    app.use(cookieParser());
-    // app.use(compression()) // disabled;
-
-    // 4. Configuration CORS Dynamique
-    const allowedOrigins = env.FRONTEND_URL.split(',').map((origin) => origin.trim());
-
-    app.enableCors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-                callback(null, true);
-            } else {
-                callback(new Error(`Origine CORS non autorisée : ${origin}`));
-            }
-        },
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        credentials: true,
     });
 
     // 5. Validation Globale des DTOs (Data Transfer Objects)

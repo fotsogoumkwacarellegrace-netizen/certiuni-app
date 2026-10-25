@@ -4,6 +4,8 @@ import { MailMessage, MailProvider } from '../modules/integrations/providers/mai
 import { env } from '../config/env.config';
 import logger from '../common/utils/logger.util';
 
+const frontendUrl = env.FRONTEND_URL.split(',')[0].trim();
+
 @Injectable()
 export class EmailService implements MailProvider {
     private readonly transporter?: nodemailer.Transporter;
@@ -62,7 +64,7 @@ export class EmailService implements MailProvider {
     }
 
     async sendMagicLinkEmail(email: string, token: string): Promise<boolean> {
-        const magicLink = `${env.FRONTEND_URL}/login?token=${encodeURIComponent(token)}`;
+        const magicLink = `${frontendUrl}/login?token=${encodeURIComponent(token)}`;
         const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Connexion à CertiUni</h2>
@@ -87,7 +89,7 @@ export class EmailService implements MailProvider {
         <h2>Votre diplôme a été émis</h2>
         <p>Bonjour ${studentName},</p>
         <p>Votre diplôme a été émis avec succès sur la plateforme CertiUni.</p>
-        <p><a href="${env.FRONTEND_URL}/verify" style="display: inline-block; background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Vérifier mon diplôme</a></p>
+        <p><a href="${frontendUrl}/verify" style="display: inline-block; background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Vérifier mon diplôme</a></p>
         <p>ID du certificat: ${certificateId}</p>
       </div>
     `;
