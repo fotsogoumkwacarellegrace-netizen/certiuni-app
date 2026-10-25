@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { GetUser } from '../../common/decorators/get-user.decorator';
+import { RegisterDto } from '@modules/auth/dto';
 
 @ApiTags('Auth')
 // Pas de 'v1' en dur : le versioning URI global (/api/v1) s'en charge.
@@ -19,6 +20,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Public()
+  @Post('register')
+  @HttpCode(HttpStatus.OK)
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
   }
 
   @Get('profile')
