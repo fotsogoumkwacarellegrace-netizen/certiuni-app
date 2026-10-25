@@ -1,6 +1,8 @@
 import {
   BadGatewayException,
   BadRequestException,
+  GatewayTimeoutException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -8,7 +10,6 @@ import {
 import { CertificateStatus, Prisma } from '@prisma/client';
 import jsQR from 'jsqr';
 import sharp from 'sharp';
-import { z } from 'zod';
 import { PrismaService } from '../prisma/prisma.service';
 import { ExtractedDiplomaSchema, ImageVerificationResult, RequestMeta } from '@modules/diplomas-verification/type/schema';
 import { ExtractedDiploma, FieldChecks, FieldResult, VerificationStatus } from '@modules/diplomas-verification/type/diplomas-verification.type';
@@ -30,6 +31,8 @@ const REQUIRED_FIELDS: (keyof ExtractedDiploma)[] = [
 const STRICT = { tolerance: 0, minRatio: 1, minTokenLength: 1 };
 // Texte descriptif : on tolère 1 faute de lecture et 20 % de mots manquants.
 const LENIENT = { tolerance: 1, minRatio: 0.8, minTokenLength: 3 };
+
+const DEFAULT_MODEL = 'qwen/qwen3.8-27b';
 
 const EXTRACTION_PROMPT =
   "Tu extrais des informations d'un diplôme ou certificat universitaire. " +
@@ -133,21 +136,27 @@ export class DiplomaImageVerificationService {
   }
 
   // -------------------------------------------------------------------------
-  // Étape 1 : extraction des infos du document (LLM vision via OpenRouter)
+  // Étape 1 : extraction des infos du document (LLM vision via Groq)
   // -------------------------------------------------------------------------
 
   private async extractDocumentInfo(jpeg: Buffer): Promise<ExtractedDiploma> {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    const model = "qwen/qwen2.5-vl-72b-instruct";
-    if (!apiKey || !model) {
+    const apiKey = process.env.GROQ_API_KEY;
+    // Modèle réglable dans le .env sans toucher au code
+    const model = process.env.GROQ_MODEL ?? DEFAULT_MODEL;
+    if (!apiKey) {
       throw new InternalServerErrorException('Extraction IA non configurée.');
     }
 
+    // Lu ici (et non en haut du fichier) pour que le .env soit déjà chargé
+    const timeoutMs = Number(process.env.GROQ_TIMEOUT_MS) || 60_000;
+    // Qwen3.8 réfléchit par défaut ; "none" coupe la réflexion : inutile pour lire un document, et plus lent
+    const reasoningEffort = process.env.GROQ_REASONING_EFFORT ?? 'none';
+
     const dataUrl = `data:image/jpeg;base64,${jpeg.toString('base64')}`;
 
-    let res: Response;
+    let json: any;
     try {
-      res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -156,7 +165,7 @@ export class DiplomaImageVerificationService {
         body: JSON.stringify({
           model,
           temperature: 0,
-          response_format: { type: 'json_object' },
+          reasoning_effort: reasoningEffort,
           messages: [
             { role: 'system', content: EXTRACTION_PROMPT },
             {
@@ -168,20 +177,30 @@ export class DiplomaImageVerificationService {
             },
           ],
         }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(timeoutMs),
       });
+
+      if (!res.ok) {
+        // Le corps d'une erreur Groq ne contient pas l'image : on peut en logger le début
+        const detail = (await res.text()).slice(0, 300);
+        this.logger.error(`Groq a répondu ${res.status} : ${detail}`);
+        throw new BadGatewayException("Service d'extraction indisponible.");
+      }
+
+      // Le délai court aussi pendant la lecture du corps : elle doit rester dans le try
+      json = await res.json();
     } catch (error) {
-      this.logger.error(`Appel OpenRouter échoué : ${(error as Error).message}`);
+      if (error instanceof HttpException) throw error;
+      if ((error as Error).name === 'TimeoutError') {
+        this.logger.error(`Groq : délai de ${timeoutMs / 1000} s dépassé`);
+        throw new GatewayTimeoutException(
+          "Le service d'extraction a mis trop de temps à répondre.",
+        );
+      }
+      this.logger.error(`Appel Groq échoué : ${(error as Error).message}`);
       throw new BadGatewayException("Service d'extraction indisponible.");
     }
 
-    if (!res.ok) {
-      // On ne logue jamais le corps (peut contenir des données personnelles)
-      this.logger.error(`OpenRouter a répondu ${res.status}`);
-      throw new BadGatewayException("Service d'extraction indisponible.");
-    }
-
-    const json: any = await res.json();
     const content: string | undefined = json?.choices?.[0]?.message?.content;
     if (!content) {
       throw new BadGatewayException("Réponse vide du service d'extraction.");
