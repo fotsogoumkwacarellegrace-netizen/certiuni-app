@@ -1,53 +1,135 @@
+
 <div class="admin-shell">
   <aside class="sidebar">
-   <a class="sidebar-brand" routerLink="/admin/dashboard" title="Accueil CertiUni">
-  <img src="/assets/images/logo-bg-white.jpeg" alt="logo-bg-white" class="logo">
-  <span>CertiUni</span>
-</a>
+    <a
+      class="sidebar-brand"
+      routerLink="/admin/dashboard"
+      title="Accueil CertiUni"
+    >
+      <img
+        src="/assets/images/logo-bg-white.png"
+        alt="Logo CertiUni"
+        class="logo"
+      />
+      <span>CertiUni</span>
+    </a>
 
     <nav class="sidebar-nav">
-      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">dashboard</span></span> Dashboard
+      <a
+        class="nav-item"
+        routerLink="/admin/dashboard"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">dashboard</span>
+        </span>
+        Dashboard
       </a>
-      <a class="nav-item" routerLink="/admin/creer-diplomes" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">add</span></span> Créer des diplômes
+
+      <a
+        class="nav-item"
+        routerLink="/admin/creer-diplomes"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">add</span>
+        </span>
+        Créer des diplômes
       </a>
-      
-      <a class="nav-item" routerLink="/admin/diplomes-emis" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">description</span></span> Diplômes émis
+
+      <a
+        class="nav-item"
+        routerLink="/admin/diplomes-emis"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">description</span>
+        </span>
+        Diplômes émis
       </a>
-      <a class="nav-item" routerLink="/admin/logs-verification" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">search</span></span> Logs de vérification
+
+      <a
+        class="nav-item"
+        routerLink="/admin/logs-verification"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">search</span>
+        </span>
+        Logs de vérification
       </a>
-      <a class="nav-item" routerLink="/admin/mon-institution" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">account_balance</span></span> Mon institution
+
+      <a
+        class="nav-item"
+        routerLink="/admin/mon-institution"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">account_balance</span>
+        </span>
+        Mon institution
       </a>
-      <a class="nav-item" routerLink="/admin/parametres" routerLinkActive="is-active">
-        <span aria-hidden="true"><span class="material-icons">settings</span></span> Paramètres
+
+      <a
+        class="nav-item"
+        routerLink="/admin/parametres"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">settings</span>
+        </span>
+        Paramètres
       </a>
     </nav>
 
-    <button type="button" class="logout-btn" (click)="demanderDeconnexion()">
-      <span class="material-icons" aria-hidden="true">exit_to_app</span> Déconnexion
+    <button
+      type="button"
+      class="logout-btn"
+      (click)="demanderDeconnexion()"
+    >
+      <span class="material-icons" aria-hidden="true">exit_to_app</span>
+      Déconnexion
     </button>
   </aside>
 
   <div class="main-column">
     <header class="topbar">
       <div class="topbar-left">
-        <a class="topbar-brand" routerLink="/admin/dashboard" title="Accueil CertiUni">
-          <img src="/assets/images/logo-bg-white.jpeg" alt="CertiUni" class="topbar-logo" />
+        <a
+          class="topbar-brand"
+          routerLink="/admin/dashboard"
+          title="Accueil CertiUni"
+        >
+          <img
+            src="/assets/images/logo-bg-white.jpeg"
+            alt="Logo CertiUni"
+            class="topbar-logo"
+          />
           <span>CertiUni</span>
         </a>
-        <button type="button" class="topbar-back" (click)="goBack()" title="Page précédente">
+
+        <button
+          type="button"
+          class="topbar-back"
+          (click)="goBack()"
+          title="Page précédente"
+        >
           <span class="material-icons" aria-hidden="true">arrow_back</span>
         </button>
       </div>
+
       <div class="topbar-user">
-        <span class="bell" aria-hidden="true"><span class="material-icons">notifications</span></span>
+        <span class="bell" aria-hidden="true">
+          <span class="material-icons">notifications</span>
+        </span>
+
         <app-theme-toggle></app-theme-toggle>
+
         <span class="user-name">{{ institution.adminNom }}</span>
-        <span aria-hidden="true"><span class="material-icons">arrow_drop_down</span></span>
+
+        <span aria-hidden="true">
+          <span class="material-icons">arrow_drop_down</span>
+        </span>
       </div>
     </header>
 
@@ -55,15 +137,36 @@
       <router-outlet></router-outlet>
     </main>
   </div>
+
   @if (showLogoutConfirm()) {
     <div class="logout-overlay">
       <div class="logout-dialog">
-        <span class="logout-icon" aria-hidden="true"><span class="material-icons">exit_to_app</span></span>
+        <span class="logout-icon" aria-hidden="true">
+          <span class="material-icons">exit_to_app</span>
+        </span>
+
         <h2>Se déconnecter ?</h2>
-        <p>Vous allez être redirigé vers la page de connexion.</p>
+
+        <p class="logout-text">
+          Vous allez être redirigé vers la page de connexion.
+        </p>
+
         <div class="logout-actions">
-          <button type="button" class="btn-secondary" (click)="annulerDeconnexion()">Annuler</button>
-          <button type="button" class="btn-danger" (click)="confirmerDeconnexion()">Se déconnecter</button>
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="annulerDeconnexion()"
+          >
+            Annuler
+          </button>
+
+          <button
+            type="button"
+            class="btn-danger"
+            (click)="confirmerDeconnexion()"
+          >
+            Se déconnecter
+          </button>
         </div>
       </div>
     </div>

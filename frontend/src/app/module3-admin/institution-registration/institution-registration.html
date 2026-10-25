@@ -1,13 +1,5 @@
-﻿<div class="registration-page">
-  <header class="page-header">
-    <a class="brand" routerLink="/">
-      <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
-      <span class="brand-name">CertiUni</span>
-    </a>
-    <a class="help-link" routerLink="/admin/bientot" [queryParams]="{page: 'Aide et support'}">
-      <span class="material-icons" aria-hidden="true">help_outline</span> Besoin d'aide ?
-    </a>
-  </header>
+
+<div class="registration-page">
 
   <main class="page-main">
     @if (!submitted()) {
@@ -25,7 +17,7 @@
               [disabled]="step.index >= currentStep()"
             >
               @if (currentStep() > step.index) {
-                <span aria-hidden="true"><span class="material-icons">check_circle</span></span>
+                {{ step.index }}
               } @else {
                 {{ step.index }}
               }
@@ -305,11 +297,11 @@
             }
             @if (currentStep() < 3) {
               <button type="button" class="btn-primary" (click)="nextStep()">
-                Suivant →
+                Suivant 
               </button>
             } @else {
               <button type="button" class="btn-primary" [disabled]="submitting()" (click)="onSubmit()">
-                {{ submitting() ? 'Envoi en cours…' : 'Soumettre la demande →' }}
+                {{ submitting() ? 'Envoi en cours…' : 'Soumettre la demande ' }}
               </button>
             }
           </div>

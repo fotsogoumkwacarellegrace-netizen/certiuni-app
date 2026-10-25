@@ -17,30 +17,17 @@
   color: var(--black-soft);
 }
 
-:host {
-  --primary: #00543f;
-  --primary-dark: #003b31;
-  --primary-tint: #e8f3ef;
-  --secondary-blue: #080b32;
-  --secondary-blue-tint: #e9eaf8;
-  --secondary-red: #ce1126;
-  --gray-50: #f7f8f8;
-  --gray-100: #eef0f0;
-  --gray-200: #e1e4e4;
-  --gray-400: #9aa3a3;
-  --gray-600: #5c6666;
-  --gray-800: #23292a;
-  --black-soft: #17191a;
-
-  display: block;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color: var(--black-soft);
-}
 
 .material-icons { font-family: 'Material Icons'; }
 .stat-card { border-top-color: var(--secondary-blue); }
 .chart-dot { stroke: var(--secondary-blue); }
 .activity-badge { background: var(--primary-tint); color: var(--primary-dark); }
+
+.dashboard-page{
+  margin-top: 5%;
+  z-index: -1;
+  width: 100%
+}
 
 .dashboard-page h1 {
   margin: 0 0 0.25rem;
@@ -76,12 +63,15 @@
   color: var(--gray-600);
   
 }
-
+.stat-value{
+  color: var(--primary);
+}
 
 .stat-delta {
   font-size: 0.78rem;
-  color: var(--primary);
-  font-weight: 600;
+  color: var(--secondary-yellow);
+  font-weight: 300;
+  opacity: 0.9;
 }
 
 .activity-card {

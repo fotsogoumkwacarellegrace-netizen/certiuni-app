@@ -16,6 +16,14 @@
   color: var(--black-soft);
 }
 
+.page{
+  margin-top: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .material-icons {
   font-size: 1.1rem;
   line-height: 1;
@@ -30,6 +38,7 @@
   text-decoration: none;
   font-size: 0.85rem;
   margin-bottom: 0.9rem;
+  align-items: flex-start;
 }
 
 .back-link .material-icons {
@@ -45,7 +54,7 @@
   border: 1px solid var(--gray-200);
   border-radius: 8px;
   padding: 1.75rem;
-  max-width: 600px;
+  width: 90%;
 }
 
 .revoke-card h1 {

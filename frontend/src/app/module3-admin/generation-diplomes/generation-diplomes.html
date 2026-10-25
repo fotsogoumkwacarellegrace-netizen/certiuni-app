@@ -1,5 +1,4 @@
 <div class="generation-page">
-  <a class="back-link" routerLink="/admin/creer-diplomes/validation-csv">← Retour</a>
 
   <div class="generation-card">
     <h1>Génération des diplômes</h1>
@@ -28,9 +27,11 @@
       @if (!terminee()) {
         <button type="button" class="btn-secondary" (click)="annuler()">Annuler</button>
       } @else {
-        <button type="button" class="btn-primary" (click)="voirResultats()">
-          Voir les résultats →
-        </button>
+          <div class="form-footer">
+    <button type="button" class="btn-primary" (click)="validerEtEmettre()" [disabled]="emitting()">
+      {{ emitting() ? 'Émission en cours…' : 'Valider et émettre les diplômes' }}
+    </button>
+  </div>
       }
     </div>
   </div>

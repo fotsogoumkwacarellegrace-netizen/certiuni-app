@@ -1,56 +1,56 @@
+
 import { Routes } from '@angular/router';
 
 /**
- * Routes racines de l'application unifiee CertiUni.
+ * Routes racines de l'application unifiée CertiUni.
  *
- *  /public/*    -> Module 1  : portail public (verification, recruteur)
- *  /student/*   -> Module 3  : espace etudiant
- *  /admin/*     -> Module 3  : back-office institution (AdminLayout)
- *  /superadmin/*-> Module 4  : superadmin (SuperadminLayout)
+ * /public/*     -> Module 1 : portail public
+ * /student/*    -> Module 3 : espace étudiant
+ * /admin/*      -> Module 3 : back-office institution
+ * /superadmin/* -> Module 4 : superadmin
  */
 export const routes: Routes = [
   // Racine -> portail public
-  { path: '', redirectTo: 'public/landing', pathMatch: 'full' },
+  {
+    path: '',
+    redirectTo: 'public/landing',
+    pathMatch: 'full',
+  },
 
-  // =========================================
-  // Module 1 : Portail public (lazy)
-  // =========================================
+  // Module 1 : portail public
   {
     path: 'public',
     loadChildren: () =>
       import('./module1/module1.routes').then((m) => m.MODULE1_ROUTES),
   },
 
-  // =========================================
-  // Module 3 : Espace étudiant (lazy)
-  // =========================================
+  // Module 3 : espace étudiant
   {
     path: 'student',
     loadChildren: () =>
       import('./module3/module3.routes').then((m) => m.module3Routes),
   },
 
-  // =========================================
-  // Module 3-admin : Back-office institution (lazy)
-  // =========================================
+  // Module 3 : back-office institution
   {
     path: 'admin',
     loadChildren: () =>
       import('./module3-admin/admin.routes').then((m) => m.ADMIN_ROUTES),
   },
+
   // Anciens chemins institution -> module admin
   {
     path: 'institution-registration',
     redirectTo: 'admin/inscription',
     pathMatch: 'full',
   },
-  { path: 'admin-login', redirectTo: 'admin/login', pathMatch: 'full' },
-  // (anciens chemins geres plus haut : institution-registration, admin-login)
+  {
+    path: 'admin-login',
+    redirectTo: 'admin/login',
+    pathMatch: 'full',
+  },
 
-  // =========================================
-  // Module 4 : Superadmin (lazy)
-  // =========================================
-  // (login superadmin gere dans le module : /superadmin/login)
+  // Module 4 : superadmin
   {
     path: 'superadmin-login',
     loadComponent: () =>
@@ -61,24 +61,30 @@ export const routes: Routes = [
   {
     path: 'superadmin',
     loadChildren: () =>
-      import('./module4-superadmin/module4.routes').then((m) => m.superadminRoutes),
+      import('./module4-superadmin/module4.routes').then(
+        (m) => m.superadminRoutes
+      ),
   },
 
-  // =========================================
-  // Hub central « Se connecter » (choix du profil) : chemin canonique /public/connexion
-  // (le doublon /connexion est conserve par compatibilite)
-  // =========================================
+  // Hub central de connexion
   {
     path: 'connexion',
     loadComponent: () =>
-      import('./shared/connexion-hub/connexion-hub').then((m) => m.ConnexionHub),
+      import('./shared/connexion-hub/connexion-hub').then(
+        (m) => m.ConnexionHub
+      ),
   },
-  // =========================================
-  // Compatibilite : anciens chemins conserves
-  // =========================================
-  { path: 'admin/layout', redirectTo: 'admin/dashboard', pathMatch: 'full' },
-  // (routes canoniques /admin/login et /superadmin/login dans leurs modules)
 
-  // 404 -> accueil public
-  { path: '**', redirectTo: 'public/landing' },
+  // Compatibilité avec les anciens chemins
+  {
+    path: 'admin/layout',
+    redirectTo: 'admin/dashboard',
+    pathMatch: 'full',
+  },
+
+  // Page introuvable -> accueil public
+  {
+    path: '**',
+    redirectTo: 'public/landing',
+  },
 ];

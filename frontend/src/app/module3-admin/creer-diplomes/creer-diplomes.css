@@ -1,13 +1,13 @@
 
 
 :host {
-  --primary: #0DAA6F;
-  --primary-dark: #0b8f58;
+  --primary: #19764A;
+  --primary-dark: #00543f;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
   --primary-tint: #e8faf0;
   --secondary-blue: #080b32;
   --secondary-blue-tint: #e9eaf8;
-  --secondary-red: #ce1126;
-  --secondary-yellow: #fcd116;
   --gray-50: #f7f8f8;
   --gray-100: #eef0f0;
   --gray-200: #e1e4e4;
@@ -24,6 +24,10 @@
 .material-icons { font-family: 'Material Icons'; }
 .search-box .material-icons { font-size: 18px; }
 .stepper-dot .material-icons { font-size: 18px; }
+
+.wizard-page{
+margin-top: 5%;
+}
 
 .wizard-page h1 {
   margin: 0 0 1.25rem;
@@ -111,7 +115,7 @@
 
 .btn-primary {
   background: var(--primary);
-  color: #fff;
+  color: var(--secondary-yellow);
   border: none;
   border-radius: 6px;
   padding: 0.65rem 1rem;
@@ -156,7 +160,7 @@
 
 .template-version {
   font-size: 0.78rem;
-  color: var(--primary);
+  color: var(--secondary-red);
   font-weight: 600;
   margin-top: 0.3rem;
 }
@@ -192,11 +196,11 @@
   color: var(--gray-600);
   text-decoration: none;
   border-style: dashed;
-  border-color: var(--gray-200);
+  border-color: var(--gray-400);
 }
 
 .template-card-new:hover {
-  border-color: var(--primary);
+  border-color: var(--secondary-yellow);
   color: var(--primary);
 }
 

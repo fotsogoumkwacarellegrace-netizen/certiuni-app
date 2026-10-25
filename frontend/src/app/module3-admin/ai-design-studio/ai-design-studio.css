@@ -1,13 +1,13 @@
 
 
 :host {
-  --primary: #0DAA6F;
-  --primary-dark: #0b8f58;
+  --primary: #19764A;
+  --primary-dark: #00543f;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
   --primary-tint: #e8faf0;
   --secondary-blue: #080b32;
   --secondary-blue-tint: #e9eaf8;
-  --secondary-red: #ce1126;
-  --secondary-yellow: #fcd116;
   --gray-50: #f7f8f8;
   --gray-100: #eef0f0;
   --gray-200: #e1e4e4;
@@ -25,11 +25,15 @@
 .back-link .material-icons { font-size: 18px; }
 .preview-qr .material-icons { font-size: 18px; }
 
+.studio-page{
+  margin-top: 5%;
+}
+
 .back-link {
   display: inline-block;
   color: var(--gray-600);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 2rem;
   margin-bottom: 0.6rem;
 }
 
@@ -85,7 +89,7 @@
 .btn-primary {
   width: 100%;
   background: var(--primary);
-  color: #fff;
+  color: var(--secondary-yellow);
   border: none;
   border-radius: 6px;
   padding: 0.7rem 1rem;
@@ -247,7 +251,7 @@
 }
 
 .btn-secondary:hover:not(:disabled) {
-  border-color: var(--primary);
+  border-color: var(--secondary-yellow);
   color: var(--primary);
 }
 

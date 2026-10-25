@@ -1,7 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DiplomaCreationState } from '../services/diploma-creation-state';
-import { MOCK_CSV_VALIDATION } from '../../assets/data/mock-data.admin';
+import { MOCK_CSV_VALIDATION,   MOCK_ECHANTILLON_DIPLOMES,
+ } from '../../assets/data/mock-data.admin';
 
 @Component({
   selector: 'app-generation-diplomes',
@@ -16,6 +17,7 @@ export class GenerationDiplomes {
 
   readonly etapes = this.state.etapesGeneration;
   readonly terminee = this.state.generationTerminee;
+  readonly emitting = signal(false);
 
   readonly totalLignes = MOCK_CSV_VALIDATION.lignesValides;
 
@@ -36,7 +38,13 @@ export class GenerationDiplomes {
     this.router.navigate(['/admin/creer-diplomes/validation-csv']);
   }
 
-  voirResultats(): void {
-    this.router.navigate(['/admin/creer-diplomes/validation-emission']);
+validerEtEmettre(): void {
+    this.emitting.set(true);
+    // TODO: remplacer par l'appel réel à l'API d'émission des diplômes.
+    setTimeout(() => {
+      this.emitting.set(false);
+      this.state.reset();
+      this.router.navigate(['/admin/dashboard']);
+    }, 800);
   }
 }
