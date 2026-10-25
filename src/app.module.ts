@@ -47,7 +47,8 @@ import { BatchModule } from './modules/batch/batch.module';                     
 import { VerifyModule } from './modules/verify/verify.module';                       // 28
 import { TemplatesModule } from './modules/templates/templates.module';               // 29
 import { AcademicModule } from './modules/academic/academic.module';                 // 30
-import { RequestsModule } from './modules/requests/requests.module';                 // 31
+import { RequestsModule } from './modules/requests/requests.module';// 31
+import { DiplomaVerificationModule } from '@modules/diplomas-verification/diplomas-verification.module'; // 32
 
 @Module({
   imports: [
@@ -125,6 +126,7 @@ import { RequestsModule } from './modules/requests/requests.module';            
     TemplatesModule,
     AcademicModule,
     RequestsModule,
+    DiplomaVerificationModule
   ],
   providers: [
     // Exception Filter Global (Uniformise les réponses d'erreur HTTP)

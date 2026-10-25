@@ -30,7 +30,7 @@ datasource db {
 ## 2. Migration workflow (the only supported flow)
 
 ```bash
-# 1. edit prisma/schema.prisma
+# 1. edit prisma/type.prisma
 # 2. dev loop (creates SQL + applies locally)
 npx prisma migrate dev --name <snake_case_change>
 # 3. review generated SQL under prisma/migrations/<ts>_<name>/migration.sql

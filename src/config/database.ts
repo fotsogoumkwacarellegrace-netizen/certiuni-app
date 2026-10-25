@@ -5,7 +5,7 @@ export { prisma };
 
 // src/config/database.ts
 // NOTE: single source of truth for TypeORM + runtime DB knobs.
-// Prisma connection itself is driven by DATABASE_URL (see prisma/schema.prisma).
+// Prisma connection itself is driven by DATABASE_URL (see prisma/type.prisma).
 // Compat: re-export du singleton Prisma (source: src/lib/prisma.ts) pour les
 // anciens imports `from '../config/database'` encore présents dans le code.
 

@@ -11,7 +11,7 @@ export const envSchema = z.object({
     PORT: z.coerce.number().default(3000),
 
     // Base de données (Prisma / Postgres)
-    DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/certiuni_dev?schema=public'),
+    DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/certiuni_dev?type=public'),
     DB_HOST: z.string().optional().default('localhost'),
     DB_PORT: z.coerce.number().optional().default(5432),
     DB_USERNAME: z.string().optional().default('postgres'),
