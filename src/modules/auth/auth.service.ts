@@ -52,12 +52,27 @@ export class AuthService {
       throw new BadRequestException("La création d'un Super Admin n'est pas autorisée par cette route.");
     }
 
-    // 2. Hashage du mot de passe
+    // 2. Vérification de l'existence de l'université
+    let targetUniversityId: string | null = null;
+
+    if (registerDto.universityId) {
+      const universityExists = await this.prisma.university.findUnique({
+        where: { id: registerDto.universityId },
+        select: { id: true },
+      });
+
+      // Si l'université existe, on conserve son ID, sinon on laisse à null
+      if (universityExists) {
+        targetUniversityId = registerDto.universityId;
+      }
+    }
+
+    // 3. Hashage du mot de passe
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(registerDto.password, saltRounds);
 
     try {
-      // 3. Persistence en base de données
+      // 4. Création de l'utilisateur
       const user = await this.prisma.user.create({
         data: {
           email: registerDto.email,
@@ -65,17 +80,14 @@ export class AuthService {
           firstName: registerDto.firstName,
           lastName: registerDto.lastName,
           role: registerDto.role,
-          universityId: registerDto.universityId ?? null,
+          universityId: targetUniversityId, // null si introuvable ou non fourni
         },
       });
 
-      // 4. Génération des tokens JWT
+      // 5. Génération des tokens et mise à jour du refresh token
       const tokens = await this.generateTokens(user.id, user.email, user.role);
-
-      // 5. Stockage / mise à jour du refreshToken hashé
       await this.updateRefreshToken(user.id, tokens.refreshToken);
 
-      // 6. Retour de l'utilisateur (sans le hash) et des tokens
       return {
         user: {
           id: user.id,
@@ -87,7 +99,6 @@ export class AuthService {
         },
         ...tokens,
       };
-
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
