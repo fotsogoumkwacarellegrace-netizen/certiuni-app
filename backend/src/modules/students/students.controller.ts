@@ -22,6 +22,7 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { GetUser } from '../../common/decorators/get-user.decorator';
 
 @ApiTags('Students')
 @ApiBearerAuth()
@@ -43,8 +44,8 @@ export class StudentsController {
     @Get()
     @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN)
     @ApiOperation({ summary: 'Lister tous les profils étudiants' })
-    findAll() {
-        return this.studentsService.findAll();
+    findAll(@GetUser() user: any) {
+        return this.studentsService.findAll(user);
     }
 
     @Get('matricule/:matricule')
@@ -62,8 +63,8 @@ export class StudentsController {
 
     @Get(':id')
     @ApiOperation({ summary: 'Obtenir un profil étudiant par son ID' })
-    findOne(@Param('id', ParseUUIDPipe) id: string) {
-        return this.studentsService.findOne(id);
+    findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: any) {
+        return this.studentsService.findOne(id, user);
     }
 
     @Patch(':id')
@@ -72,14 +73,15 @@ export class StudentsController {
     update(
         @Param('id', ParseUUIDPipe) id: string,
         @Body() dto: UpdateStudentDto,
+        @GetUser() user: any,
     ) {
-        return this.studentsService.update(id, dto);
+        return this.studentsService.update(id, dto, user);
     }
 
     @Delete(':id')
     @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN)
     @ApiOperation({ summary: 'Supprimer un profil étudiant' })
-    remove(@Param('id', ParseUUIDPipe) id: string) {
-        return this.studentsService.remove(id);
+    remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: any) {
+        return this.studentsService.remove(id, user);
     }
 }

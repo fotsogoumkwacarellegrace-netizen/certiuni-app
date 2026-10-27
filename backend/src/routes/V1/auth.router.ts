@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../config/database';
 import { authenticateJwt } from '../../middlewares/auth.middleware';
+import { env, requireJwtAccessSecret } from '../../config/env.config';
 
 const router = Router();
 
@@ -45,8 +46,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
                 role: user.role,
                 universityId: user.universityId,
             },
-            process.env.JWT_ACCESS_SECRET || 'certiuni-dev-secret',
-            { expiresIn: (process.env.JWT_ACCESS_EXPIRES_IN || '15m') as jwt.SignOptions['expiresIn'] }
+            requireJwtAccessSecret(),
+            { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions['expiresIn'] }
         );
 
         res.status(200).json({
@@ -68,7 +69,10 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.post('/refresh', async (req: Request, res: Response) => {
-    res.status(200).json({ status: 'success', message: 'Refresh token route ready.' });
+    res.status(501).json({
+        error: 'not_configured',
+        feature: 'legacy-auth-refresh',
+    });
 });
 
 router.post('/logout', authenticateJwt, async (req: Request, res: Response) => {

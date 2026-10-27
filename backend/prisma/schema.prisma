@@ -1,8 +1,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // NOTE(prod): route pooled connection via PgBouncer when DATABASE_URL points to :6543.
-  // Keep direct migrations on :5432 via `prisma migrate deploy` before switching the pool.
+  // The migration runner substitutes DIRECT_URL into DATABASE_URL when it is set.
 }
 
 generator client {
@@ -19,6 +18,7 @@ enum UserRole {
   UNIV_ADMIN
   ISSUER
   VERIFIER
+  RECRUITER
   STUDENT
 }
 
@@ -69,6 +69,7 @@ enum RequestStatus {
   APPROVED
   REJECTED
   COMPLETED
+  CANCELLED
 }
 
 enum Gender {
@@ -87,8 +88,8 @@ model Role {
   permissions RolePermission[]
   users       UserRoleLink[]
 
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("roles")
 }
@@ -99,8 +100,8 @@ model Permission {
   description String?          @db.VarChar(255)
   roles       RolePermission[]
 
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("permissions")
 }
@@ -137,13 +138,14 @@ model UserUniversity {
 
 /// Utilisateurs de la plateforme
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  email        String   @unique @db.VarChar(255)
-  passwordHash String   @db.VarChar(255)
-  firstName    String   @db.VarChar(100)
-  lastName     String   @db.VarChar(100)
-  role         UserRole @default(ISSUER)
-  isActive     Boolean  @default(true)
+  id               String   @id @default(uuid()) @db.Uuid
+  email            String   @unique @db.VarChar(255)
+  passwordHash     String   @db.VarChar(255)
+  refreshTokenHash String?  @db.VarChar(64)
+  firstName        String   @db.VarChar(100)
+  lastName         String   @db.VarChar(100)
+  role             UserRole @default(ISSUER)
+  isActive         Boolean  @default(true)
 
   // Authentification Double Facteur (MFA/TOTP)
   isMfaEnabled Boolean @default(false)
@@ -212,8 +214,7 @@ model Program {
 
   students     Student[]
   certificates Certificate[]
-  enrollments Enrollment[]
-
+  enrollments  Enrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -231,7 +232,7 @@ model AcademicLevel {
 
   students     Student[]
   certificates Certificate[]
-  enrollments Enrollment[]
+  enrollments  Enrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -248,7 +249,7 @@ model AcademicYear {
 
   students     Student[]
   certificates Certificate[]
-  enrollments Enrollment[]
+  enrollments  Enrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -262,17 +263,17 @@ model AcademicYear {
 // ==========================================
 
 model Student {
-  id        String  @id @default(uuid()) @db.Uuid
-  matricule String  @db.VarChar(50)
-  firstName String  @db.VarChar(100)
-  lastName  String  @db.VarChar(100)
-  email     String? @db.VarChar(255)
-  phone     String? @db.VarChar(50)
-  birthDate DateTime?
-  birthPlace String? @db.VarChar(255)
-  nationality String? @db.VarChar(100)
-  gender    Gender?
-  idCardNumber String? @db.VarChar(50)
+  id           String    @id @default(uuid()) @db.Uuid
+  matricule    String    @db.VarChar(50)
+  firstName    String    @db.VarChar(100)
+  lastName     String    @db.VarChar(100)
+  email        String?   @db.VarChar(255)
+  phone        String?   @db.VarChar(50)
+  birthDate    DateTime?
+  birthPlace   String?   @db.VarChar(255)
+  nationality  String?   @db.VarChar(100)
+  gender       Gender?
+  idCardNumber String?   @db.VarChar(50)
 
   userId String? @unique @db.Uuid
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -304,27 +305,29 @@ model Student {
 }
 
 model Enrollment {
-  id              String        @id @default(uuid()) @db.Uuid
-  status          EnrollmentStatus @default(PENDING)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-templateId String? @db.Uuid
+  id         String               @id @default(uuid()) @db.Uuid
+  status     EnrollmentStatus     @default(PENDING)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  templateId String?              @db.Uuid
   template   CertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
 
-  studentId       String        @db.Uuid
-  student         Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String  @db.Uuid
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  programId       String        @db.Uuid
-  program         Program       @relation(fields: [programId], references: [id], onDelete: Restrict)
+  programId String  @db.Uuid
+  program   Program @relation(fields: [programId], references: [id], onDelete: Restrict)
 
   academicLevelId String        @db.Uuid
   academicLevel   AcademicLevel @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
 
-  academicYearId  String        @db.Uuid
-  academicYear    AcademicYear  @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+  academicYearId String       @db.Uuid
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+
+  requests Request[]
 
   @@unique([studentId, academicYearId])
-    @@map("enrollments")
+  @@map("enrollments")
 }
 
 enum EnrollmentStatus {
@@ -334,7 +337,6 @@ enum EnrollmentStatus {
   SUSPENDED
   DROPPED
 }
-
 
 // ==========================================
 // 4. DOCUMENTS, DIPLÔMES ET FICHIERS
@@ -509,13 +511,17 @@ model Request {
   amount   Decimal @default(0.00) @db.Decimal(12, 2)
   currency String  @default("XAF") @db.VarChar(10)
 
-  notes String? @db.Text
+  notes      String? @db.Text
+  adminNotes String? @db.Text
 
   studentId String  @db.Uuid
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   serviceId String  @db.Uuid
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  enrollmentId String?     @db.Uuid
+  enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
 
   handledById String? @db.Uuid
   handledBy   User?   @relation("HandledRequests", fields: [handledById], references: [id], onDelete: SetNull)
@@ -528,6 +534,7 @@ model Request {
 
   @@index([studentId])
   @@index([serviceId])
+  @@index([enrollmentId])
   @@index([status])
   @@map("requests")
 }
@@ -574,17 +581,17 @@ model AuditLog {
 }
 
 model Notification {
-  id        String  @id @default(uuid()) @db.Uuid
-  userId    String  @db.Uuid
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   universityId String?     @db.Uuid
   university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
 
-  type      String  @db.VarChar(50)
-  title     String? @db.VarChar(255)
-  message   String  @db.Text
-  isRead    Boolean @default(false)
+  type    String  @db.VarChar(50)
+  title   String? @db.VarChar(255)
+  message String  @db.Text
+  isRead  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -621,17 +628,25 @@ model Payment {
   @@map("payments")
 }
 
+model StripeWebhookEvent {
+  id          String   @id @db.VarChar(255)
+  type        String   @db.VarChar(100)
+  processedAt DateTime @default(now())
+
+  @@map("stripe_webhook_events")
+}
+
 model CertificateTemplate {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        String   @db.VarChar(255)
-  description String?  @db.Text
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String  @db.VarChar(255)
+  description  String? @db.Text
   layoutConfig Json
 
   universityId String     @db.Uuid
   university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
   certificates Certificate[]
-  enrollments Enrollment[]
+  enrollments  Enrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

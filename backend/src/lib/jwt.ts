@@ -1,5 +1,6 @@
 import jwt, { JwtPayload as JwtLibPayload, SignOptions } from 'jsonwebtoken';
 import { UserRole } from '@prisma/client';
+import { requireJwtAccessSecret } from '../config/env.config';
 type RoleEnum = UserRole;
 
 /**
@@ -14,17 +15,14 @@ export interface JwtPayload {
   universityId: string | null;
 }
 
-// Remplace @nestjs/jwt (JwtService) et la configuration PassportStrategy.
-export const JWT_SECRET =
-  process.env.JWT_SECRET || 'super_secret_certiuni_key_2026';
 export const JWT_EXPIRES_IN = '15m'; // durée de vie courte, conformément à la doc sécurité
 
 export function signToken(payload: JwtPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as SignOptions);
+  return jwt.sign(payload, requireJwtAccessSecret(), { expiresIn: JWT_EXPIRES_IN } as SignOptions);
 }
 
 export function verifyToken(token: string): JwtPayload {
-  return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  return jwt.verify(token, requireJwtAccessSecret()) as JwtPayload;
 }
 
 // Re-exporté pour garder un point d'import stable depuis `auth/strategies/jwt.strategy.ts`.

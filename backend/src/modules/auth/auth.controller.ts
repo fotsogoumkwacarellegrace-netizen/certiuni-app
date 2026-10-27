@@ -6,9 +6,11 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { GetUser } from '../../common/decorators/get-user.decorator';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { MfaVerifyDto } from './dto/mfa-verify.dto';
 
 @ApiTags('Auth')
-@Controller('v1/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
@@ -17,6 +19,16 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  /** Complète l'authentification 2FA (TOTP) et émet les tokens JWT */
+  @Public()
+  @Post('mfa/login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Terminer l\'authentification 2FA TOTP et obtenir les tokens JWT' })
+  @ApiResponse({ status: 200, description: 'Tokens d\'accès et de rafraîchissement émis.' })
+  async completeMfaLogin(@Body() dto: MfaVerifyDto) {
+    return this.authService.completeMfaLogin(dto.mfaToken, dto.code);
   }
 
   @Get('profile')
@@ -29,8 +41,8 @@ export class AuthController {
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Body('refreshToken') refreshToken: string) {
-    return this.authService.refreshToken(refreshToken);
+  async refresh(@Body() dto: RefreshTokenDto) {
+    return this.authService.refreshToken(dto.refreshToken);
   }
 
   @Post('logout')

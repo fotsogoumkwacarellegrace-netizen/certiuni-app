@@ -1,14 +1,14 @@
 import {
     BadRequestException,
+    HttpException,
     Injectable,
     InternalServerErrorException,
-    NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import * as crypto from 'crypto';
 import * as path from 'path';
+import { env } from '../../config/env.config';
 
 export interface UploadedFileResponse {
     filename: string;
@@ -21,24 +21,44 @@ export interface UploadedFileResponse {
 
 @Injectable()
 export class FilesService {
-    private s3Client: S3Client;
-    private bucketName: string;
+    private readonly s3Client?: S3Client;
+    private readonly bucketName?: string;
 
-    constructor(private readonly configService: ConfigService) {
-        const region = this.configService.get<string>('AWS_REGION', 'us-east-1');
-        const endpoint = this.configService.get<string>('S3_ENDPOINT');
+    constructor() {
+        const {
+            AWS_REGION,
+            AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY,
+            AWS_S3_BUCKET,
+            AWS_S3_ENDPOINT,
+        } = env;
+        if (
+            AWS_REGION &&
+            AWS_ACCESS_KEY_ID &&
+            AWS_SECRET_ACCESS_KEY &&
+            AWS_S3_BUCKET
+        ) {
+            this.bucketName = AWS_S3_BUCKET;
+            this.s3Client = new S3Client({
+                region: AWS_REGION,
+                endpoint: AWS_S3_ENDPOINT,
+                forcePathStyle: Boolean(AWS_S3_ENDPOINT),
+                credentials: {
+                    accessKeyId: AWS_ACCESS_KEY_ID,
+                    secretAccessKey: AWS_SECRET_ACCESS_KEY,
+                },
+            });
+        }
+    }
 
-        this.bucketName = this.configService.get<string>('S3_BUCKET_NAME', 'certiuni-bucket');
-
-        this.s3Client = new S3Client({
-            region,
-            endpoint: endpoint || undefined,
-            forcePathStyle: !!endpoint, // Requis pour la compatibilité MinIO
-            credentials: {
-                accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY_ID', ''),
-                secretAccessKey: this.configService.get<string>('AWS_SECRET_ACCESS_KEY', ''),
-            },
-        });
+    private getStorage(): { client: S3Client; bucket: string } {
+        if (!this.s3Client || !this.bucketName) {
+            throw new HttpException(
+                { error: 'not_configured', feature: 'storage' },
+                501,
+            );
+        }
+        return { client: this.s3Client, bucket: this.bucketName };
     }
 
     /**
@@ -56,22 +76,24 @@ export class FilesService {
             throw new BadRequestException('Aucun fichier n\'a été fourni.');
         }
 
+        const { client, bucket } = this.getStorage();
         const key = this.generateFileKey(file.originalname, folder);
 
         try {
-            await this.s3Client.send(
+            await client.send(
                 new PutObjectCommand({
-                    Bucket: this.bucketName,
+                    Bucket: bucket,
                     Key: key,
                     Body: file.buffer,
                     ContentType: file.mimetype,
                 }),
             );
 
-            const publicBaseUrl = this.configService.get<string>('S3_PUBLIC_URL');
-            const url = publicBaseUrl
-                ? `${publicBaseUrl.replace(/\/+$/, '')}/${key}`
-                : `https://${this.bucketName}.s3.amazonaws.com/${key}`;
+            const url = await getSignedUrl(
+                client,
+                new GetObjectCommand({ Bucket: bucket, Key: key }),
+                { expiresIn: 3600 },
+            );
 
             return {
                 filename: path.basename(key),
@@ -81,43 +103,41 @@ export class FilesService {
                 key,
                 url,
             };
-        } catch (error: any) {
-            throw new InternalServerErrorException(
-                `Échec du stockage du fichier sur S3/MinIO: ${error.message}`,
-            );
+        } catch {
+            throw new InternalServerErrorException('Échec du stockage du fichier sur S3/MinIO.');
         }
     }
 
     async getPresignedDownloadUrl(key: string, expiresInSeconds = 3600): Promise<string> {
+        const { client, bucket } = this.getStorage();
         try {
             const command = new GetObjectCommand({
-                Bucket: this.bucketName,
+                Bucket: bucket,
                 Key: key,
             });
 
-            return await getSignedUrl(this.s3Client, command, { expiresIn: expiresInSeconds });
-        } catch (error: any) {
-            throw new NotFoundException(`Impossible de générer l'URL de téléchargement pour "${key}".`);
+            return await getSignedUrl(client, command, { expiresIn: expiresInSeconds });
+        } catch {
+            throw new InternalServerErrorException('Impossible de générer l’URL de téléchargement.');
         }
     }
 
     async deleteFile(key: string): Promise<{ success: boolean; message: string }> {
+        const { client, bucket } = this.getStorage();
         try {
-            await this.s3Client.send(
+            await client.send(
                 new DeleteObjectCommand({
-                    Bucket: this.bucketName,
+                    Bucket: bucket,
                     Key: key,
                 }),
             );
 
             return {
                 success: true,
-                message: `Le fichier "${key}" a été supprimé du stockage avec succès.`,
+                message: 'Le fichier a été supprimé du stockage avec succès.',
             };
-        } catch (error: any) {
-            throw new InternalServerErrorException(
-                `Erreur lors de la suppression du fichier "${key}": ${error.message}`,
-            );
+        } catch {
+            throw new InternalServerErrorException('Erreur lors de la suppression du fichier du stockage.');
         }
     }
 }

@@ -8,6 +8,7 @@ import { addPdfJobToQueue } from '../jobs/queues/pdf.queue';
 import { AuditService, AuditAction } from '../services/audit.service';
 import { IssueCertificateSchema } from '../dtos/certificate.dto';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../errors/app.error';
+import { createSignedCertificateVerificationUrl } from '../common/utils/qr-signature.util';
 
 interface RawCertificateRow {
     studentIdentifier: string;
@@ -123,7 +124,7 @@ export const importCertificatesBatch = async (req: Request, res: Response) => {
         }
 
         const publicIdentifier = `CERT-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const verificationUrl = `${process.env.FRONTEND_URL || 'https://certiuni.app'}/verify/${publicIdentifier}`;
+        const verificationUrl = createSignedCertificateVerificationUrl(publicIdentifier);
 
         try {
             // Insertion BDD en transaction isolée par ligne

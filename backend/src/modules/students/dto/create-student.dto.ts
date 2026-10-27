@@ -63,11 +63,19 @@ export class CreateStudentDto {
     @IsNotEmpty({ message: 'Le genre est obligatoire.' })
     gender: Gender;
 
-    @ApiPropertyOptional({
+    @ApiProperty({
         example: '123456789',
         description: 'Numéro de CNI ou Passeport',
     })
     @IsOptional()
     @IsString()
     idCardNumber?: string;
+
+    @ApiProperty({
+        example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+        description: 'ID de l\'université à laquelle l\'étudiant est rattaché',
+    })
+    @IsUUID('4', { message: 'L\'ID de l\'université doit être un UUID v4 valide.' })
+    @IsNotEmpty({ message: 'L\'université est obligatoire.' })
+    universityId: string;
 }

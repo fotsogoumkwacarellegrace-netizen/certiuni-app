@@ -5,11 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as crypto from 'crypto';
+import * as QRCode from 'qrcode';
 import { CertificateStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { IssueDocumentDto } from './dto/issue-document.dto';
 import { RevokeDocumentDto } from './dto/revoke-document.dto';
 import { BatchIssueDocumentDto } from './dto/batch-issue-document.dto';
+import { createSignedCertificateVerificationUrl } from '../../common/utils/qr-signature.util';
 
 @Injectable()
 export class DocumentsService {
@@ -18,6 +20,7 @@ export class DocumentsService {
   private readonly documentSelect = Prisma.validator<Prisma.CertificateSelect>()({
     id: true,
     publicIdentifier: true,
+    metadataJson: true,
     degreeTitle: true,
     fieldOfStudy: true,
     grade: true,
@@ -86,8 +89,8 @@ export class DocumentsService {
     const certificateNumber = this.generateCertificateNumber();
     const issuedAt = dto.issuedAt ? new Date(dto.issuedAt) : new Date();
 
-    const verificationUrl = `${process.env.FRONTEND_VERIFY_URL || 'https://verify.certiuni.com'}/${certificateNumber}`;
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(verificationUrl)}`;
+    const verificationUrl = createSignedCertificateVerificationUrl(certificateNumber);
+    const qrCodeUrl = await QRCode.toDataURL(verificationUrl);
 
     const canonicalHash = require('crypto')
       .createHash('sha256')

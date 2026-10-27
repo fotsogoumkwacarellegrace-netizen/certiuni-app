@@ -1,0 +1,2 @@
+This synthetic file is intentionally plain text.
+Use it to test upload handlers that should reject unsupported file extensions.

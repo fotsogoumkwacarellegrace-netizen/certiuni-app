@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { CertificateStatus, Prisma } from '@prisma/client';
+import { PrismaService } from '../../common/prisma/prisma.service';
+import { verifyCertificateQrSignature } from '../../common/utils/qr-signature.util';
 import { VerifyHashDto } from './dto/verify-hash.dto';
 import { VerifyQrDto } from './dto/verify-qr.dto';
 
 export interface VerificationResult {
     isValid: boolean;
-    status: 'AUTHENTIC' | 'REVOKED' | 'NOT_FOUND';
+    status: 'AUTHENTIC' | 'REVOKED' | 'PENDING' | 'FAILED' | 'NOT_FOUND';
     message: string;
     verifiedAt: Date;
     documentDetails?: {
@@ -22,166 +24,134 @@ export interface VerificationResult {
             lastName: string;
             matricule: string;
         };
-        documentType: {
-            code: string;
-            name: string;
-        };
         institution: {
             name: string;
             code: string;
         };
-        academicYear: string;
     };
 }
+
+const certificateSelect = Prisma.validator<Prisma.CertificateSelect>()({
+    publicIdentifier: true,
+    canonicalHash: true,
+    studentFirstName: true,
+    studentLastName: true,
+    studentIdentifier: true,
+    degreeTitle: true,
+    grade: true,
+    issueDate: true,
+    status: true,
+    revokedAt: true,
+    revocationReason: true,
+    university: { select: { name: true, code: true } },
+});
+
+type CertificateRecord = Prisma.CertificateGetPayload<{
+    select: typeof certificateSelect;
+}>;
 
 @Injectable()
 export class VerificationService {
     constructor(private readonly prisma: PrismaService) { }
 
-    private readonly verificationSelect = {
-        id: true,
-        certificateNumber: true,
-        title: true,
-        mention: true,
-        issuedAt: true,
-        documentHash: true,
-        isRevoked: true,
-        revokedAt: true,
-        revocationReason: true,
-        student: {
-            select: {
-                matricule: true,
-                user: {
-                    select: {
-                        firstName: true,
-                        lastName: true,
-                    },
-                },
-            },
-        },
-        documentType: {
-            select: {
-                code: true,
-                name: true,
-            },
-        },
-        enrollment: {
-            select: {
-                academicYear: {
-                    select: { year: true },
-                },
-                program: {
-                    select: {
-                        department: {
-                            select: {
-                                faculty: {
-                                    select: {
-                                        university: {
-                                            select: {
-                                                name: true,
-                                                code: true,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    };
-
-    /**
-     * Formate la réponse publique de vérification
-     */
-    private formatVerificationResponse(certificate: any): VerificationResult {
-        const isRevoked = certificate.isRevoked;
-
-        return {
-            isValid: !isRevoked,
-            status: isRevoked ? 'REVOKED' : 'AUTHENTIC',
-            message: isRevoked
-                ? 'Ce document a été révoqué par l\'établissement émetteur.'
-                : 'Document authentique et valide émis par une institution certifiée.',
-            verifiedAt: new Date(),
-            documentDetails: {
-                certificateNumber: certificate.certificateNumber,
-                title: certificate.title,
-                mention: certificate.mention,
-                issuedAt: certificate.issuedAt,
-                isRevoked: certificate.isRevoked,
-                revokedAt: certificate.revokedAt,
-                revocationReason: certificate.revocationReason,
-                documentHash: certificate.documentHash,
-                student: {
-                    firstName: certificate.student.user.firstName,
-                    lastName: certificate.student.user.lastName,
-                    matricule: certificate.student.matricule,
-                },
-                documentType: {
-                    code: certificate.documentType.code,
-                    name: certificate.documentType.name,
-                },
-                institution: {
-                    name: certificate.enrollment?.program?.department?.faculty?.university?.name || 'N/A',
-                    code: certificate.enrollment?.program?.department?.faculty?.university?.code || 'N/A',
-                },
-                academicYear: certificate.enrollment?.academicYear?.year || 'N/A',
-            },
-        };
-    }
-
-    async verifyByHash(dto: VerifyHashDto): Promise<VerificationResult> {
+    async verifyHash(dto: VerifyHashDto): Promise<VerificationResult> {
         const cleanHash = dto.hash.trim().toLowerCase();
-
         const certificate = await this.prisma.certificate.findFirst({
             where: {
-                canonicalHash: {
-                    equals: cleanHash,
-                    mode: 'insensitive',
-                },
+                canonicalHash: { equals: cleanHash, mode: 'insensitive' },
             },
-            select: this.verificationSelect,
+            select: certificateSelect,
         });
 
         if (!certificate) {
             throw new NotFoundException({
                 isValid: false,
                 status: 'NOT_FOUND',
-                message: 'Aucun document correspondant à ce hash SHA-256 n\'a été trouvé.',
+                message: "Aucun document correspondant à ce hash SHA-256 n'a été trouvé.",
                 verifiedAt: new Date(),
             });
         }
 
-        return this.formatVerificationResponse(certificate);
+        return this.format(certificate);
     }
 
-    async verifyByQr(dto: VerifyQrDto): Promise<VerificationResult> {
-        let rawInput = dto.qrData.trim();
+    async verifyQr(dto: VerifyQrDto): Promise<VerificationResult> {
+        const qrData = dto.qrData.trim();
+        let identifier = qrData;
 
-        // Extrait le numéro si une URL complète est scannée (ex: https://verify.certiuni.com/CERT-2026-X9A2B4C)
-        if (rawInput.includes('/')) {
-            const parts = rawInput.split('/');
-            rawInput = parts[parts.length - 1];
+        if (/^https?:\/\//i.test(qrData)) {
+            let url: URL;
+            try {
+                url = new URL(qrData);
+            } catch {
+                throw new BadRequestException('URL du QR code invalide.');
+            }
+
+            identifier = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() ?? '');
+            const signature = url.searchParams.get('signature');
+            if (!identifier || !signature || !verifyCertificateQrSignature(identifier, signature)) {
+                throw new BadRequestException('Signature du QR code invalide ou absente.');
+            }
+        } else if (qrData.includes('/') || qrData.includes('?')) {
+            throw new BadRequestException('Le contenu du QR code est invalide.');
         }
 
-        const certificateNumber = rawInput.toUpperCase();
-
         const certificate = await this.prisma.certificate.findUnique({
-            where: { publicIdentifier: certificateNumber },
-            select: this.verificationSelect,
+            where: { publicIdentifier: identifier.toUpperCase() },
+            select: certificateSelect,
         });
 
         if (!certificate) {
             throw new NotFoundException({
                 isValid: false,
                 status: 'NOT_FOUND',
-                message: `Aucun document trouvé pour le numéro de certificat "${certificateNumber}".`,
+                message: "Aucun document trouvé pour ce numéro de certificat.",
                 verifiedAt: new Date(),
             });
         }
 
-        return this.formatVerificationResponse(certificate);
+        return this.format(certificate);
+    }
+
+    private format(certificate: CertificateRecord): VerificationResult {
+        const isRevoked = certificate.status === CertificateStatus.REVOKED;
+        const isValid = certificate.status === CertificateStatus.ISSUED;
+        const status: VerificationResult['status'] = isRevoked
+            ? 'REVOKED'
+            : isValid
+                ? 'AUTHENTIC'
+                : certificate.status === CertificateStatus.PENDING
+                    ? 'PENDING'
+                    : 'FAILED';
+
+        return {
+            isValid,
+            status,
+            message: isRevoked
+                ? "Ce document a été révoqué par l'établissement émetteur."
+                : isValid
+                    ? 'Document authentique et valide émis par une institution certifiée.'
+                    : 'Ce document ne peut pas être confirmé comme authentique.',
+            verifiedAt: new Date(),
+            documentDetails: {
+                certificateNumber: certificate.publicIdentifier,
+                title: certificate.degreeTitle,
+                mention: certificate.grade,
+                issuedAt: certificate.issueDate,
+                isRevoked,
+                revokedAt: certificate.revokedAt,
+                revocationReason: certificate.revocationReason,
+                documentHash: certificate.canonicalHash,
+                student: {
+                    firstName: certificate.studentFirstName,
+                    lastName: certificate.studentLastName,
+                    matricule: certificate.studentIdentifier,
+                },
+                institution: {
+                    name: certificate.university.name,
+                    code: certificate.university.code,
+                },
+            },
+        };
     }
 }

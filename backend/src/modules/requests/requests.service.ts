@@ -49,7 +49,7 @@ export class RequestsService {
      */
     async getStatusByTrackingCode(trackingCode: string) {
         const request = await this.prisma.request.findFirst({
-            where: { id: trackingCode },
+            where: { requestNumber: trackingCode },
             select: {
                 id: true,
                 status: true,
@@ -69,8 +69,24 @@ export class RequestsService {
      * Liste des demandes (Accès restreint Admin / Super Admin)
      */
     async findAll(user: any) {
+        const where: any =
+            user?.role === UserRole.SUPER_ADMIN
+                ? {}
+                : { student: { universityId: user?.universityId } };
+
         return this.prisma.request.findMany({
+            where,
             orderBy: { createdAt: 'desc' },
+            include: {
+                student: {
+                    select: {
+                        id: true,
+                        matricule: true,
+                        firstName: true,
+                        lastName: true,
+                    },
+                },
+            },
         });
     }
 
@@ -80,13 +96,21 @@ export class RequestsService {
     async findOne(id: string, user: any) {
         const request = await this.prisma.request.findUnique({
             where: { id },
+            include: {
+                student: {
+                    select: { universityId: true },
+                },
+            },
         });
 
         if (!request) {
             throw new NotFoundException(`Demande #${id} introuvable.`);
         }
 
-        if (user.role !== UserRole.SUPER_ADMIN) {
+        if (
+            user.role !== UserRole.SUPER_ADMIN &&
+            request.student?.universityId !== user?.universityId
+        ) {
             throw new ForbiddenException('Accès non autorisé à cette demande.');
         }
 

@@ -1,14 +1,18 @@
 import {
     Controller,
+    BadRequestException,
     Get,
     Post,
     Body,
-    Patch,
     Param,
     UseGuards,
     ParseUUIDPipe,
     Req,
+    HttpCode,
+    HttpStatus,
+    RawBodyRequest,
 } from '@nestjs/common';
+import { Request } from 'express';
 import {
     ApiTags,
     ApiBearerAuth,
@@ -18,10 +22,10 @@ import {
 import { UserRole } from '@prisma/client';
 import { PaymentsService } from './payments.service';
 import { InitiatePaymentDto } from './dto/initiate-payment.dto';
-import { PaymentStatusDto } from './dto/payment-status.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 
 @ApiTags('Payments')
 @ApiBearerAuth()
@@ -38,14 +42,16 @@ export class PaymentsController {
         return this.paymentsService.initiatePayment(req.user.id, dto);
     }
 
-    @Patch(':id/status')
-    @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN)
-    @ApiOperation({ summary: 'Mettre à jour le statut d un paiement (Admin / Callback manuel)' })
-    updateStatus(
-        @Param('id', ParseUUIDPipe) id: string,
-        @Body() dto: PaymentStatusDto,
-    ) {
-        return this.paymentsService.processPaymentStatus(id, dto);
+    @Public()
+    @Post('webhook/stripe')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Recevoir et vérifier les webhooks Stripe' })
+    stripeWebhook(@Req() req: RawBodyRequest<Request>) {
+        const signature = req.headers['stripe-signature'];
+        if (typeof signature !== 'string' || !req.rawBody) {
+            throw new BadRequestException('Signature Stripe ou corps brut manquant.');
+        }
+        return this.paymentsService.handleStripeWebhook(req.rawBody, signature);
     }
 
     @Get()

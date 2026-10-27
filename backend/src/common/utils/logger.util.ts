@@ -1,6 +1,7 @@
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { LoggerService, Injectable, Scope } from '@nestjs/common';
+import { env } from '../../config/env.config';
 
 const logLevels = {
     fatal: 0,
@@ -22,7 +23,7 @@ const dailyRotateTransport = new (winston.transports as any).DailyRotateFile({
     zippedArchive: true,
     maxSize: '20m',
     maxFiles: '14d',
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    level: env.NODE_ENV === 'production' ? 'info' : 'debug',
 });
 
 /**
@@ -48,13 +49,13 @@ const errorRotateTransport = new (winston.transports as any).DailyRotateFile({
  */
 const logger = winston.createLogger({
     levels: logLevels,
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    level: env.NODE_ENV === 'production' ? 'info' : 'debug',
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.errors({ stack: true }),
         winston.format((info) => {
             info.service = 'certiuni-api';
-            info.environment = process.env.NODE_ENV || 'development';
+            info.environment = env.NODE_ENV;
             info.pid = process.pid;
             return info;
         })(),
@@ -64,7 +65,7 @@ const logger = winston.createLogger({
     transports: [dailyRotateTransport, errorRotateTransport],
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
     logger.add(
         new winston.transports.Console({
             level: 'debug',

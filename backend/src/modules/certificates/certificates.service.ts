@@ -4,7 +4,6 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { IssueCertificateDto } from './dto/issue-certificate.dto';
@@ -12,14 +11,14 @@ import { RevokeCertificateDto } from './dto/revoke-certificate.dto';
 import { UserRole, CertificateStatus, Prisma } from '@prisma/client';
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
+import {
+  createSignedCertificateVerificationUrl,
+  verifyCertificateQrSignature,
+} from '../../common/utils/qr-signature.util';
 
 @Injectable()
 export class CertificatesService {
-  private readonly baseUrl: string;
-
-  constructor(private readonly prisma: PrismaService) {
-    this.baseUrl = process.env.PUBLIC_VERIFY_URL || 'https://certiuni.app/verify';
-  }
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Inclusion standard des relations pour inclure l'ensemble des données d'un certificat
@@ -99,7 +98,7 @@ export class CertificatesService {
     });
 
     const sha256Hash = crypto.createHash('sha256').update(canonicalString).digest('hex');
-    const verificationUrl = `${this.baseUrl}/${publicIdentifier}`;
+    const verificationUrl = createSignedCertificateVerificationUrl(publicIdentifier);
     const qrCodeDataUrl = await this.generateQrCode(verificationUrl);
 
     try {
@@ -150,15 +149,16 @@ export class CertificatesService {
           details: certificate,
         },
       };
-    } catch (error: any) {
-      if (error.code === 'P2002') {
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new ConflictException(
           'Un diplôme avec cet identifiant ou cette empreinte existe déjà.',
         );
       }
-      throw new InternalServerErrorException(
-        'Erreur lors de la création du diplôme dans la base de données : ' + error.message,
-      );
+      throw error;
     }
   }
 
@@ -204,7 +204,15 @@ export class CertificatesService {
   /**
    * Vérification publique d'un diplôme (Accès libre) avec journalisation d'audit
    */
-  async verifyCertificatePublic(publicIdentifier: string, reqContext?: { ipAddress?: string; userAgent?: string }) {
+  async verifyCertificatePublic(
+    publicIdentifier: string,
+    signature?: string,
+    reqContext?: { ipAddress?: string; userAgent?: string },
+  ) {
+    if (signature && !verifyCertificateQrSignature(publicIdentifier, signature)) {
+      throw new BadRequestException('Signature du QR code invalide.');
+    }
+
     const cert = await this.prisma.certificate.findUnique({
       where: { publicIdentifier },
       include: this.defaultInclude,
@@ -224,8 +232,6 @@ export class CertificatesService {
         ipAddress: reqContext?.ipAddress,
         userAgent: reqContext?.userAgent,
       },
-    }).catch(() => {
-      // Ignorer l'échec de log pour ne pas bloquer la réponse publique
     });
 
     const studentName = cert.student
@@ -338,17 +344,13 @@ export class CertificatesService {
   }
 
   private async generateQrCode(url: string): Promise<string> {
-    try {
-      return await QRCode.toDataURL(url, {
-        errorCorrectionLevel: 'H',
-        type: 'image/png',
-        margin: 2,
-        width: 300,
-        color: { dark: '#000000', light: '#FFFFFF' },
-      });
-    } catch {
-      throw new InternalServerErrorException('Échec de la génération du QR Code');
-    }
+    return QRCode.toDataURL(url, {
+      errorCorrectionLevel: 'H',
+      type: 'image/png',
+      margin: 2,
+      width: 300,
+      color: { dark: '#000000', light: '#FFFFFF' },
+    });
   }
 
   private generatePublicIdentifier(universityCode: string): string {

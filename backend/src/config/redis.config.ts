@@ -3,9 +3,9 @@ import { env } from './env.config';
 import Redis from 'ioredis';
 
 export interface RedisConfigOptions {
-    url: string;
-    host: string;
-    port: number;
+    url?: string;
+    host?: string;
+    port?: number;
     password?: string;
     db: number;
     keyPrefix: string;
@@ -34,16 +34,16 @@ const parseRedisUrl = (redisUrl: string) => {
     }
 };
 
-const parsedUrl = parseRedisUrl(env.REDIS_URL);
+const parsedUrl = env.REDIS_URL ? parseRedisUrl(env.REDIS_URL) : undefined;
 
 export default registerAs(
     'redis',
     (): RedisConfigOptions => ({
         url: env.REDIS_URL,
-        host: parsedUrl.host,
-        port: parsedUrl.port,
-        password: parsedUrl.password,
-        db: parsedUrl.db,
+        host: parsedUrl?.host ?? env.REDIS_HOST,
+        port: parsedUrl?.port ?? env.REDIS_PORT,
+        password: parsedUrl?.password ?? env.REDIS_PASSWORD,
+        db: parsedUrl?.db ?? env.REDIS_DB ?? 0,
         keyPrefix: 'certiuni:',
 
         // Stratégie de reconnexion automatique avec backoff exponentiel

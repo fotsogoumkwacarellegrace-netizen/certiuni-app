@@ -2,10 +2,12 @@ import {
     ConflictException,
     Injectable,
     NotFoundException,
+    ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class StudentsService {
@@ -83,7 +85,7 @@ export class StudentsService {
                 matricule: matriculeClean,
                 firstName: '',
                 lastName: '',
-                universityId: 'default-university-id',
+                universityId: dto.universityId,
                 birthDate: new Date(dto.birthDate),
                 birthPlace: dto.birthPlace.trim(),
                 nationality: dto.nationality.trim(),
@@ -94,14 +96,20 @@ export class StudentsService {
         });
     }
 
-    async findAll() {
+    async findAll(currentUser: any) {
+        const where: any =
+            currentUser?.role === UserRole.SUPER_ADMIN
+                ? {}
+                : { universityId: currentUser?.universityId };
+
         return this.prisma.student.findMany({
+            where,
             select: this.studentSelect,
             orderBy: { createdAt: 'desc' },
         });
     }
 
-    async findOne(id: string) {
+    async findOne(id: string, currentUser: any) {
         const student = await this.prisma.student.findUnique({
             where: { id },
             select: this.studentSelect,
@@ -109,6 +117,14 @@ export class StudentsService {
 
         if (!student) {
             throw new NotFoundException(`Profil étudiant introuvable avec l'ID #${id}.`);
+        }
+
+        // Isolation multi-locataire : un UNIV_ADMIN ne voit que les étudiants de son université
+        if (
+            currentUser?.role !== UserRole.SUPER_ADMIN &&
+            student.universityId !== currentUser?.universityId
+        ) {
+            throw new ForbiddenException('Accès non autorisé à cet étudiant.');
         }
 
         return student;
@@ -145,8 +161,8 @@ export class StudentsService {
         return student;
     }
 
-    async update(id: string, dto: UpdateStudentDto) {
-        const studentToUpdate = await this.findOne(id);
+    async update(id: string, dto: UpdateStudentDto, currentUser: any) {
+        const studentToUpdate = await this.findOne(id, currentUser);
 
         const updateData: any = { ...dto };
 
@@ -176,8 +192,8 @@ export class StudentsService {
         });
     }
 
-    async remove(id: string) {
-        await this.findOne(id);
+    async remove(id: string, currentUser: any) {
+        await this.findOne(id, currentUser);
 
         return this.prisma.student.delete({
             where: { id },

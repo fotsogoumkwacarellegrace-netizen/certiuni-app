@@ -1,0 +1,7 @@
+﻿# Security.txt - RFC 9116
+Contact: mailto:security@certiuni.app
+Expires: 2027-12-31T23:59:59.000Z
+Mandatory-Args: false
+Canonical: https://certiuni.app/.well-known/security.txt
+Policy: https://certiuni.app/security-policy
+Acknowledgements: https://certiuni.app/security/hall-of-fame
