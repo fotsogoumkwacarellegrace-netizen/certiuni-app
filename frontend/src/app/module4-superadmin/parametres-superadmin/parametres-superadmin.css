@@ -22,6 +22,11 @@
   vertical-align: middle;
 }
 
+.page{
+  margin-top: 5%;
+  width: 100%;
+}
+
 .page h1 {
   display: flex;
   align-items: center;
@@ -38,8 +43,8 @@
   background: #fff;
   border: 1px solid var(--gray-200);
   border-radius: 8px;
-  max-width: 560px;
   overflow: hidden;
+  width: 100%;
 }
 
 .setting-row {
@@ -49,7 +54,7 @@
   gap: 1rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--gray-200);
-  width: 100%;
+  width: 90%;
   background: none;
   border-left: none;
   border-right: none;
@@ -104,9 +109,9 @@
 /* Toggle switch */
 .toggle {
   position: relative;
-  width: 42px;
-  height: 24px;
-  border-radius: 999px;
+  width: 34px;
+  height: 4px;
+  border-radius: 5px;
   border: none;
   background: var(--gray-200);
   cursor: pointer;
@@ -238,6 +243,42 @@
 
 .btn-primary:hover {
   background: var(--primary-dark);
+}
+
+@media (max-width: 1050Px) {
+
+.page{
+  width: 100%;
+}
+
+}
+
+/* Mobile : la topbar devient sticky (voir layout), compensation verticale supprimee */
+@media (max-width: 768px) {
+  .page {
+    margin-top: 0;
+  }
+
+  .setting-row {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .setting-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .overlay {
+    padding: 1rem;
+  }
+
+  .dialog {
+    width: 100%;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
 }
 
 @media (max-width: 600px) {

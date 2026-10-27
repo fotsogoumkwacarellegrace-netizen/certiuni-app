@@ -1,0 +1,76 @@
+<!-- HEADER (identique à la landing page) -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-container">
+      <a class="logo-link" (click)="goToLanding()">
+        <img src="images/logo.png" alt="CertiUni" class="logo-img" />
+      </a>
+      <span class="logo-text">CertiUni</span>
+    </div>
+
+    <button class="burger-menu" (click)="toggleMenu()" [class.active]="isMenuOpen()">
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+      <span class="burger-line"></span>
+    </button>
+
+    <nav class="nav-links desktop-nav">
+      <a class="active" (click)="goToLanding()">Accueil</a>
+      <a (click)="goToInstitutions()">Institutions</a>
+      <a (click)="goToEtudiants()">Étudiants</a>
+      <a (click)="goToRecruteurs()">Recruteurs</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="btn-login" (click)="goToLogin()">
+        <span class="material-symbols-outlined">login</span>
+        <span>Se connecter</span>
+      </button>
+      <button class="theme-toggle" (click)="toggleDarkMode()">
+        <span class="material-symbols-outlined">
+          {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- OVERLAY MOBILE -->
+<div class="menu-overlay" [class.active]="isMenuOpen()" (click)="closeMenu()"></div>
+
+<!-- MENU MOBILE -->
+<nav class="mobile-menu" [class.open]="isMenuOpen()">
+  <div class="mobile-menu-header">
+    <span class="mobile-menu-title">Navigation</span>
+    <button class="mobile-menu-close" (click)="closeMenu()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="mobile-menu-body">
+    <a class="active" (click)="goToLanding(); closeMenu()">
+      <span class="material-symbols-outlined">verified</span> Accueil
+    </a>
+    <a (click)="goToInstitutions(); closeMenu()">
+      <span class="material-symbols-outlined">account_balance</span> Institutions
+    </a>
+    <a (click)="goToEtudiants(); closeMenu()">
+      <span class="material-symbols-outlined">badge</span> Étudiants
+    </a>
+    <a (click)="goToRecruteurs(); closeMenu()">
+      <span class="material-symbols-outlined">manage_search</span> Recruteurs
+    </a>
+  </div>
+  <div class="mobile-menu-footer">
+    <button class="mobile-btn-login" (click)="goToLogin(); closeMenu()">
+      <span class="material-symbols-outlined">login</span> Se connecter
+    </button>
+    <div class="mobile-lang-toggle">
+      <button [class.active]="lang() === 'FR'" (click)="setLang('FR')">FR</button>
+      <button [class.active]="lang() === 'EN'" (click)="setLang('EN')">EN</button>
+    </div>
+    <div class="mobile-social">
+      <span class="material-symbols-outlined">shield</span>
+      <span>Portail sécurisé</span>
+    </div>
+  </div>
+</nav>

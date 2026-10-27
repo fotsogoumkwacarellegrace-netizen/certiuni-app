@@ -139,8 +139,38 @@
   border-color: var(--secondary-red);
 }
 
+@media (max-width: 1024px) {
+  .generation-card {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .generation-page {
+    margin-top: 0;
+  }
+
+  .generation-card {
+    width: 100%;
+  }
+
+  .progress-meta {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+}
+
 @media (max-width: 560px) {
   .generation-card {
     padding: 1.25rem;
+  }
+
+  .form-footer {
+    justify-content: stretch;
+  }
+
+  .form-footer .btn-primary,
+  .form-footer .btn-secondary {
+    width: 100%;
   }
 }

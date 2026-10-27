@@ -1,35 +1,52 @@
 
 :host {
-  --primary: #0DAA6F;
-  --primary-dark: #0A8A56;
-  --secondary-red: #ce1126;
+  --primary: #19764A;
+  --primary-dark: #00543f;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
+  --primary-tint: #e8faf0;
+  --secondary-blue: #080b32;
+  --secondary-blue-tint: #e9eaf8;
   --gray-50: #f7f8f8;
+  --gray-100: #eef0f0;
   --gray-200: #e1e4e4;
+  --gray-400: #9aa3a3;
   --gray-600: #5c6666;
   --gray-800: #23292a;
   --black-soft: #17191a;
 
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
+  display: block;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--black-soft);
   background: var(--gray-50);
-  padding: 1rem;
+  min-height: 100vh;
 }
 
+.material-icons { font-family: 'Material Icons'; }
+.shield-icon .material-icons { font-size: 26px; }
+.password-toggle .material-icons { font-size: 18px; }
+
 .auth-page {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-main {
+  flex: 1;
   display: flex;
   justify-content: center;
+  height: auto;
+  width: auto;
+  padding-top: 20px;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .auth-intro {
@@ -37,34 +54,42 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .shield-icon {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--primary);
-  color: #fff;
-  font-size: 1.4rem;
+  background: #fff;
+
+  border: 1px solid var(--primary-dark);
+  font-size: 1.5rem;
 }
 
-.material-icons { font-family: 'Material Icons'; }
-.shield-icon .material-icons { font-size: 26px; }
-.password-toggle .material-icons { font-size: 18px; }
+.shield-icon img {
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+}
 
 .auth-intro h1 {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   margin: 0;
 }
 
 .auth-intro p {
   margin: 0;
   color: var(--gray-600);
-  font-size: 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .auth-form {
@@ -75,6 +100,18 @@
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
+}
+
+.form-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.form-subtitle {
+  margin: -0.6rem 0 0;
+  color: var(--gray-600);
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .form-alert {
@@ -104,6 +141,7 @@
   padding: 0.65rem 0.75rem;
   font-size: 0.9rem;
   font-family: inherit;
+  color: var(--black-soft);
   background: var(--gray-50);
 }
 
@@ -142,32 +180,123 @@
   background: transparent;
   cursor: pointer;
   font-size: 1rem;
+  color: var(--gray-600);
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--primary-dark);
+  color: var(--secondary-yellow);
   border: none;
   border-radius: 6px;
   padding: 0.75rem 1rem;
   font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-dark);
+  background: var(--primary);
 }
 
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.security-note {
+  display: flex;
+  gap: 0.75rem;
+  background: var(--gray-100);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+}
+
+.lock-icon {
+  color: var(--gray-600);
+}
+
+.security-note strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.security-note p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* Les adaptations mobiles de la page de connexion sont regroupees en fin de fichier
+   (apres les regles de base .auth-header) pour eviter tout ecrasement par l'ordre source. */
+
 /* Outils d'en-tête : retour + mode clair/sombre */
 .header-tools { display: inline-flex; align-items: center; gap: 10px; }
 .top-bar-actions { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }
 
-.auth-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px; background: #fff; border-bottom: 1px solid #e2e8f0; }
-.auth-header .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #0f172a; font-weight: 800; }
-.auth-header .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 9px; background: #0b4d3a; color: #fff; }
-.auth-header .brand-mark .material-icons { font-size: 20px; }
+.auth-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px; background: #fff; border-bottom: 1px solid var(--gray-200); }
+.auth-header .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--black-soft); font-weight: 800; }
+.auth-header .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 1px solid var(--primary-dark); overflow: hidden; }
+.auth-header .brand-mark img { width: 100%; height: 100%; padding: 3px; box-sizing: border-box; object-fit: contain; display: block; }
+
+/* Mobile : carte pleine largeur, en-tete compact sans debordement */
+@media (max-width: 600px) {
+  .auth-main {
+    padding: 1rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0));
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    gap: 1.25rem;
+  }
+
+  .auth-header {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .auth-header .brand {
+    gap: 6px;
+  }
+
+  .auth-header .brand-name {
+    font-size: 1rem;
+  }
+
+  .auth-header .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-tools {
+    gap: 6px;
+  }
+
+  .auth-intro h1 {
+    font-size: 1.2rem;
+  }
+
+  .shield-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .auth-form {
+    padding: 1.25rem;
+  }
+
+  .form-field input,
+  .password-wrapper,
+  .btn-primary {
+    width: 100%;
+  }
+}

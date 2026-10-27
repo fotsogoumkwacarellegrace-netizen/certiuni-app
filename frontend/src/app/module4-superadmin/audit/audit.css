@@ -1,13 +1,16 @@
 
 :host {
-  --primary: #0DAA6F;
-  --primary-dark: #0A8A56;
-  --primary-tint: #E8F7EF;
-  --secondary-blue: #0B3A66;
-  --secondary-blue-tint: #E9F0F8;
-  --secondary-red: #ce1126;
-  --gray-50: #f7f8f8;
-  --gray-100: #eef0f0;
+  --primary: #19764a;
+  --primary-dark: #12633d;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
+  --primary-tint: #e6f3ee;
+  --secondary: #edeff3;
+  --accent: #f9c31f;
+  --accent-tint: #fbeea1;
+  --destructive: #dc2828;
+  --destructive-tint: #fceaea;
+  --gray-50: #fafbfb;
   --gray-200: #e1e4e4;
   --gray-400: #9aa3a3;
   --gray-600: #5c6666;
@@ -19,8 +22,16 @@
   color: var(--black-soft);
 }
 
-.material-icons { font-family: 'Material Icons'; }
-.search-box .material-icons { font-size: 18px; }
+.material-icons {
+  font-size: 1.1rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.page{
+  margin-top: 5%;
+  width: 100%
+}
 
 .page h1 {
   margin: 0 0 1.25rem;
@@ -36,7 +47,7 @@
 
 .search-box {
   flex: 1;
-  min-width: 200px;
+  min-width: 220px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -44,6 +55,7 @@
   border: 1px solid var(--gray-200);
   border-radius: 6px;
   padding: 0.55rem 0.8rem;
+  color: var(--gray-600);
 }
 
 .search-box input {
@@ -52,6 +64,7 @@
   font-size: 0.85rem;
   width: 100%;
   background: transparent;
+  color: var(--black-soft);
 }
 
 .filters-bar select,
@@ -93,18 +106,19 @@
   border: 1px solid var(--gray-200);
   border-radius: 8px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .audit-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.83rem;
+  font-size: 0.85rem;
 }
 
 .audit-table th {
   text-align: left;
   padding: 0.75rem 1.25rem;
-  background: var(--gray-50);
+  background: var(--secondary);
   color: var(--gray-600);
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -114,7 +128,7 @@
 
 .audit-table td {
   padding: 0.75rem 1.25rem;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--gray-200);
   white-space: nowrap;
 }
 
@@ -129,16 +143,44 @@
   padding: 0.85rem 1.25rem;
   color: var(--gray-400);
   font-size: 0.78rem;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--gray-200);
 }
 
-@media (max-width: 900px) {
+/* Tablette / mobile : le tableau defile proprement, rien n'est masque */
+@media (max-width: 1024px) {
+  .audit-table {
+    min-width: 680px;
+  }
+
+  .audit-table th,
+  .audit-table td {
+    padding: 0.65rem 0.85rem;
+  }
+}
+
+/* Mobile : filtres empiles pleine largeur, compensation topbar supprimee */
+@media (max-width: 768px) {
+  .page {
+    margin-top: 0;
+  }
+
   .filters-bar {
     flex-direction: column;
     align-items: stretch;
   }
 
+  .filters-bar select,
+  .filters-bar .btn-primary {
+    width: 100%;
+  }
+
   .date-range {
     justify-content: space-between;
+  }
+
+  /* Les deux champs date tiennent sur une seule ligne, sans deborder */
+  .date-range input {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }

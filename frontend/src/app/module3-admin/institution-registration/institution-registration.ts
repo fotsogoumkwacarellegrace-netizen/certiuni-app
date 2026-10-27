@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { LandingHeader } from '../../shared/ui/landing-header/landing-header';
 
 interface StepDefinition {
   index: 1 | 2 | 3;
@@ -17,7 +18,7 @@ interface StepDefinition {
 @Component({
   selector: 'app-institution-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, LandingHeader],
   templateUrl: './institution-registration.html',
   styleUrl: './institution-registration.css'
 })

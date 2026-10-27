@@ -190,8 +190,35 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
+  .emission-page {
+    margin-top: 0;
+  }
+
   .content-grid {
     grid-template-columns: 1fr;
+  }
+
+  .status-banner {
+    align-items: flex-start;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel {
+    padding: 1.25rem;
+  }
+
+  .form-footer {
+    justify-content: stretch;
+  }
+
+  .form-footer .btn-primary {
+    width: 100%;
+  }
+
+  .reference {
+    overflow-wrap: anywhere;
   }
 }

@@ -3,11 +3,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { BackButton } from '../../shared/ui/back-button';
 import { ThemeToggle } from '../../shared/ui/theme-toggle';
+import { LandingHeader } from '../../shared/ui/landing-header/landing-header';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, BackButton, ThemeToggle],
+  imports: [ReactiveFormsModule, RouterLink, BackButton, ThemeToggle, LandingHeader],
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.css'
 })

@@ -1,12 +1,16 @@
 
 :host {
-  --primary: #0DAA6F;
-  --primary-dark: #0A8A56;
-  --primary-tint: #E8F7EF;
-  --secondary-blue: #0B3A66;
-  --secondary-blue-tint: #E9F0F8;
-  --secondary-red: #ce1126;
-  --gray-50: #f7f8f8;
+  --primary: #19764A;
+  --primary-dark: #00543f;
+  --secondary-red: #dc2828;
+  --secondary-yellow: #f9c31f;
+  --primary-tint: #e6f3ee;
+  --secondary: #edeff3;
+  --accent: #f9c31f;
+  --accent-tint: #fef6dc;
+  --destructive: #dc2828;
+  --destructive-tint: #fceaea;
+  --gray-50: #fafbfb;
   --gray-100: #eef0f0;
   --gray-200: #e1e4e4;
   --gray-400: #9aa3a3;
@@ -19,8 +23,16 @@
   color: var(--black-soft);
 }
 
-.material-icons { font-family: 'Material Icons'; }
-.icon-btn .material-icons { font-size: 18px; }
+.material-icons {
+  font-size: 1.15rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.page{
+  margin-top: 5%;
+  width: 100%
+}
 
 .page h1 {
   margin: 0 0 0.3rem;
@@ -46,6 +58,7 @@
   border: 1px solid var(--gray-200);
   border-radius: 6px;
   padding: 0.55rem 0.8rem;
+  color: var(--gray-600);
 }
 
 .search-box input {
@@ -54,6 +67,7 @@
   font-size: 0.85rem;
   width: 100%;
   background: transparent;
+  color: var(--black-soft);
 }
 
 .table-card {
@@ -72,16 +86,17 @@
 .institutions-table th {
   text-align: left;
   padding: 0.75rem 1.25rem;
-  background: var(--gray-50);
+  background: var(--secondary);
   color: var(--gray-600);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .institutions-table td {
-  padding: 0.8rem 1.25rem;
-  border-top: 1px solid var(--gray-100);
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--gray-200);
 }
 
 .status-badge {
@@ -92,11 +107,12 @@
   padding: 0.2rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .status-badge.is-suspended {
-  background: #fdecee;
-  color: var(--secondary-red);
+  background: var(--destructive-tint);
+  color: var(--destructive);
 }
 
 .actions-cell {
@@ -105,20 +121,26 @@
 }
 
 .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--gray-200);
   background: #fff;
   border-radius: 6px;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
+  color: var(--gray-800);
 }
 
 .icon-btn:hover {
   border-color: var(--primary);
+  color: var(--primary);
 }
 
 .icon-btn-danger:hover {
   border-color: var(--secondary-red);
+  color: var(--secondary-red);
 }
 
 .empty-row {
@@ -131,7 +153,7 @@
   padding: 0.85rem 1.25rem;
   color: var(--gray-400);
   font-size: 0.78rem;
-  border-top: 1px solid var(--gray-100);
+  border-top: 1px solid var(--gray-200);
 }
 
 /* Confirmation de suppression */
@@ -201,8 +223,42 @@
   background: #a80e1f;
 }
 
+/* Tablette / mobile : le tableau defile proprement, colonnes et actions conservees */
+@media (max-width: 1024px) {
+  .institutions-table {
+    min-width: 720px;
+  }
+
+  .institutions-table th,
+  .institutions-table td {
+    padding: 0.65rem 0.85rem;
+  }
+}
+
+/* Mobile : la topbar devient sticky (voir layout), plus de compensation verticale */
+@media (max-width: 768px) {
+  .page {
+    margin-top: 0;
+  }
+
+  .institutions-table td {
+    overflow-wrap: anywhere;
+  }
+
+  .confirm-overlay {
+    padding: 1rem;
+  }
+
+  .confirm-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+}
+
 @media (max-width: 600px) {
   .search-box {
     max-width: none;
+    width: 100%;
   }
 }

@@ -1,5 +1,7 @@
 
 <div class="auth-page">  
+  <app-landing-header></app-landing-header>
+
   <main class="auth-main">
     <div class="auth-card">
       <div class="auth-intro">
@@ -83,17 +85,11 @@
         </button>
       </form>
 
-      <div class="security-note">
-        <span class="lock-icon" aria-hidden="true"><span class="material-icons">lock</span></span>
-        <div>
-          <strong>Sécurité et confidentialité</strong>
-          <p>
-            Vos informations sont protégées et utilisées uniquement
-            dans le cadre du processus d'enregistrement et de validation
-            par le MINESUP.
-          </p>
-        </div>
-      </div>
+      <p class="register-link">
+        Pas encore inscrit ?
+        <a routerLink="/admin/inscription">Inscrire mon institution</a>
+      </p>
+
     </div>
   </main>
 

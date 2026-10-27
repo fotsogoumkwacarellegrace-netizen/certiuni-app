@@ -1,67 +1,73 @@
 <div class="auth-page">
-    <header class="auth-header">
-    <a class="brand" routerLink="/public/landing" title="Accueil CertiUni">
-      <span class="brand-mark" aria-hidden="true"><span class="material-icons">verified_user</span></span>
-      <span class="brand-name">CertiUni</span>
-    </a>
-    <div class="header-tools">
-      <app-back-button></app-back-button>
-      <app-theme-toggle></app-theme-toggle>
-    </div>
-  </header>
-<div class="auth-card">
-    <div class="auth-intro">
-      <span class="shield-icon" aria-hidden="true"><span class="material-icons">security</span></span>
-      <h1>CertiUni — Super Admin</h1>
-      <p>Espace réservé à l'administration nationale MINESUP.</p>
-    </div>
-
-    <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-      @if (errorMessage()) {
-        <div class="form-alert" role="alert">{{ errorMessage() }}</div>
-      }
-
-      <div class="form-field">
-        <label for="identifiant">Identifiant Super Admin *</label>
-        <input
-          id="identifiant"
-          type="text"
-          formControlName="identifiant"
-          placeholder="Entrez votre identifiant"
-          [class.has-error]="isInvalid('identifiant')"
-        />
-        @if (isInvalid('identifiant')) {
-          <span class="field-error">L'identifiant est requis.</span>
-        }
+    <main class="auth-main">
+    <div class="auth-card">
+      <div class="auth-intro">
+        <span class="shield-icon" aria-hidden="true">
+          <img src="/assets/images/logo-bg-white.png" alt="logo">
+        </span>
+        <h1>CertiUni — Super Admin</h1>
+        <p>Espace réservé à l'administration nationale MINESUP.</p>
       </div>
 
-      <div class="form-field">
-        <label for="motDePasse">Mot de passe *</label>
-        <div class="password-wrapper">
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <h2 class="form-title">Connexion Super Admin</h2>
+
+        @if (errorMessage()) {
+          <div class="form-alert" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <div class="form-field">
+          <label for="identifiant">Identifiant Super Admin *</label>
           <input
-            id="motDePasse"
-            [type]="showPassword() ? 'text' : 'password'"
-            formControlName="motDePasse"
-            placeholder="Entrez votre mot de passe"
-            [class.has-error]="isInvalid('motDePasse')"
+            id="identifiant"
+            type="text"
+            formControlName="identifiant"
+            placeholder="Entrez votre identifiant"
+            [class.has-error]="isInvalid('identifiant')"
           />
-          <button
-            type="button"
-            class="password-toggle"
-            (click)="togglePassword()"
-            [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
-          >
-            <span class="material-icons">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
-          </button>
+          @if (isInvalid('identifiant')) {
+            <span class="field-error">L'identifiant est requis.</span>
+          }
         </div>
-        @if (isInvalid('motDePasse')) {
-          <span class="field-error">Le mot de passe est requis.</span>
-        }
-      </div>
 
-      <button type="submit" class="btn-primary" [disabled]="submitting()">
-        {{ submitting() ? 'Connexion en cours…' : 'Se connecter' }}
-      </button>
-    </form>
-  </div>
+        <div class="form-field">
+          <label for="motDePasse">Mot de passe *</label>
+          <div class="password-wrapper">
+            <input
+              id="motDePasse"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="motDePasse"
+              placeholder="Entrez votre mot de passe"
+              [class.has-error]="isInvalid('motDePasse')"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+            >
+              <span class="material-icons">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+          @if (isInvalid('motDePasse')) {
+            <span class="field-error">Le mot de passe est requis.</span>
+          }
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="submitting()">
+          {{ submitting() ? 'Connexion en cours…' : 'Se connecter' }}
+        </button>
+      </form>
+
+      <div class="security-note">
+        <span class="lock-icon" aria-hidden="true"><span class="material-icons">lock</span></span>
+        <div>
+          <strong>Sécurité et confidentialité</strong>
+          <p>
+            Vos informations sont protégées et utilisées uniquement
+            dans le cadre de l'administration nationale et de la
+            validation des institutions par le MINESUP.
+          </p>
+        </div>
+      </div>
 </div>

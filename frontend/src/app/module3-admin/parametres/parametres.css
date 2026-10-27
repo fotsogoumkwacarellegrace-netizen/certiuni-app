@@ -248,13 +248,19 @@
   background: var(--primary-dark);
 }
 
-@media (max-width: 600px) {
-  .settings-card {
-    max-width: none;
+/* Mobile : lignes empilées, overlay/dialogue contenus dans l'écran */
+@media (max-width: 768px) {
+  .page {
+    margin-top: 0;
   }
 
   .setting-row {
+    width: 100%;
     padding: 0.9rem 1rem;
+  }
+
+  .setting-label {
+    min-width: 0;
   }
 
   .sub-setting-row {
@@ -267,5 +273,19 @@
   .file-control {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .overlay {
+    padding: 1rem;
+  }
+
+  .dialog {
+    padding: 1.25rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+
+  .dialog p {
+    overflow-wrap: anywhere;
   }
 }

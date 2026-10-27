@@ -144,9 +144,27 @@
   color: var(--secondary-red);
 }
 
-@media (max-width: 1100px) {
+/* Tablette : statistiques sur 2 colonnes */
+@media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile : topbar sticky, plus de compensation de hauteur */
+@media (max-width: 768px) {
+  .dashboard-page {
+    margin-top: 0;
+  }
+
+  .activity-card {
+    padding: 1.1rem 1rem;
+  }
+
+  .activity-description,
+  .activity-time {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 }
 

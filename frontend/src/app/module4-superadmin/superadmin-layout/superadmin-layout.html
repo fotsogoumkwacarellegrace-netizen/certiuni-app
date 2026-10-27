@@ -1,52 +1,134 @@
 <div class="superadmin-shell">
-  <aside class="sidebar">
-
-    
-    <a class="sidebar-brand" routerLink="/superadmin/dashboard" title="Accueil CertiUni">
-      <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
+  <aside class="sidebar" [class.is-open]="menuOpen()">
+    <a
+      class="sidebar-brand"
+      routerLink="/superadmin/dashboard"
+      title="Accueil CertiUni"
+    >
+      <img
+        src="/assets/images/logo-bg-white.png"
+        alt="Logo CertiUni"
+        class="logo"
+      />
       <span>CertiUni</span>
     </a>
 
-    <nav class="sidebar-nav">
-      <a class="nav-item" routerLink="/superadmin/dashboard" routerLinkActive="is-active">
-        <span class="material-icons" aria-hidden="true">dashboard</span> Dashboard
+    <nav class="sidebar-nav" (click)="fermerMenu()">
+      <a
+        class="nav-item"
+        routerLink="/superadmin/dashboard"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">dashboard</span>
+        </span>
+        Dashboard
       </a>
-      <a class="nav-item" routerLink="/superadmin/demandes-inscription" routerLinkActive="is-active">
-        <span class="material-icons" aria-hidden="true">inbox</span> Demandes d'inscription
+
+      <a
+        class="nav-item"
+        routerLink="/superadmin/demandes-inscription"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">inbox</span>
+        </span>
+        Demandes d'inscription
       </a>
-      <a class="nav-item" routerLink="/superadmin/institutions" routerLinkActive="is-active">
-        <span class="material-icons" aria-hidden="true">account_balance</span> Institutions
+
+      <a
+        class="nav-item"
+        routerLink="/superadmin/institutions"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">account_balance</span>
+        </span>
+        Institutions
       </a>
-      <a class="nav-item" routerLink="/superadmin/audit" routerLinkActive="is-active">
-        <span class="material-icons" aria-hidden="true">receipt_long</span> Audit
+
+      <a
+        class="nav-item"
+        routerLink="/superadmin/audit"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">receipt_long</span>
+        </span>
+        Audit
       </a>
-      <a class="nav-item" routerLink="/superadmin/parametres" routerLinkActive="is-active">
-        <span class="material-icons" aria-hidden="true">settings</span> Paramètres
+
+      <a
+        class="nav-item"
+        routerLink="/superadmin/parametres"
+        routerLinkActive="is-active"
+      >
+        <span aria-hidden="true">
+          <span class="material-icons">settings</span>
+        </span>
+        Paramètres
       </a>
     </nav>
 
-    <button type="button" class="logout-btn" (click)="demanderDeconnexion()">
-      <span class="material-icons" aria-hidden="true">exit_to_app</span> Déconnexion
+    <button
+      type="button"
+      class="logout-btn"
+      (click)="fermerMenu(); demanderDeconnexion()"
+    >
+      <span class="material-icons" aria-hidden="true">exit_to_app</span>
+      Déconnexion
     </button>
   </aside>
+
+  <div
+    class="sidebar-backdrop"
+    [class.is-open]="menuOpen()"
+    (click)="fermerMenu()"
+    aria-hidden="true"
+  ></div>
 
   <div class="main-column" [class.is-blurred]="showLogoutConfirm()">
     <header class="topbar">
       <div class="topbar-left">
-        <a class="topbar-brand" routerLink="/superadmin/dashboard" title="Accueil CertiUni">
-          <span class="material-icons" aria-hidden="true">verified_user</span>
+        <button
+          type="button"
+          class="menu-toggle"
+          (click)="basculerMenu()"
+          [attr.aria-expanded]="menuOpen()"
+          aria-label="Ouvrir ou fermer le menu"
+          title="Menu"
+        >
+          <span class="material-icons" aria-hidden="true">{{ menuOpen() ? 'close' : 'menu' }}</span>
+        </button>
+
+        <a
+          class="topbar-brand"
+          routerLink="/superadmin/dashboard"
+          title="Accueil CertiUni"
+        >
+          <img
+            src="/assets/images/logo-bg-white.png"
+            alt="Logo CertiUni"
+            class="topbar-logo"
+          />
           <span>CertiUni</span>
         </a>
-        <button type="button" class="topbar-back" (click)="goBack()" title="Page précédente">
-          <span class="material-icons" aria-hidden="true">arrow_back</span>
-        </button>
+
+        
       </div>
-      <div></div>
+
       <div class="topbar-user">
-        <span class="bell"><span class="material-icons" aria-hidden="true">notifications</span></span>
+        <span class="bell" aria-hidden="true">
+          <span class="material-icons">notifications</span>
+        </span>
+
         <app-theme-toggle></app-theme-toggle>
+
         <span class="user-name">{{ superadmin.nom }}</span>
-        <span class="material-icons" aria-hidden="true">arrow_drop_down</span>
+
+        <span aria-hidden="true">
+          <span class="material-icons">arrow_drop_down</span>
+        </span>
       </div>
     </header>
 
@@ -58,12 +140,32 @@
   @if (showLogoutConfirm()) {
     <div class="logout-overlay">
       <div class="logout-dialog">
-        <span class="logout-icon" aria-hidden="true"><span class="material-icons">exit_to_app</span></span>
+        <span class="logout-icon" aria-hidden="true">
+          <span class="material-icons">exit_to_app</span>
+        </span>
+
         <h2>Se déconnecter ?</h2>
-        <p>Vous allez être redirigé vers la page de connexion Super Admin.</p>
+
+        <p class="logout-text">
+          Vous allez être redirigé vers la page de connexion Super Admin.
+        </p>
+
         <div class="logout-actions">
-          <button type="button" class="btn-secondary" (click)="annulerDeconnexion()">Annuler</button>
-          <button type="button" class="btn-danger" (click)="confirmerDeconnexion()">Se déconnecter</button>
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="annulerDeconnexion()"
+          >
+            Annuler
+          </button>
+
+          <button
+            type="button"
+            class="btn-danger"
+            (click)="confirmerDeconnexion()"
+          >
+            Se déconnecter
+          </button>
         </div>
       </div>
     </div>

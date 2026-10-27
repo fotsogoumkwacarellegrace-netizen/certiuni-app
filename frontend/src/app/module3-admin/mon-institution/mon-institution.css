@@ -463,6 +463,37 @@
 
 
 /* =========================
+   MOBILE (grilles sur une colonne)
+========================= */
+
+@media (max-width: 768px) {
+
+  .institution-page {
+    margin-top: 0;
+  }
+
+  .general-content {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row,
+  .detail-row {
+    grid-template-columns: 1fr;
+  }
+
+  .info-value,
+  .detail-value,
+  .document-name,
+  .document-title,
+  .document-file,
+  .document-meta {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+
+/* =========================
    MOBILE
 ========================= */
 
@@ -530,7 +561,6 @@
   /* Coordonnées */
 
   .detail-row {
-    grid-template-columns: 1fr;
     gap: 4px;
     padding: 7px 0;
   }

@@ -260,14 +260,51 @@
   flex: 1.4;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .studio-layout {
     grid-template-columns: 1fr;
   }
 }
 
+@media (max-width: 768px) {
+  .studio-page {
+    margin-top: 0;
+  }
+
+  .studio-panel,
+  .preview-panel {
+    padding: 1.25rem;
+  }
+
+  .diploma-preview {
+    padding: 1.5rem 1rem;
+    overflow: hidden;
+  }
+
+  .diploma-preview p,
+  .diploma-preview h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .preview-signatures {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 480px) {
+  .studio-panel,
+  .preview-panel {
+    padding: 1rem;
+  }
+
   .preview-actions {
     flex-direction: column;
+  }
+
+  .preview-actions .btn-secondary,
+  .preview-actions .btn-primary {
+    flex: none;
+    width: 100%;
   }
 }

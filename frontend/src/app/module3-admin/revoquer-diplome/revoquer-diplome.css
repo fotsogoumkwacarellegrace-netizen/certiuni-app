@@ -249,8 +249,14 @@
   font-size: 0.88rem;
 }
 
-@media (max-width: 600px) {
+/* Mobile : formulaire sur une colonne, actions pleine largeur */
+@media (max-width: 768px) {
+  .page {
+    margin-top: 0;
+  }
+
   .revoke-card {
+    width: 100%;
     padding: 1.25rem;
   }
 
@@ -260,5 +266,19 @@
 
   .form-footer {
     flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .form-footer .btn-primary,
+  .form-footer .btn-secondary {
+    width: 100%;
+  }
+
+  .warning-banner {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .warning-banner > div {
+    min-width: 0;
   }
 }

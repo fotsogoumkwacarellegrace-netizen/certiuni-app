@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ThemeToggle } from '../../shared/ui/theme-toggle';
 import { MOCK_INSTITUTION } from '../../assets/data/mock-data.admin';
@@ -22,6 +22,17 @@ export class AdminLayout {
 
   readonly institution = MOCK_INSTITUTION;
   readonly showLogoutConfirm = this.state.showLogoutConfirm;
+
+  /** Menu latéral mobile : ouvert/fermé (drawer). */
+  readonly menuOpen = signal(false);
+
+  basculerMenu(): void {
+    this.menuOpen.update((ouvert) => !ouvert);
+  }
+
+  fermerMenu(): void {
+    this.menuOpen.set(false);
+  }
 
   demanderDeconnexion(): void {
     this.state.openLogoutConfirm();

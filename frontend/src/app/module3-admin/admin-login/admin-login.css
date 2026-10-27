@@ -45,6 +45,7 @@
   justify-content: center;
   height: auto;
   width: auto;
+  padding-top: 20px;
   /* padding: 2.5rem 1rem; */
 }
 
@@ -202,6 +203,25 @@
   text-decoration: underline;
 }
 
+/* Lien vers l'inscription de l'institution (sous le formulaire de connexion) */
+.register-link {
+  margin: -0.75rem 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 50px;
+}
+
+.register-link a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
 .btn-primary {
   display: flex;
   align-items: center;
@@ -276,6 +296,22 @@
   color: var(--primary);
 }
 
+@media (max-width: 768px) {
+  .auth-main {
+    padding: 1.5rem 1rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0));
+  }
+
+  .auth-card {
+    gap: 1.25rem;
+  }
+
+  .form-alert,
+  .security-note p {
+    overflow-wrap: anywhere;
+  }
+}
+
 @media (max-width: 600px) {
   .auth-header,
   .auth-footer {
@@ -292,6 +328,28 @@
     padding: 1.25rem;
   }
 }
+
+@media (max-width: 480px) {
+  .auth-main {
+    padding: 1.25rem 0.75rem;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0));
+  }
+
+  .auth-form {
+    padding: 1rem;
+  }
+
+  .auth-intro h1 {
+    font-size: 1.25rem;
+  }
+}
 /* Outils d'en-tête : retour + mode clair/sombre */
 .header-tools { display: inline-flex; align-items: center; gap: 10px; }
 .top-bar-actions { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* Décalage pour l'en-tête de la landing page (position: fixed) */
+.auth-page { padding-top: 72px; }
+
+@media (max-width: 768px) {
+  .auth-page { padding-top: 64px; }
+}

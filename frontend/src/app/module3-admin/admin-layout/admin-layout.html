@@ -1,6 +1,6 @@
 
 <div class="admin-shell">
-  <aside class="sidebar">
+  <aside class="sidebar" [class.is-open]="menuOpen()">
     <a
       class="sidebar-brand"
       routerLink="/admin/dashboard"
@@ -14,7 +14,7 @@
       <span>CertiUni</span>
     </a>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" (click)="fermerMenu()">
       <a
         class="nav-item"
         routerLink="/admin/dashboard"
@@ -85,16 +85,34 @@
     <button
       type="button"
       class="logout-btn"
-      (click)="demanderDeconnexion()"
+      (click)="fermerMenu(); demanderDeconnexion()"
     >
       <span class="material-icons" aria-hidden="true">exit_to_app</span>
       Déconnexion
     </button>
   </aside>
 
+  <div
+    class="sidebar-backdrop"
+    [class.is-open]="menuOpen()"
+    (click)="fermerMenu()"
+    aria-hidden="true"
+  ></div>
+
   <div class="main-column">
     <header class="topbar">
       <div class="topbar-left">
+        <button
+          type="button"
+          class="menu-toggle"
+          (click)="basculerMenu()"
+          [attr.aria-expanded]="menuOpen()"
+          aria-label="Ouvrir ou fermer le menu"
+          title="Menu"
+        >
+          <span class="material-icons" aria-hidden="true">{{ menuOpen() ? 'close' : 'menu' }}</span>
+        </button>
+
         <a
           class="topbar-brand"
           routerLink="/admin/dashboard"
@@ -108,14 +126,7 @@
           <span>CertiUni</span>
         </a>
 
-        <button
-          type="button"
-          class="topbar-back"
-          (click)="goBack()"
-          title="Page précédente"
-        >
-          <span class="material-icons" aria-hidden="true">arrow_back</span>
-        </button>
+      
       </div>
 
       <div class="topbar-user">

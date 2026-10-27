@@ -214,18 +214,43 @@ margin-top: 5%;
   font-size: 0.88rem;
 }
 
-@media (max-width: 640px) {
-  .toolbar {
-    flex-direction: column;
-    align-items: stretch;
+@media (max-width: 1024px) {
+  .templates-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .wizard-page {
+    margin-top: 0;
   }
 
-  .search-box {
-    min-width: 0;
+  .templates-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .stepper {
     gap: 1rem;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.75rem;
+  }
+
+  .toolbar-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .search-box {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar-actions .btn-primary {
+    width: 100%;
+    justify-content: center;
   }
 }

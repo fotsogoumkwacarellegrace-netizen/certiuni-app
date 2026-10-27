@@ -723,6 +723,31 @@
     width: 100%;
     justify-content: center;
   }
+
+  /* Aperçu du logo : empilé, jamais plus large que l'écran */
+  .logo-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .logo-preview img {
+    max-width: 100%;
+  }
+
+  /* Actions du formulaire empilées, pleine largeur */
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-actions .btn-cancel,
+  .form-actions .btn-save {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {

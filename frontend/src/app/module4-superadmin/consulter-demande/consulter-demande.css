@@ -379,14 +379,47 @@
   font-size: 1.1rem;
 }
 
-@media (max-width: 800px) {
+/* Grille sur une seule colonne des la tablette */
+@media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 500px) {
+/* Mobile : la topbar devient sticky (voir layout), dialogs accessibles */
+@media (max-width: 768px) {
+  .content-grid {
+    gap: 1rem;
+  }
+
+  .panel {
+    padding: 1.25rem 1rem;
+  }
+
+  .validation-overlay {
+    padding: 1rem;
+  }
+
+  .validation-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .credentials-list dd,
+  .dialog-institution {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
   .form-footer {
     flex-direction: column-reverse;
+  }
+
+  .form-footer .btn-primary,
+  .form-footer .btn-danger {
+    width: 100%;
   }
 }
