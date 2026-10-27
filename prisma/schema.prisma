@@ -152,7 +152,8 @@ model User {
   // Tenant facultatif (SuperAdmin n'a pas d'université rattachée)
   universityId String?     @db.Uuid
   university   University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
-
+  
+  //Date
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
