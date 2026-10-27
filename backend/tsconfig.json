@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-        "paths": {
+    "paths": {
       "@prisma/*": ["src/prisma/*"],
       "@auth/*": ["src/common/*"],
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@utils/*": ["src/common/utils/*"],
       "@modules/*": ["src/modules/*"],
-      "@services/*": ["src/services/*"],
+      "@services/*": ["src/services/*"]
     },
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist/src",
     "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "node",
+    "ignoreDeprecations": "5.0",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -31,12 +32,15 @@
     "sourceMap": true,
     "incremental": true
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "test/**/*.ts",
+    "src/**/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",
-    ".history",
-    "test",
-    "**/*spec.ts"
+    ".history"
   ]
 }

@@ -20,6 +20,7 @@ import verifyRouter from './routes/V1/verify.router';
 import paymentRouter from './routes/V1/payment.router';
 import universityRouter from './routes/V1/university.router';
 import securityRouter from './routes/V1/security.router';
+import studentsRouter from './routes/V1/students.router';
 
 const app: Application = express();
 
@@ -103,6 +104,7 @@ app.use('/api/v1/certificates', batchRouter);
 app.use('/api/v1/verify', verifyRouter);
 app.use('/api/v1/payments', paymentRouter);
 app.use('/api/v1/universities', universityRouter);
+app.use('/api/v1/students', studentsRouter);
 app.use('/api/v1/security', securityRouter);
 
 // Catch-all pour les routes non trouvees

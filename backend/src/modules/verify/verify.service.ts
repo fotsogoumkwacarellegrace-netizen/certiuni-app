@@ -1,114 +1,161 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { CertificateStatus } from '@prisma/client';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { verifyCertificateQrSignature } from '../../common/utils/qr-signature.util';
+﻿import { Injectable, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
+import { Certificate } from '@prisma/client';
+import { VerifyHashParamDto } from './dto/verify-hash.dto';
+import { VerifyQrDto } from './dto/verify-hash.dto';
+import * as crypto from 'crypto';
 
 export interface VerificationResult {
-    isValid: boolean;
-    status: 'VALID' | 'REVOKED' | 'PENDING' | 'FAILED' | 'NOT_FOUND';
-    documentDetails?: {
-        documentNumber: string;
-        studentName: string;
-        degreeTitle: string;
-        institutionName: string;
-        issueDate: Date;
-        revocationReason?: string;
-    };
-    verifiedAt: Date;
+    status: 'VALIDE' | 'RÉVOKÉ' | 'PENDING' | 'FAILED' | 'INTROUVABLE';
+    universityName?: string;
+    issuedBy?: string;
+    revocationReason?: string | null;
 }
 
 @Injectable()
 export class VerifyService {
-    private readonly logger = new Logger(VerifyService.name);
-
     constructor(private readonly prisma: PrismaService) { }
 
-    async verifyByHash(hash: string): Promise<VerificationResult> {
-        const formattedHash = hash.trim().toLowerCase();
-        const certificate = await this.prisma.certificate.findFirst({
-            where: {
-                canonicalHash: { equals: formattedHash, mode: 'insensitive' },
-            },
-            include: { university: { select: { name: true } } },
-        });
-
-        if (!certificate) {
-            this.logger.warn('Certificate hash verification did not match a record');
-            throw new NotFoundException(
-                'Aucun document certifié ne correspond à cette empreinte cryptographique.',
-            );
-        }
-
-        return this.format(certificate);
-    }
-
-    async verifyByQrData(qrData: string): Promise<VerificationResult> {
-        const input = qrData.trim();
-        let identifier = input;
-
-        if (/^https?:\/\//i.test(input)) {
-            let url: URL;
-            try {
-                url = new URL(input);
-            } catch {
-                throw new BadRequestException('URL du QR code invalide.');
-            }
-
-            identifier = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() ?? '');
-            const signature = url.searchParams.get('signature');
-            if (!identifier || !signature || !verifyCertificateQrSignature(identifier, signature)) {
-                throw new BadRequestException('Signature du QR code invalide ou absente.');
-            }
-        } else if (input.includes('/') || input.includes('?')) {
-            throw new BadRequestException('Le contenu du QR code est invalide.');
+    /** Vérifie un document par son empreinte SHA-256. Retourne VALIDE (ISSUED), RÉVOKÉ, ou INTROUVABLE. */
+    async verifyByHash(
+        hash: string,
+        ctx: { ip: string; userAgent: string },
+    ): Promise<VerificationResult> {
+        // Validation format hash SHA-256
+        if (!/^[a-fA-F0-9]{64}$/.test(hash)) {
+            throw new BadRequestException('Format de hash SHA-256 invalide.');
         }
 
         const certificate = await this.prisma.certificate.findUnique({
-            where: { publicIdentifier: identifier.toUpperCase() },
-            include: { university: { select: { name: true } } },
+            where: { canonicalHash: hash },
+            include: { university: true, issuedBy: true },
         });
 
         if (!certificate) {
-            throw new NotFoundException(
-                'Aucun document trouvé pour le numéro de certificat fourni.',
-            );
+            return { status: 'INTROUVABLE' };
         }
 
-        return this.format(certificate);
+        // Si le certificat est révoqué
+        if (certificate.revocationReason || certificate.status === 'REVOKED') {
+            return {
+                status: 'RÉVOKÉ',
+                universityName: certificate.university?.name,
+                issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+                revocationReason: certificate.revocationReason,
+            };
+        }
+
+        // Sinon, gestion explicite des autres statuts métier
+        if (certificate.status === 'PENDING') {
+            return {
+                status: 'PENDING',
+                universityName: certificate.university?.name,
+                issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+                revocationReason: null,
+            };
+        }
+
+        if (certificate.status === 'FAILED') {
+            return {
+                status: 'FAILED',
+                universityName: certificate.university?.name,
+                issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+                revocationReason: null,
+            };
+        }
+
+        // Par défaut, valide (statut ISSUED en BDD)
+        return {
+            status: 'VALIDE',
+            universityName: certificate.university?.name,
+            issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+            revocationReason: null,
+        };
     }
 
-    private format(certificate: {
-        publicIdentifier: string;
-        studentFirstName: string;
-        studentLastName: string;
-        degreeTitle: string;
-        issueDate: Date;
-        status: CertificateStatus;
-        revocationReason: string | null;
-        university: { name: string };
-    }): VerificationResult {
-        const isRevoked = certificate.status === CertificateStatus.REVOKED;
-        const isValid = certificate.status === CertificateStatus.ISSUED;
-        return {
-            isValid,
-            status: isRevoked
-                ? 'REVOKED'
-                : isValid
-                    ? 'VALID'
-                    : certificate.status === CertificateStatus.PENDING
-                        ? 'PENDING'
-                        : 'FAILED',
-            documentDetails: {
-                documentNumber: certificate.publicIdentifier,
-                studentName: `${certificate.studentFirstName} ${certificate.studentLastName}`,
-                degreeTitle: certificate.degreeTitle,
-                institutionName: certificate.university.name,
-                issueDate: certificate.issueDate,
-                ...(isRevoked && certificate.revocationReason
-                    ? { revocationReason: certificate.revocationReason }
-                    : {}),
-            },
-            verifiedAt: new Date(),
-        };
+    /** Vérifie un document à partir du contenu d'un QR Code. */
+    async verifyByQrData(
+        qrData: string,
+        ctx: { ip: string; userAgent: string },
+    ): Promise<VerificationResult> {
+        // Essayer d'extraire un hash ou identifiant du QR data
+        // Format typique : https://verify.example.com/CERT-xxx?signature=...
+        const hashMatch = qrData.match(/[a-fA-F0-9]{64}/);
+        if (hashMatch) {
+            return this.verifyByHash(hashMatch[0], ctx);
+        }
+
+        // Sinon, essayer de trouver par identifiant public dans l'URL
+        const publicIdMatch = qrData.match(/CERT-[A-Z0-9]+/i);
+        if (publicIdMatch) {
+            const publicIdentifier = publicIdMatch[0];
+            const certificate = await this.prisma.certificate.findUnique({
+                where: { publicIdentifier },
+                include: { university: true, issuedBy: true },
+            });
+            if (!certificate) {
+                return { status: 'INTROUVABLE' };
+            }
+            if (certificate.revocationReason || certificate.status === 'REVOKED') {
+                return {
+                    status: 'RÉVOKÉ',
+                    universityName: certificate.university?.name,
+                    issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+                    revocationReason: certificate.revocationReason,
+                };
+            }
+            return {
+                status: 'VALIDE',
+                universityName: certificate.university?.name,
+                issuedBy: `${certificate.issuedBy.firstName} ${certificate.issuedBy.lastName}`,
+                revocationReason: null,
+            };
+        }
+
+        // Par défaut, introuvable
+        return { status: 'INTROUVABLE' };
+    }
+
+    /** Vérification de masse à partir d'un fichier Excel/CSV. */
+    async bulkVerify(filePath: string): Promise<Array<{ hash: string; status: string; universityName?: string; issuedBy?: string; revocationReason?: string | null }>> {
+        const fs = require('fs');
+        const path = require('path');
+
+        if (!fs.existsSync(filePath)) {
+            throw new BadRequestException('Fichier introuvable : ' + filePath);
+        }
+
+        const ext = path.extname(filePath).toLowerCase();
+        let rawData: string[];
+
+        if (ext === '.csv') {
+            const csvContent = fs.readFileSync(filePath, 'utf-8');
+            const lines = csvContent.split('\n');
+            // En-tête attendu: hash
+            rawData = lines.slice(1).filter((line: string) => line.trim()); // skip header
+        } else if (ext === '.xlsx' || ext === '.xls') {
+            const workbook = require('xlsx').readFile(filePath);
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            // Supposer que la colonne s'appelle "hash"
+            const rows = require('xlsx').utils.sheet_to_json(worksheet);
+            rawData = rows.map((row: any) => row.hash).filter((h: any) => h);
+        } else {
+            throw new BadRequestException('Format de fichier non supporté. Utilisez .csv, .xlsx ou .xls.');
+        }
+
+        const results: Array<{ hash: string; status: string; universityName?: string; issuedBy?: string; revocationReason?: string | null }> = [];
+
+        for (const hash of rawData) {
+            const result = await this.verifyByHash(hash, { ip: 'bulk', userAgent: 'bulk-import' });
+            results.push({
+                hash,
+                status: result.status,
+                universityName: result.universityName,
+                issuedBy: result.issuedBy,
+                revocationReason: result.revocationReason,
+            });
+        }
+
+        return results;
     }
 }

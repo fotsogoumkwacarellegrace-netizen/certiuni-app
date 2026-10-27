@@ -12,12 +12,14 @@ import { LoginDto } from './dto/login.dto';
 import { env, requireJwtAccessSecret, requireJwtRefreshSecret } from '../../config/env.config';
 import { refreshTokenConfig } from '../../config/jwt.config';
 import { AuthProvider } from '../integrations/providers/auth/auth-provider.interface';
+import { MfaService } from './mfa.service';
 
 @Injectable()
 export class AuthService implements AuthProvider {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+    private readonly mfaService: MfaService,
   ) { }
 
   get configured(): boolean {
@@ -44,6 +46,35 @@ export class AuthService implements AuthProvider {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Identifiants invalides');
     }
+
+    // Si MFA est activé, on ne retourne pas les tokens directement :
+    // le client doit d'abord valider un code TOTP via POST /auth/mfa/verify
+    if (user.isMfaEnabled) {
+      return {
+        mfaRequired: true,
+        userId: user.id,
+        email: user.email,
+        message: 'Code TOTP requis pour terminer l\'authentification.',
+      };
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      ...tokens,
+    };
+  }
+
+  /** Termine l'authentification 2FA : vérifie le code TOTP et émet les tokens JWT */
+  async completeMfaLogin(userId: string, token: string) {
+    const user = await this.mfaService.verifyTokenAndGetUser(userId, token);
 
     const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);

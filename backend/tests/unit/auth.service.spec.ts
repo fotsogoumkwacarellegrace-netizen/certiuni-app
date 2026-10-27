@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { AuthService } from '../../src/modules/auth/auth.service';
+import { MfaService } from '../../src/modules/auth/mfa.service';
 import { createHash } from 'crypto';
 import * as bcrypt from 'bcrypt';
 
@@ -52,7 +53,7 @@ describe('AuthService refresh tokens', () => {
     prismaService.user.findUnique.mockReset();
     prismaService.user.findUnique.mockImplementation(async () => ({ ...user }));
     prismaService.user.update.mockReset();
-    prismaService.user.update.mockImplementation(async ({ data }) => {
+    prismaService.user.update.mockImplementation(async ({ data }: { data: Record<string, unknown> }) => {
       Object.assign(user, data);
       return { ...user };
     });
@@ -62,6 +63,12 @@ describe('AuthService refresh tokens', () => {
         AuthService,
         { provide: JwtService, useValue: jwtService },
         { provide: PrismaService, useValue: prismaService },
+        {
+          provide: MfaService,
+          useValue: {
+            verifyTokenAndGetUser: jest.fn().mockResolvedValue({ ...user }),
+          },
+        },
       ],
     }).compile();
     service = module.get(AuthService);
@@ -80,7 +87,8 @@ describe('AuthService refresh tokens', () => {
       password: 'correct-password',
     });
 
-    expect(login.refreshToken).toBe('refresh-login');
+    const loginResponse = login as { refreshToken?: string; accessToken?: string };
+    expect(loginResponse.refreshToken).toBe('refresh-login');
     expect(user.passwordHash).toBe(originalPasswordHash);
     expect(user.refreshTokenHash).toBe(
       createHash('sha256').update('refresh-login').digest('hex'),
@@ -100,7 +108,8 @@ describe('AuthService refresh tokens', () => {
       password: 'correct-password',
     });
 
-    expect(relogin.refreshToken).toBe('refresh-relogin');
+    const reloginResponse = relogin as { refreshToken?: string };
+    expect(reloginResponse.refreshToken).toBe('refresh-relogin');
     expect(user.passwordHash).toBe(originalPasswordHash);
   });
 

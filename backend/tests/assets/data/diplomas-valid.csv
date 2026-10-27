@@ -1,0 +1,3 @@
+studentMatricule,studentFirstName,studentLastName,studentEmail,diplomaTitle,fieldOfStudy,grade,issueDate
+TEST-2026-001,Amina,Exemple,amina@example.invalid,Licence de test,Informatique,Assez bien,2026-06-30
+TEST-2026-002,Noah,Fictif,noah@example.invalid,Master de test,Mathematiques,Bien,2026-07-15

@@ -1,0 +1,4 @@
+matricule,firstName,lastName,email
+TEST-2026-003,Lea,Valide,lea@example.invalid
+,SansMatricule,Test,sans-matricule@example.invalid
+TEST-2026-004,Email,Invalide,adresse-invalide
