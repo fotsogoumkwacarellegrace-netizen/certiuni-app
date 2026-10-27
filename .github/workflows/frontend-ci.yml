@@ -1,0 +1,105 @@
+﻿name: Frontend CI/CD
+
+on:
+  push:
+    branches: [main, dev, dev-standing]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [main, dev, dev-standing]
+    paths:
+      - 'frontend/**'
+
+env:
+  NODE_VERSION: 20
+  PACKAGE_DIR: frontend
+
+jobs:
+  # ============================================================
+  # 1. Lint & Format Check
+  # ============================================================
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PACKAGE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npx eslint "src/**/*.ts" --max-warnings=0
+      - run: npx prettier --check "src/**/*.ts"
+
+  # ============================================================
+  # 2. Security Audit
+  # ============================================================
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PACKAGE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN || '' }}
+        with:
+          args: --severity-threshold=medium --fail-on=all
+        continue-on-error: true
+
+  # ============================================================
+  # 3. Unit Tests
+  # ============================================================
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PACKAGE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npx vitest run --coverage
+
+  # ============================================================
+  # 4. Build
+  # ============================================================
+  build:
+    name: Angular Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PACKAGE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npx ng build --configuration production --output-path dist
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 30

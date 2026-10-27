@@ -1,0 +1,80 @@
+.cs-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(1200px 600px at 70% -10%, #12321f 0%, #0b1220 55%);
+  color: #e5e7eb;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+.cs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: rgba(7, 12, 22, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.cs-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.cs-logo { height: 36px; width: auto; }
+.cs-brand-name { font-size: 1.3rem; font-weight: 800; color: #fff; }
+.cs-theme {
+  background: #16a34a; color: #fff; border: none; border-radius: 8px;
+  padding: 8px 16px; font-weight: 600; cursor: pointer;
+}
+.cs-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.cs-card {
+  max-width: 680px; width: 100%; text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px; padding: 44px 36px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.cs-icon-badge {
+  width: 84px; height: 84px; margin: 0 auto 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #16a34a, #0f766e);
+  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.35);
+}
+.cs-icon-badge .material-symbols-outlined { font-size: 40px; color: #fff; }
+.cs-pill {
+  display: inline-block; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4); padding: 5px 14px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.cs-title { margin: 16px 0 10px; font-size: 1.7rem; font-weight: 800; color: #fff; }
+.cs-text { color: #9ca3af; line-height: 1.6; margin: 0 auto 26px; max-width: 520px; }
+.cs-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
+.cs-chip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px;
+  border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+  color: #fff; transition: transform 0.15s ease;
+}
+.cs-chip:hover { transform: translateY(-2px); }
+.cs-chip .material-symbols-outlined { font-size: 18px; }
+.cs-chip.green { background: #16a34a; }
+.cs-chip.gold { background: #f59e0b; color: #1f2937; }
+.cs-chip.dark { background: #111827; border: 1px solid #374151; }
+.cs-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cs-btn {
+  display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 10px;
+  padding: 12px 22px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+}
+.cs-btn .material-symbols-outlined { font-size: 18px; }
+.cs-btn.primary { background: #16a34a; color: #fff; }
+.cs-btn.ghost {
+  background: transparent; color: #e5e7eb; border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.cs-footer {
+  display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px;
+  font-size: 0.82rem; color: #6b7280; background: rgba(7, 12, 22, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.cs-footer-logo { height: 20px; width: auto; opacity: 0.8; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .cs-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+  .cs-card { padding: 32px 20px; }
+  .cs-title { font-size: 1.35rem; }
+  .cs-body { padding: 28px 14px; }
+}

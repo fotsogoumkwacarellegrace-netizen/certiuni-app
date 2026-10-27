@@ -1,0 +1,84 @@
+<!-- src/app/module1/ocr-scan/ocr-scan.html -->
+<div class="ocr-page" [class.dark-mode]="isDarkMode()" appDarkMode>
+
+  <div class="main-content">
+
+    <!-- SECURE SESSION BANNER -->
+    <div class="session-banner">
+      <span class="lock-circle">
+        <span class="material-symbols-outlined lock-icon">lock</span>
+      </span>
+      <div class="banner-text-group">
+        <span class="banner-title">{{ i18n.t('ocrBannerTitle') }}</span>
+        <span class="banner-subtitle">{{ i18n.t('ocrBannerSubtitle') }}</span>
+      </div>
+      <span class="material-symbols-outlined shield-watermark">shield</span>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <main class="content-area">
+
+      <div class="ocr-card">
+
+        <!-- Bande jaune -->
+        <div class="gold-stripe"></div>
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <h1>{{ i18n.t('ocrTitle') }}</h1>
+          <div class="card-header-icon">
+            <span class="material-symbols-outlined">image</span>
+          </div>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone"
+             [class.dragging]="isDragging()"
+             [class.scanning]="isScanning()"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)">
+          <div class="scan-beam" [class.active]="isScanning()"></div>
+
+          @if (!isScanning()) {
+          <div class="upload-content">
+            <span class="material-symbols-outlined upload-icon">upload_file</span>
+            <p class="upload-title">{{ i18n.t('ocrDropTitle') }}</p>
+            <p class="upload-hint">{{ i18n.t('ocrDropHint') }}</p>
+          </div>
+          } @else {
+          <div class="scanning-content">
+            <div class="spinner"></div>
+            <p class="scanning-title">{{ i18n.t('ocrScanningTitle') }}</p>
+            <p class="scanning-hint">{{ i18n.t('ocrScanningHint') }}</p>
+          </div>
+          }
+        </div>
+
+        <!-- Browse Button -->
+        <div class="card-actions">
+          <input #fileInput type="file" accept=".png,.jpg,.jpeg,.pdf" (change)="onFileSelected($event)"
+            style="display:none;" />
+          <button class="browse-btn" (click)="fileInput.click()" [disabled]="isScanning()">
+            <span class="material-symbols-outlined">folder_open</span>
+            {{ i18n.t('ocrBrowse') }}
+          </button>
+
+          <!-- Separator -->
+          <div class="separator">
+            <span class="separator-line"></span>
+            <span class="separator-text">{{ i18n.t('ocrSeparator') }}</span>
+            <span class="separator-line"></span>
+          </div>
+
+          <!-- Cancel Link -->
+          <a class="cancel-link" (click)="onCancel()">{{ i18n.t('ocrCancel') }}</a>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>

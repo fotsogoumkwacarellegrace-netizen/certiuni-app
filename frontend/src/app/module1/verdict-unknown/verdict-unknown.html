@@ -1,0 +1,129 @@
+<div class="page">
+
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-container">
+        <img src="images/logo1.png" alt="CertiUni Logo" class="certiuni-logo" />
+      </div>
+      <div class="brand-block">
+        <div class="brand-text">CertiUni</div>
+        <div class="brand-tagline">{{ i18n.t('brandTagline') }}</div>
+      </div>
+    </div>
+    <button class="close-btn" (click)="onBack()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <main class="body">
+
+    <div class="status-card">
+      <app-back-button variant="pill"></app-back-button>
+      <div class="status-circle">
+        <span class="material-symbols-outlined">help</span>
+      </div>
+      <h1 class="status-title">{{ i18n.t('verdictUnknownTitle') }}</h1>
+      <p class="status-text">
+        {{ i18n.t('verdictUnknownText') }}
+        <strong>{{ searchedCode() }}</strong>.
+      </p>
+    </div>
+
+    <div class="attestation-card">
+
+      <div class="attestation-header">
+        <div class="status-label">
+          {{ i18n.t('verdictAttestation') }}
+        </div>
+        <span class="unknown-pill">
+          <span class="material-symbols-outlined">warning</span>
+          {{ i18n.t('verdictUnknownSchool') }}
+        </span>
+      </div>
+
+      <div class="holder-section">
+        <span class="holder-icon">
+          <span class="material-symbols-outlined">domain_disabled</span>
+        </span>
+        <div class="holder-text">
+          <span class="holder-label">{{ i18n.t('verdictUnknownInstitution') }}</span>
+          <h2 class="holder-name">{{ i18n.t('verdictUnknownInstitute') }}</h2>
+          <span class="holder-diploma">
+            <span class="dot-sep"></span>
+            {{ i18n.t('verdictUnknownProtocol') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <span class="info-tile-label">{{ i18n.t('verdictUnknownSearchId') }}</span>
+          <span class="info-tile-value">{{ searchedCode() || '—' }}</span>
+        </div>
+        <div class="info-tile">
+          <span class="info-tile-label">{{ i18n.t('verdictStatus') }}</span>
+          <span class="info-tile-value">{{ i18n.t('verdictUnknownStatus') }}</span>
+        </div>
+      </div>
+
+      <div class="reason-box">
+        <span class="reason-label">
+          <span class="material-symbols-outlined">schedule</span>
+          {{ i18n.t('verdictUnknownGuarantee') }}
+        </span>
+        <p>{{ i18n.t('verdictUnknownGuaranteeText') }}</p>
+      </div>
+
+    </div>
+
+    <div class="trust-pills">
+      <span class="trust-pill">
+        <span class="material-symbols-outlined">lock</span>
+        {{ i18n.t('verdictUnknownTrust1') }}
+      </span>
+      <span class="trust-pill">
+        <span class="material-symbols-outlined">verified_user</span>
+        {{ i18n.t('verdictUnknownTrust2') }}
+      </span>
+    </div>
+
+    <button class="btn-manual-verif" (click)="onManualVerification()">
+      <span class="material-symbols-outlined">verified</span>
+      {{ i18n.t('verdictUnknownManual') }}
+      <span class="price-tag">{{ i18n.t('verdictUnknownPrice') }}</span>
+    </button>
+
+    <button class="btn-new-verif" (click)="onBack()">
+      {{ i18n.t('verdictNewVerif') }}
+    </button>
+
+    <div class="recommendations">
+      <h3 class="recommendations-title">{{ i18n.t('verdictUnknownWhat') }}</h3>
+      <div class="recommendations-grid">
+        <div class="rec-item">
+          <span class="rec-icon">1</span>
+          <div class="rec-content">
+            <span class="rec-title">{{ i18n.t('verdictUnknownStep1') }}</span>
+            <span class="rec-desc">{{ i18n.t('verdictUnknownStep1Desc') }}</span>
+          </div>
+        </div>
+        <div class="rec-item">
+          <span class="rec-icon">2</span>
+          <div class="rec-content">
+            <span class="rec-title">{{ i18n.t('verdictUnknownStep2') }}</span>
+            <span class="rec-desc">{{ i18n.t('verdictUnknownStep2Desc') }}</span>
+          </div>
+        </div>
+        <div class="rec-item">
+          <span class="rec-icon">3</span>
+          <div class="rec-content">
+            <span class="rec-title">{{ i18n.t('verdictUnknownStep3') }}</span>
+            <span class="rec-desc">{{ i18n.t('verdictUnknownStep3Desc') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>

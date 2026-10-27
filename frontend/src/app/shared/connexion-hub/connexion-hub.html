@@ -1,0 +1,44 @@
+<div class="hub-page">
+  <header class="hub-header">
+    <a class="hub-brand" routerLink="/public/landing">
+      <img src="/assets/logos/logo.png" alt="CertiUni" class="hub-logo" />
+      <span>CertiUni</span>
+    </a>
+    <a class="hub-home" routerLink="/public/landing">
+      <span class="material-symbols-outlined">arrow_back</span> Retour
+    </a>
+    <app-back-button variant="pill"></app-back-button>
+  </header>
+
+  <main class="hub-body">
+    <p class="hub-pill">Espaces CertiUni</p>
+    <h1>Ou souhaitez-vous vous connecter ?</h1>
+    <p class="hub-sub">Chaque profil dispose de son propre espace securise. Choisissez le votre.</p>
+
+    <section class="hub-grid">
+      <a
+        class="hub-card"
+        *ngFor="let s of spaces"
+        [routerLink]="s.link"
+        [class]="'hub-card tone-' + s.tone"
+      >
+        <span class="material-symbols-outlined hub-icon">{{ s.icon }}</span>
+        <h2>{{ s.label }}</h2>
+        <p>{{ s.desc }}</p>
+        <span class="hub-cta">
+          Se connecter <span class="material-symbols-outlined">arrow_forward</span>
+        </span>
+      </a>
+    </section>
+
+    <p class="hub-register">
+      Pas encore de compte institution ?
+      <a routerLink="/institution-registration">Creer une demande d'inscription</a>
+    </p>
+  </main>
+
+  <footer class="hub-footer">
+    <img src="/assets/logos/logo.png" alt="" class="hub-footer-logo" />
+    <span>CertiUni Cameroon — Plateforme nationale de certification des diplomes</span>
+  </footer>
+</div>

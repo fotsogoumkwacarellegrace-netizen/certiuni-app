@@ -1,0 +1,258 @@
+:host {
+  display: block;
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+
+.linkedin-modal {
+  width: 100%;
+  max-width: 620px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 28px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.linkedin-icon {
+  background: #0A66C2;
+  color: #FFFFFF;
+  font-weight: 900;
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-header h2 {
+  flex: 1;
+  font-size: 19px;
+  font-weight: 800;
+  color: #19764a;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #6B7280;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.close-btn:hover {
+  background: #F3F4F6;
+  color: #111827;
+}
+
+.modal-body {
+  padding: 28px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.caption-section,
+.preview-section {
+  flex: 1;
+  min-width: 220px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #19764a;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  border: 1.5px solid #19764a;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #374151;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s ease;
+}
+
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(11, 77, 58, 0.15);
+}
+
+/* Aperçu de la carte de certification */
+.preview-card {
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.preview-badge-bar {
+  height: 5px;
+  background: linear-gradient(90deg, #F0B906, #0B4D3A);
+}
+
+.preview-content {
+  padding: 18px;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+.preview-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.preview-content h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #19764a;
+  margin: 0 0 6px;
+}
+
+.preview-content p {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin: 0 0 14px;
+}
+
+.preview-footer {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.preview-footer strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #19764a
+}
+
+.preview-footer span {
+  font-size: 11.5px;
+  color: #9CA3AF;
+}
+
+/* ===== Actions ===== */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 18px 28px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.btn-cancel {
+  background: #FFFFFF;
+  color:#19764a;
+  border: 1.5px solid#19764a;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-cancel:hover {
+  background: #E4F5EA;
+}
+
+.btn-linkedin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #19764a;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn-linkedin:hover {
+  opacity: 0.9;
+}
+mat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+label mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}
+
+.preview-icon {
+  font-size: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  color: #19764a;
+  margin-bottom: 10px;
+}
+
+.btn-linkedin mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 560px) {
+  .linkedin-modal {
+    border-radius: 0;
+  }
+
+  .modal-body {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .modal-header {
+    padding: 18px 20px;
+  }
+
+  .modal-actions {
+    padding: 16px 20px;
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-linkedin {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}

@@ -1,0 +1,54 @@
+<div class="wizard-page">
+  <h1>Créer des diplômes — Étape 1 : choisir le type</h1>
+
+  <ol class="stepper">
+    <li class="stepper-item is-active">
+      <span class="stepper-dot">1</span> Choisir le type
+    </li>
+    <li class="stepper-item">
+      <span class="stepper-dot">2</span> Importer CSV
+    </li>
+    <li class="stepper-item">
+      <span class="stepper-dot">3</span> Prévisualiser &amp; Générer
+    </li>
+  </ol>
+
+  <div class="toolbar">
+    <h2>Choisissez le type de diplôme (modèle)</h2>
+    <div class="toolbar-actions">
+      <div class="search-box">
+        <span aria-hidden="true"><span class="material-icons">search</span></span>
+        <input
+          type="search"
+          placeholder="Rechercher un modèle…"
+          [value]="searchTerm()"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+      </div>
+      <a class="btn-primary" routerLink="/admin/creer-diplomes/nouveau-design">
+        <span class="material-icons">add</span> Nouveau design
+      </a>
+    </div>
+  </div>
+
+  <div class="templates-grid">
+    @for (template of filteredTemplates(); track template.id) {
+      <div class="template-card">
+        <span class="template-intitule">{{ template.intitule }}</span>
+        <span class="template-filiere">{{ template.filiere }}</span>
+        <span class="template-version">{{ template.version }}</span>
+        <span class="template-date">Mis à jour le {{ template.dateMaj }}</span>
+        <button type="button" class="btn-secondary" (click)="utiliserModele(template)">
+          Utiliser 
+        </button>
+      </div>
+    } @empty {
+      <p class="empty-state">Aucun modèle ne correspond à votre recherche.</p>
+    }
+
+    <a class="template-card template-card-new" routerLink="/admin/creer-diplomes/nouveau-design">
+      <span class="new-icon" aria-hidden="true"><span class="material-icons">add</span></span>
+      Créer un nouveau design
+    </a>
+  </div>
+</div>

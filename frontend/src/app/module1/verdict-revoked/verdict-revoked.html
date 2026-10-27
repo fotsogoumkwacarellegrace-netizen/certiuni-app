@@ -1,0 +1,101 @@
+<div class="page">
+
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-container">
+        <img src="images/logo1.png" alt="CertiUni Logo" class="certiuni-logo" />
+      </div>
+      <div class="brand-block">
+        <div class="brand-text">CertiUni</div>
+        <div class="brand-tagline">{{ i18n.t('brandTagline') }}</div>
+      </div>
+    </div>
+    <button class="close-btn" (click)="onBackToHome()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <main class="body">
+
+    @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>{{ i18n.t('commonLoading') }}</p>
+    </div>
+    } @else {
+
+    <div class="status-card">
+      <app-back-button variant="pill"></app-back-button>
+      <div class="status-circle">
+        <span class="material-symbols-outlined">block</span>
+      </div>
+      <h1 class="status-title">{{ i18n.t('verdictRevokedTitle') }}</h1>
+      <p class="status-text">{{ i18n.t('verdictRevokedText') }}</p>
+    </div>
+
+    <div class="attestation-card">
+
+      <div class="attestation-header">
+        <div class="status-label">
+          {{ i18n.t('verdictAttestation') }}
+        </div>
+        <span class="revoked-pill">
+          <span class="material-symbols-outlined">block</span>
+          {{ i18n.t('verdictRevokedPill') }}
+        </span>
+      </div>
+
+      <div class="holder-section">
+        <span class="holder-icon">
+          <span class="material-symbols-outlined">account_balance</span>
+        </span>
+        <div class="holder-text">
+          <span class="holder-label">{{ i18n.t('verdictHolder') }}</span>
+          <h2 class="holder-name">{{ studentName() }}</h2>
+          <span class="holder-diploma">
+            <span class="dot-sep"></span>
+            {{ diplomaLine() }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <span class="info-tile-label">{{ i18n.t('verdictRevokedRef') }}</span>
+          <span class="info-tile-value">{{ documentRef() }}</span>
+        </div>
+        <div class="info-tile">
+          <span class="info-tile-label">{{ i18n.t('verdictRevokedStatus') }}</span>
+          <span class="info-tile-value">{{ i18n.t('tableStatusRevoked') }}</span>
+        </div>
+      </div>
+
+      <div class="reason-box">
+        <span class="reason-label">
+          <span class="material-symbols-outlined">info</span>
+          {{ i18n.t('verdictRevokedReason') }}
+        </span>
+        <p>{{ revocationReason() }}</p>
+      </div>
+
+    </div>
+
+    <div class="security-notice">
+      <span class="material-symbols-outlined">shield</span>
+      <span>{{ i18n.t('verdictRevokedLocked') }}</span>
+    </div>
+
+    <button class="btn-contact" (click)="onContactSecretariat()">
+      <span class="material-symbols-outlined">mail</span>
+      {{ i18n.t('verdictRevokedContact') }}
+    </button>
+
+    <button class="btn-new-verif" (click)="onBackToHome()">
+      {{ i18n.t('verdictNewVerif') }}
+    </button>
+
+    }
+
+  </main>
+
+</div>

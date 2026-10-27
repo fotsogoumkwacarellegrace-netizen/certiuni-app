@@ -1,0 +1,50 @@
+<div class="linkedin-modal">
+
+  <div class="modal-header">
+    <span class="linkedin-icon">in</span>
+    <h2>Créer une publication</h2>
+    <button class="close-btn" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="caption-section">
+      <label><mat-icon>edit</mat-icon> Légende de la publication</label>
+      <textarea
+        [ngModel]="caption()"
+        (ngModelChange)="caption.set($event)"
+        rows="5"
+        placeholder="Personnalisez votre message pour engager votre réseau."
+      ></textarea>
+    </div>
+
+    <div class="preview-section">
+      <label><mat-icon>visibility</mat-icon> Aperçu de la publication</label>
+      <div class="preview-card">
+        <div class="preview-badge-bar"></div>
+        <div class="preview-content">
+          <mat-icon class="preview-icon">school</mat-icon>
+          <h3>{{ data.certificate.course_title }}</h3>
+          <p>{{ data.certificate.university_name }}</p>
+
+          <div class="preview-footer">
+            <strong>{{ data.certificate.course_title }} - CertiUni</strong>
+            <span>certiuni.cm · Vérité et authentique</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-actions">
+    <button class="btn-cancel" (click)="close()">Annuler</button>
+    <button class="btn-linkedin" (click)="publishToLinkedIn()">
+      Publier sur LinkedIn
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+
+</div>

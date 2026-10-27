@@ -1,0 +1,512 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:host {
+  --primary: #19764A;
+  --primary-dark: #125637;
+  --accent: #F9C31F;
+  --accent-text: #2b2200;
+  --success-bg: #E7F5EC;
+  --success-border: #C7E8D3;
+  --text: #111827;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --border: #E5E7EB;
+  --surface: #ffffff;
+  --bg: #F4F6F5;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.cdas-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================ */
+/* ===== HEADER ===== */
+/* ============================================ */
+.header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+ 
+  flex-shrink: 0;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ----- LOGO AGRANDI ----- */
+.certiuni-logo {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.certiuni-logo:hover {
+  transform: scale(1.05);
+}
+
+.brand-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.close-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* ============================================ */
+/* ===== BODY ===== */
+.body {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;         /* était 460px */
+  margin: 0 auto;
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 100px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(25, 118, 74, 0.15);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================ */
+/* ===== CARTE SUCCÈS (ÉLARGIE) ===== */
+/* ============================================ */
+/* Déborde volontairement de son parent .cdas-body pour être plus large
+   que les autres blocs de la page */
+.success-card {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  width: calc(100% + 120px);
+  max-width: none;
+  margin-left: -60px;
+  margin-right: -60px;
+}
+
+.success-circle {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(25, 118, 74, 0.25);
+}
+
+.success-circle .material-symbols-outlined {
+  font-size: 40px;
+  color: #ffffff;
+}
+
+.success-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.success-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.success-text strong {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+/* ============================================ */
+/* ===== CARTE ATTESTATION ===== */
+/* ============================================ */
+.attestation-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.attestation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--success-bg);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--success-border);
+}
+
+.verified-pill .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.holder-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.holder-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 14px;
+  background: var(--success-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holder-icon .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--primary);
+}
+
+.holder-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.holder-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.holder-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.holder-diploma {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.dot-sep {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.info-tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-tile-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.info-tile-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================ */
+/* ===== BOUTONS D'ACTION ===== */
+/* ============================================ */
+.btn-download {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 20px rgba(25, 118, 74, 0.22);
+  font-family: var(--font);
+}
+
+.btn-download:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(25, 118, 74, 0.3);
+}
+
+.btn-download .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.btn-new-verif {
+  width: 100%;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: var(--font);
+}
+
+.btn-new-verif:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 195, 31, 0.3);
+}
+
+.history-link {
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.history-link:hover {
+  color: var(--primary);
+}
+
+/* ============================================ */
+/* ===== RESPONSIVE ===== */
+/* ============================================ */
+@media (max-width: 600px) {
+  /* Sur petits écrans, on ne fait plus déborder la carte pour éviter
+     un débordement horizontal indésirable */
+  .success-card {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 26px 18px;
+  }
+
+  .certiuni-logo {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cdas-body {
+    padding: 20px 16px 32px;
+    gap: 16px;
+  }
+
+  .success-circle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .success-circle .material-symbols-outlined {
+    font-size: 34px;
+  }
+
+  .success-title {
+    font-size: 1.1rem;
+  }
+
+  .attestation-card {
+    padding: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+}
+
+/* ===== Responsive moderne (écrase les anciennes règles) ===== */
+.header {
+  padding: calc(6px + env(safe-area-inset-top)) clamp(12px, 3vw, 28px) 6px;
+}
+
+.body {
+  max-width: 720px;
+  padding: clamp(16px, 3vw, 28px) clamp(14px, 4vw, 24px) calc(40px + env(safe-area-inset-bottom));
+}
+
+.status-card,
+.success-card {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding: clamp(24px, 5vw, 36px) clamp(16px, 4vw, 32px);
+}
+
+.certiuni-logo {
+  width: clamp(52px, 12vw, 88px);
+  height: clamp(52px, 12vw, 88px);
+}
+
+.brand-text { font-size: clamp(1.25rem, 4vw, 1.6rem); }
+
+@media (max-width: 480px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .brand-tagline { font-size: 0.62rem; }
+  .attestation-header { align-items: flex-start; }
+}

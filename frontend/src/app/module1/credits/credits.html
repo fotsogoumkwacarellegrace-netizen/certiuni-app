@@ -1,0 +1,93 @@
+<!-- src/app/module1/credits/credits.html -->
+<div class="page">
+
+  <header class="head" appDarkMode>
+    <div class="head__left">
+      <button type="button" class="back" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>{{ c().back }}</span>
+      </button>
+      <a class="brand" href="#" (click)="$event.preventDefault(); goBack()" aria-label="CertiUni">
+        <img src="images/logo.png" alt="" class="brand__logo" />
+        <strong>CertiUni</strong>
+      </a>
+    </div>
+    <div class="head__center">
+      <h1>{{ c().title }}</h1>
+      <p>{{ c().subtitle }}</p>
+    </div>
+    <div class="head__right">
+      <button type="button" class="tool tool--theme" (click)="toggleDarkMode()" [attr.aria-label]="c().theme">
+        <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+    </div>
+    <span class="rule">
+      <span class="material-symbols-outlined">verified</span>
+      {{ c().rule }}
+    </span>
+  </header>
+
+  <!-- SOLDES -->
+  <section class="balance">
+    <article class="card">
+      <div class="card-top">
+        <span class="ico ico--green"><span class="material-symbols-outlined">redeem</span></span>
+        <span class="label">{{ c().freeLabel }}</span>
+      </div>
+      <strong class="big">{{ billing.freeRemaining() }}<small> / {{ billing.freeQuota }}</small></strong>
+      <div class="bar" role="progressbar" [attr.aria-valuenow]="billing.freeRemaining()" aria-valuemin="0"
+        [attr.aria-valuemax]="billing.freeQuota">
+        <span [style.width.%]="freePercent()"></span>
+      </div>
+      <p class="muted">{{ c().resetOn }} {{ nextResetLabel() }}</p>
+    </article>
+
+    <article class="card">
+      <div class="card-top">
+        <span class="ico ico--gold"><span class="material-symbols-outlined">account_balance_wallet</span></span>
+        <span class="label">{{ c().creditsLabel }}</span>
+      </div>
+      <strong class="big">{{ billing.credits() }}</strong>
+      <p class="muted">{{ c().noExpiry }}</p>
+    </article>
+
+    <article class="card card--total">
+      <div class="card-top">
+        <span class="ico ico--white"><span class="material-symbols-outlined">bolt</span></span>
+        <span class="label">{{ c().totalLabel }}</span>
+      </div>
+      <strong class="big">{{ billing.available() }}<small> {{ billing.available() > 1 ? c().checks : c().check }}</small></strong>
+    </article>
+  </section>
+
+  <!-- PACKS -->
+  <section class="block">
+    <div class="block-head">
+      <h2>{{ c().packsTitle }}</h2>
+      <p>{{ c().packsSubtitle }}</p>
+    </div>
+
+    <div class="packs">
+      @for (pack of billing.packs; track pack.id) {
+      <article class="pack" [class.pack--featured]="pack.featured">
+        @if (pack.featured) { <span class="badge">{{ c().popular }}</span> }
+        <h3>{{ packName(pack) }}</h3>
+        <p class="price"><strong>{{ fmt(pack.price) }}</strong> FCFA</p>
+        <p class="per">
+          {{ fmt(perUnit(pack)) }} FCFA / {{ c().perCheck }}
+          @if (savings(pack) > 0) { <span class="save">−{{ savings(pack) }}%</span> }
+        </p>
+        <ul>
+          <li><span class="material-symbols-outlined">check</span>{{ pack.credits }} {{ pack.credits > 1 ? c().checks : c().check }}</li>
+          <li><span class="material-symbols-outlined">check</span>{{ c().noExpiry }}</li>
+          <li><span class="material-symbols-outlined">check</span>{{ c().momo }}</li>
+        </ul>
+        <button type="button" class="buy" (click)="buy(pack)">
+          {{ c().buy }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </article>
+      }
+    </div>
+  </section>
+</div>

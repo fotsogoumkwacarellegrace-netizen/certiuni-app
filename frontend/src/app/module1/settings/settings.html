@@ -1,0 +1,478 @@
+<!-- frontend/src/app/module1/settings/settings.html -->
+<div class="settings-page" [class.dark-mode]="isDarkMode()">
+
+  <!-- HEADER (logo cliquable + retour + theme) -->
+  <header class="settings-header">
+    <div class="header-inner">
+      <div class="brand" (click)="goBack()">
+        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
+        <span class="brand-text">CertiUni</span>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="btn-back" (click)="goBack()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span>Retour</span>
+        </button>
+        <button type="button" class="theme-toggle" (click)="toggleDarkMode()" aria-label="Changer le theme">
+          <span class="material-symbols-outlined">
+            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="settings-main">
+
+    <div class="settings-grid">
+
+      <!-- SIDEBAR -->
+      <nav class="settings-sidebar" [attr.aria-label]="i18n.t('settings')">
+        @for (tab of tabs; track tab.key) {
+          <button
+            type="button"
+            class="sidebar-item"
+            [class.active]="activeTab() === tab.key"
+            (click)="setActiveTab(tab.key)">
+            <span class="material-symbols-outlined">{{ tab.icon }}</span>
+            <span class="sidebar-label">{{ i18n.t(tab.labelKey) }}</span>
+            @if (tab.badge) {
+              <span class="badge">{{ tab.badge }}</span>
+            }
+          </button>
+        }
+      </nav>
+
+      <!-- CONTENT -->
+      <div class="settings-content">
+
+        <!-- ================= GENERAL ================= -->
+        @if (activeTab() === 'general') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">tune</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsGeneralTitle') }}</h2>
+              <p>{{ i18n.t('settingsGeneralDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="platformName">{{ i18n.t('settingsPlatformName') }}</label>
+            <input
+              id="platformName"
+              type="text"
+              class="form-input"
+              [(ngModel)]="platformName"
+              [placeholder]="i18n.t('settingsPlatformNamePh')" />
+            <span class="form-hint">{{ i18n.t('settingsPlatformNameHint') }}</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="defaultLanguage">{{ i18n.t('settingsDefaultLang') }}</label>
+              <select id="defaultLanguage" class="form-select" [(ngModel)]="defaultLanguage">
+                <option value="fr">{{ i18n.t('settingsLangFr') }}</option>
+                <option value="en">{{ i18n.t('settingsLangEn') }}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="timezone">{{ i18n.t('settingsTimezone') }}</label>
+              <select id="timezone" class="form-select" [(ngModel)]="timezone">
+                <option value="Africa/Douala">{{ i18n.t('settingsTzDouala') }}</option>
+                <option value="Africa/Yaounde">{{ i18n.t('settingsTzYaounde') }}</option>
+                <option value="UTC">{{ i18n.t('settingsTzUtc') }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="currency">{{ i18n.t('settingsCurrency') }}</label>
+            <select id="currency" class="form-select" [(ngModel)]="currency">
+              <option value="XAF">{{ i18n.t('settingsCurrencyXaf') }}</option>
+              <option value="USD">{{ i18n.t('settingsCurrencyUsd') }}</option>
+              <option value="EUR">{{ i18n.t('settingsCurrencyEur') }}</option>
+            </select>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('general')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSave') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('general')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= SECURITY ================= -->
+        @if (activeTab() === 'security') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">security</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsSecurityTitle') }}</h2>
+              <p>{{ i18n.t('settingsSecurityDesc') }}</p>
+            </div>
+          </div>
+
+          <!-- Mot de passe -->
+          <div class="block-title">
+            <span class="material-symbols-outlined">lock</span>
+            {{ i18n.t('settingsPassword') }}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="currentPassword">{{ i18n.t('settingsCurrentPassword') }}</label>
+            <input
+              id="currentPassword"
+              type="password"
+              class="form-input"
+              placeholder="••••••••"
+              [(ngModel)]="currentPassword" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="newPassword">{{ i18n.t('settingsNewPassword') }}</label>
+              <input
+                id="newPassword"
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="newPassword" />
+              <span class="form-hint">{{ i18n.t('settingsPasswordHint') }}</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmPassword">{{ i18n.t('settingsConfirmPassword') }}</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="confirmPassword" />
+            </div>
+          </div>
+
+          <div class="btn-actions" style="margin-top: 0;">
+            <button type="button" class="btn-primary" (click)="updatePassword()">
+              <span class="material-symbols-outlined">key</span>
+              {{ i18n.t('settingsUpdatePassword') }}
+            </button>
+          </div>
+
+          <!-- 2FA -->
+          <div class="divider-block">
+            <div class="block-title">
+              <span class="material-symbols-outlined">verified_user</span>
+              {{ i18n.t('settings2faTitle') }}
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faApp') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faAppDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorApp" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faYubiKey') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faYubiKeyDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorYubiKey" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <span class="toggle-title">{{ i18n.t('settings2faSms') }}</span>
+                <span class="toggle-desc">{{ i18n.t('settings2faSmsDesc') }}</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="twoFactorSms" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Sessions actives -->
+          <div class="divider-block">
+            <div class="block-title">
+              <span class="material-symbols-outlined">devices</span>
+              {{ i18n.t('settingsActiveSessions') }}
+            </div>
+
+            <div class="session-list">
+              <div class="session-item">
+                <div class="session-info">
+                  <span class="material-symbols-outlined session-icon">computer</span>
+                  <div>
+                    <strong>{{ i18n.t('settingsSessionChrome') }}</strong>
+                    <small>{{ i18n.t('settingsSessionChromeInfo') }}</small>
+                  </div>
+                </div>
+                <span class="session-pill session-pill--active">{{ i18n.t('settingsSessionActive') }}</span>
+              </div>
+
+              <div class="session-item session-item--muted">
+                <div class="session-info">
+                  <span class="material-symbols-outlined session-icon">smartphone</span>
+                  <div>
+                    <strong>{{ i18n.t('settingsSessionSafari') }}</strong>
+                    <small>{{ i18n.t('settingsSessionSafariInfo') }}</small>
+                  </div>
+                </div>
+                <span class="session-pill session-pill--expired">{{ i18n.t('settingsSessionExpired') }}</span>
+              </div>
+            </div>
+
+            <button type="button" class="btn-secondary" (click)="logoutAllSessions()">
+              <span class="material-symbols-outlined">logout</span>
+              {{ i18n.t('settingsLogoutAll') }}
+            </button>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('security')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSavePreferences') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('security')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= NOTIFICATIONS ================= -->
+        @if (activeTab() === 'notifications') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">notifications</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsNotificationsTitle') }}</h2>
+              <p>{{ i18n.t('settingsNotificationsDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifEmail') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifEmailDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifEmail" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifSecurity') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifSecurityDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifSecurity" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifPayments') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifPaymentsDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifPayments" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifCertificates') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifCertificatesDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifCertificates" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <span class="toggle-title">{{ i18n.t('settingsNotifReports') }}</span>
+              <span class="toggle-desc">{{ i18n.t('settingsNotifReportsDesc') }}</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifReports" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('notifications')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsSave') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="resetSettings('notifications')">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('settingsReset') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= BILLING ================= -->
+        @if (activeTab() === 'billing') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">payments</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsBillingTitle') }}</h2>
+              <p>{{ i18n.t('settingsBillingDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsCurrentPlan') }}</span>
+              <span class="stat-value">{{ billingPlan }}</span>
+              <span class="stat-hint">{{ billingStatus }}</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsNextBilling') }}</span>
+              <span class="stat-value">{{ nextBillingDate }}</span>
+              <span class="stat-hint">{{ nextBillingAmount }}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="paymentMethod">{{ i18n.t('settingsPaymentMethod') }}</label>
+            <select id="paymentMethod" class="form-select" [(ngModel)]="paymentMethod">
+              <option value="mtn">{{ i18n.t('settingsPaymentMtn') }}</option>
+              <option value="orange">{{ i18n.t('settingsPaymentOrange') }}</option>
+              <option value="card">{{ i18n.t('settingsPaymentCard') }}</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="billingPhone">{{ i18n.t('settingsBillingPhone') }}</label>
+              <input
+                id="billingPhone"
+                type="tel"
+                class="form-input"
+                [(ngModel)]="billingPhone"
+                placeholder="+237 6XX XXX XXX" />
+              <span class="form-hint">{{ i18n.t('settingsBillingPhoneHint') }}</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="billingAddress">{{ i18n.t('settingsBillingAddress') }}</label>
+              <input
+                id="billingAddress"
+                type="text"
+                class="form-input"
+                [(ngModel)]="billingAddress"
+                [placeholder]="i18n.t('settingsBillingAddressPh')" />
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="material-symbols-outlined">info</span>
+            <div class="info-text">
+              <strong>{{ i18n.t('settingsAutoBilling') }}</strong><br />
+              {{ i18n.t('settingsAutoBillingDesc') }}
+            </div>
+          </div>
+
+          <div class="btn-actions">
+            <button type="button" class="btn-primary" (click)="saveSettings('billing')">
+              <span class="material-symbols-outlined">save</span>
+              {{ i18n.t('settingsUpdate') }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="viewInvoices()">
+              <span class="material-symbols-outlined">receipt</span>
+              {{ i18n.t('settingsViewInvoices') }}
+            </button>
+          </div>
+        }
+
+        <!-- ================= ABOUT ================= -->
+        @if (activeTab() === 'about') {
+          <div class="section-header">
+            <div class="section-header-icon">
+              <span class="material-symbols-outlined">info</span>
+            </div>
+            <div>
+              <h2>{{ i18n.t('settingsAboutTitle') }}</h2>
+              <p>{{ i18n.t('settingsAboutDesc') }}</p>
+            </div>
+          </div>
+
+          <div class="about-brand">
+            <img src="images/logo.png" alt="CertiUni" class="about-logo" />
+            <div>
+              <div class="about-name">CertiUni</div>
+              <div class="about-desc">{{ i18n.t('settingsAboutTagline') }}</div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsVersion') }}</span>
+              <span class="stat-value">v3.0.0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ i18n.t('settingsEnvironment') }}</span>
+              <span class="stat-value">{{ i18n.t('settingsProduction') }}</span>
+            </div>
+          </div>
+
+          <div class="feature-tags">
+            <span class="feature-tag">Multi-Tenant</span>
+            <span class="feature-tag">Blockchain</span>
+            <span class="feature-tag">IA OCR</span>
+            <span class="feature-tag">Mobile Money</span>
+            <span class="feature-tag">QR Code</span>
+            <span class="feature-tag">SHA-256</span>
+          </div>
+
+          <div class="links-block">
+            <span class="links-label">{{ i18n.t('settingsUsefulLinks') }}</span>
+            <div class="links-list">
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkDocs') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkApi') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkSupport') }}</a>
+              <a href="#" class="useful-link">{{ i18n.t('settingsLinkStatus') }}</a>
+            </div>
+          </div>
+
+          <div class="about-footer">
+            {{ i18n.t('settingsCopyright') }}
+          </div>
+        }
+
+      </div>
+    </div>
+
+  </main>
+
+</div>

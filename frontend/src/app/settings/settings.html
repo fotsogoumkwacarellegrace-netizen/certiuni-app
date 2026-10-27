@@ -1,0 +1,105 @@
+
+<!-- frontend/src/app/settings/settings.html -->
+<div class="settings-page" [class.dark-mode]="isDarkMode()">
+
+  <!-- HEADER -->
+  <header class="settings-header">
+    <div class="header-inner">
+      <div class="brand" (click)="goBack()">
+        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
+        <span class="brand-text">CertiUni</span>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-back" (click)="goBack()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span>Retour</span>
+        </button>
+        <button class="theme-toggle" (click)="toggleDarkMode()" aria-label="Changer le thème">
+          <span class="material-symbols-outlined">
+            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="settings-main">
+
+    <div class="settings-title">
+      <span class="material-symbols-outlined">settings</span>
+      <h1>Paramètres</h1>
+    </div>
+    <p class="settings-subtitle">Gérez la configuration de votre plateforme CertiUni</p>
+
+    <div class="settings-grid">
+
+      <!-- SIDEBAR -->
+      <nav class="settings-sidebar">
+        <button class="sidebar-item" [class.active]="activeTab() === 'general'" (click)="setActiveTab('general')">
+          <span class="material-symbols-outlined">tune</span>
+          Général
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'institution'" (click)="setActiveTab('institution')">
+          <span class="material-symbols-outlined">account_balance</span>
+          Institution
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'security'" (click)="setActiveTab('security')">
+          <span class="material-symbols-outlined">security</span>
+          Sécurité
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'billing'" (click)="setActiveTab('billing')">
+          <span class="material-symbols-outlined">payments</span>
+          Facturation
+          <span class="badge">1</span>
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'ai'" (click)="setActiveTab('ai')">
+          <span class="material-symbols-outlined">smart_toy</span>
+          Intelligence Artificielle
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'notifications'" (click)="setActiveTab('notifications')">
+          <span class="material-symbols-outlined">notifications</span>
+          Notifications
+        </button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-item" [class.active]="activeTab() === 'api'" (click)="setActiveTab('api')">
+          <span class="material-symbols-outlined">code</span>
+          API & Intégrations
+        </button>
+        <button class="sidebar-item" [class.active]="activeTab() === 'about'" (click)="setActiveTab('about')">
+          <span class="material-symbols-outlined">info</span>
+          À propos
+        </button>
+      </nav>
+
+      <!-- CONTENT -->
+      <div class="settings-content">
+        <div class="settings-card">
+          <div class="logo-preview">
+            <img src="images/logo.png" alt="CertiUni" style="height:40px; width:auto;" />
+            <div>
+              <div style="font-size:1.1rem; font-weight:700; color:var(--primary);">CertiUni</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary);">Plateforme nationale de certification académique</div>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn-primary" (click)="envoyer()">
+              <span class="material-symbols-outlined">save</span>
+              <span>Enregistrer les modifications</span>
+            </button>
+            <button class="btn-secondary" (click)="back()">
+              <span class="material-symbols-outlined">arrow_back</span>
+              <span>Retour</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+

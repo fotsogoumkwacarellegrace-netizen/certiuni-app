@@ -1,0 +1,123 @@
+
+<!-- frontend/src/app/module3-admin/mon-institution/mon-institution.html -->
+<div class="institution-page">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div>
+      <h1>Mon institution</h1>
+      <p>Informations officielles et documents de votre institution.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-edit"
+      (click)="modifierInstitution()"
+    >
+      <span class="material-icons">edit</span>
+      <span>Modifier</span>
+    </button>
+  </header>
+
+  <!-- General informations -->
+  <section class="institution-card">
+    <div class="card-title">
+      <h2>Informations générales</h2>
+    </div>
+
+    <div class="general-content">
+      <!-- Logo -->
+      <div class="logo-section">
+        <div class="institution-logo">
+          <span class="material-icons">account_balance</span>
+        </div>
+        <button
+          type="button"
+          class="change-logo"
+          (click)="changerLogo()"
+        >
+          Changer le logo
+        </button>
+      </div>
+
+      <!-- Informations -->
+      <div class="general-info">
+        <div class="info-row">
+          <span class="info-label">Nom officiel</span>
+          <span class="info-value">{{ institution.nomOfficiel }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Sigle</span>
+          <span class="info-value">{{ institution.sigle }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Type</span>
+          <span class="info-value">{{ institution.type }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Date de création</span>
+          <span class="info-value">{{ institution.dateCreation }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Statut</span>
+          <span class="info-value">{{ institution.statut }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Domaine DNS</span>
+          <span class="info-value">{{ institution.domaineDns }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Adresse</span>
+          <span class="info-value">{{ institution.adresse }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ institution.telephone }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ institution.email }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Site web</span>
+          <a [href]="institution.siteWeb" target="_blank">{{ institution.siteWeb }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documents officiels -->
+  <section class="institution-card">
+    <div class="card-title">
+      <h2>Documents officiels</h2>
+    </div>
+
+    <div class="documents-list">
+      <div class="document-item" *ngFor="let doc of documents">
+        <div class="document-header">
+          <span class="material-icons">description</span>
+          <span class="document-name">{{ doc.nom }}</span>
+        </div>
+        <div class="document-meta">
+          <span class="label">Fichier :</span>
+          <span>{{ doc.fichier }}</span>
+        </div>
+        <div class="document-meta">
+          <span class="label">Date :</span>
+          <span>{{ doc.dateUpload }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+

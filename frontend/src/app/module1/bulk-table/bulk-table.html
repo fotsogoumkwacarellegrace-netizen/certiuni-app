@@ -1,0 +1,312 @@
+<!-- frontend/src/app/module1/bulk-table/bulk-table.html -->
+<div class="bulk-page" [class.dark-mode]="isDarkMode()" appDarkMode>
+
+  <main class="main-content">
+
+    <div class="content-wrapper">
+
+      <div class="workspace">
+
+        <div class="main-card">
+
+          <!-- Card Header -->
+          <div class="card-header">
+            <button class="back-btn" (click)="onNewList()">
+              <span class="material-symbols-outlined">arrow_back</span>
+              {{ i18n.t('tableBack') }}
+            </button>
+
+            <div class="card-title">
+              <h2>{{ i18n.t('tableTitle') }}</h2>
+              <p>
+                {{ i18n.t('tableSubtitle') }} <strong>{{ totalCandidates() }}</strong> {{ i18n.t('tableSubtitle2') }}
+              </p>
+            </div>
+
+            <button class="export-btn" (click)="exportReport()" [disabled]="isExporting()">
+              @if (isExporting()) {
+                <span class="spinner-small"></span>
+              } @else {
+                <span class="material-symbols-outlined">download</span>
+              }
+              {{ isExporting() ? i18n.t('tableExporting') : i18n.t('tableExport') }}
+            </button>
+          </div>
+
+          <!-- Filtres -->
+          <div class="filters-bar">
+            <div class="search-wrapper">
+              <span class="material-symbols-outlined search-icon">search</span>
+              <input
+                type="text"
+                class="search-input"
+                [placeholder]="i18n.t('tableSearchPh')"
+                [value]="searchTerm()"
+                (input)="onSearchChange($event)"
+              />
+              @if (searchTerm()) {
+                <button class="clear-search" (click)="clearSearch()">
+                  <span class="material-symbols-outlined">close</span>
+                </button>
+              }
+            </div>
+
+            <div class="filter-tabs">
+              <button class="filter-tab" [class.active]="selectedStatus() === 'all'" (click)="setStatusFilter('all')">
+                {{ i18n.t('tableAll') }}
+                <span class="badge">{{ totalCandidates() }}</span>
+              </button>
+              <button class="filter-tab valid" [class.active]="selectedStatus() === 'VALID'" (click)="setStatusFilter('VALID')">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ i18n.t('tableValidated') }}
+                <span class="badge">{{ totalValid() }}</span>
+              </button>
+              <button class="filter-tab revoked" [class.active]="selectedStatus() === 'REVOKED'" (click)="setStatusFilter('REVOKED')">
+                <span class="material-symbols-outlined">cancel</span>
+                {{ i18n.t('tableRevoked') }}
+                <span class="badge">{{ totalRevoked() }}</span>
+              </button>
+              <button class="filter-tab unknown" [class.active]="selectedStatus() === 'NOT_FOUND'" (click)="setStatusFilter('NOT_FOUND')">
+                <span class="material-symbols-outlined">help</span>
+                {{ i18n.t('tableUnknown') }}
+                <span class="badge">{{ totalUnknown() }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tableau -->
+          <div class="table-wrapper">
+            @if (pagedCandidates().length === 0) {
+              <div class="empty-state">
+                <span class="material-symbols-outlined empty-icon">search_off</span>
+                <h3>{{ i18n.t('tableNoResult') }}</h3>
+                <p>{{ i18n.t('tableNoResultDesc') }}</p>
+              </div>
+            } @else {
+              <table class="candidates-table">
+                <thead>
+                  <tr>
+                    <th>{{ i18n.t('tableUuid') }}</th>
+                    <th>{{ i18n.t('tableName') }}</th>
+                    <th>{{ i18n.t('tableDiploma') }}</th>
+                    <th>{{ i18n.t('tableStatus') }}</th>
+                    <th class="text-right">{{ i18n.t('tableActions') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (candidate of pagedCandidates(); track candidate.uuid) {
+                    <tr [class.row-active]="selectedCandidate()?.uuid === candidate.uuid" (click)="openDetails(candidate)">
+                      <td>
+                        <span class="uuid-cell">{{ candidate.uuid | slice:0:12 }}...</span>
+                      </td>
+                      <td>
+                        <div class="candidate-info">
+                          <div class="candidate-avatar" [style.background]="getRandomColor(candidate.name)">
+                            {{ getInitials(candidate.name) }}
+                          </div>
+                          <span class="candidate-name">{{ candidate.name }}</span>
+                        </div>
+                      </td>
+                      <td>{{ candidate.diploma }}</td>
+                      <td>
+                        <span class="status-badge" [class]="getStatusClass(candidate.status)">
+                          <span class="material-symbols-outlined">
+                            {{ getStatusIcon(candidate.status) }}
+                          </span>
+                          {{ getStatusLabel(candidate.status) }}
+                        </span>
+                      </td>
+                      <td class="text-right">
+                        <button class="view-btn" (click)="$event.stopPropagation(); openDetails(candidate)">
+                          <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          </div>
+
+          <!-- Footer Tableau -->
+          <div class="table-footer">
+            <div class="footer-info">
+              <span class="material-symbols-outlined">info</span>
+              {{ i18n.t('tableShowing') }} <strong>{{ startIndex() }}</strong> {{ i18n.t('tableTo') }} <strong>{{ endIndex() }}</strong> {{ i18n.t('tableOf') }} <strong>{{ filteredCandidates().length }}</strong> {{ i18n.t('tableResults') }}
+            </div>
+            <div class="pagination">
+              <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
+                <span class="material-symbols-outlined">chevron_left</span>
+              </button>
+              @for (page of getPageNumbers(); track page) {
+                <button class="page-btn" [class.active]="currentPage() === page" (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              }
+              <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">
+                <span class="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PANNEAU DE DÉTAIL CANDIDAT -->
+        <aside class="detail-panel" [class.open]="selectedCandidate() !== null">
+          @if (selectedCandidate(); as candidate) {
+
+            <div class="panel-header">
+              <div class="panel-identity">
+                <div class="panel-avatar" [style.background]="getRandomColor(candidate.name)">
+                  {{ getInitials(candidate.name) }}
+                </div>
+                <div class="panel-identity-text">
+                  <h3 class="panel-name">{{ candidate.name }}</h3>
+                  <span class="panel-uuid">ID : {{ candidate.uuid | slice:0:8 }}...{{ candidate.uuid | slice:-4 }}</span>
+                </div>
+              </div>
+              <button class="panel-close" (click)="closeDetails()">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div class="panel-body">
+
+              @if (isLoadingDetails()) {
+
+                <div class="panel-loading">
+                  <div class="panel-spinner"></div>
+                  <p>{{ i18n.t('tableLoading') }}</p>
+                </div>
+
+              } @else if (panelData(); as data) {
+
+                @if (data.status === 'VALID') {
+
+                  <div class="status-banner valid">
+                    <span class="material-symbols-outlined">verified</span>
+                    <div>
+                      <strong>{{ i18n.t('tableAuth') }}</strong>
+                      <p>{{ i18n.t('tableSignature') }} {{ data.issueDate | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                  </div>
+
+                  <div class="panel-card">
+                    <div class="panel-card-title">
+                      <span class="material-symbols-outlined">school</span>
+                      {{ i18n.t('tableAcademic') }}
+                    </div>
+                    <dl class="info-grid">
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">account_balance</span>
+                          {{ i18n.t('tableInstitution') }}
+                        </dt>
+                        <dd>{{ data.university }}</dd>
+                      </div>
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">workspace_premium</span>
+                          {{ i18n.t('tableDiplomaLabel') }}
+                        </dt>
+                        <dd>{{ data.courseTitle }}</dd>
+                      </div>
+                      <div class="info-row">
+                        <dt>
+                          <span class="material-symbols-outlined">stars</span>
+                          {{ i18n.t('tableMention') }}
+                        </dt>
+                        <dd>{{ data.mention }}</dd>
+                      </div>
+                      <div class="info-row highlight">
+                        <dt>
+                          <span class="material-symbols-outlined">trending_up</span>
+                          {{ i18n.t('tableAverage') }}
+                        </dt>
+                        <dd class="info-value-strong">{{ data.average }}<span class="unit">/20</span></dd>
+                      </div>
+                    </dl>
+                  </div>
+
+                  @if (data.notes && data.notes.length) {
+                    <div class="panel-card">
+                      <div class="panel-card-title">
+                        <span class="material-symbols-outlined">list_alt</span>
+                        {{ i18n.t('tableGrades') }}
+                        <span class="credits-total">{{ data.totalCredits }} {{ i18n.t('tableCredits') }}</span>
+                      </div>
+                      <div class="grades-table">
+                        <div class="grades-row grades-head">
+                          <span>{{ i18n.t('tableSubject') }}</span>
+                          <span class="col-center">{{ i18n.t('tableGrade') }}</span>
+                          <span class="col-right">{{ i18n.t('tableCreditsCol') }}</span>
+                        </div>
+                        @for (grade of data.notes; track grade.matiere) {
+                          <div class="grades-row">
+                            <div class="grade-name-cell">
+                              <span class="grade-name">{{ grade.matiere }}</span>
+                              <span class="grade-semester">{{ grade.semestre }}</span>
+                            </div>
+                            <span class="grade-note-pill">{{ grade.note }}</span>
+                            <span class="grade-credits">{{ grade.credits }}</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  <div class="hash-row" (click)="copyHash(data.hash)">
+                    <span class="material-symbols-outlined">fingerprint</span>
+                    <div class="hash-text">
+                      <span class="hash-label">{{ i18n.t('tableHash') }}</span>
+                      <span class="hash-value">{{ data.hash }}</span>
+                    </div>
+                    <span class="material-symbols-outlined copy-icon" [class.done]="hashCopied()">
+                      {{ hashCopied() ? 'check' : 'content_copy' }}
+                    </span>
+                  </div>
+
+                  <button class="panel-primary-btn" (click)="onViewOriginal()">
+                    <span class="material-symbols-outlined">visibility</span>
+                    {{ i18n.t('tableViewOriginal') }}
+                  </button>
+
+                } @else if (data.status === 'REVOKED') {
+
+                  <div class="status-banner revoked">
+                    <span class="material-symbols-outlined">block</span>
+                    <div>
+                      <strong>{{ i18n.t('tableRevokedTitle') }}</strong>
+                      <p>{{ data.message }}</p>
+                    </div>
+                  </div>
+                  <p class="panel-fallback-name">{{ data.studentName }}</p>
+
+                } @else {
+
+                  <div class="status-banner unknown">
+                    <span class="material-symbols-outlined">help</span>
+                    <div>
+                      <strong>{{ i18n.t('tableUnknownTitle') }}</strong>
+                      <p>{{ data.message }}</p>
+                    </div>
+                  </div>
+
+                }
+
+              }
+
+            </div>
+
+          }
+        </aside>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <div class="panel-overlay" [class.active]="selectedCandidate() !== null" (click)="closeDetails()"></div>
+
+</div>

@@ -1,0 +1,608 @@
+<div class="landing" appDarkMode appScrollToTop>
+
+  <!-- Barre de progression de lecture -->
+  <div class="progress" aria-hidden="true">
+    <span class="progress__bar" [style.transform]="'scaleX(' + scrollProgress() + ')'"></span>
+  </div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="header" [class.header--scrolled]="isScrolled()">
+    <div class="container header__inner">
+
+      <a class="brand" href="#accueil" (click)="scrollTo('accueil', $event)"
+        aria-label="CertiUni, Diplômes sûrs, avenir sûr — retour à l'accueil">
+        <img src="images/logo.png" alt="" class="brand__logo" />
+        <span class="brand__text">
+          <strong>CertiUni</strong>
+          <small>Diplômes sûrs, avenir sûr</small>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        @for (item of navItems; track item.target) {
+        <a class="nav__link" [class.nav__link--active]="activeNav() === item.target" [href]="'#' + item.target"
+          (click)="scrollTo(item.target, $event)">{{ item.label }}</a>
+        }
+      </nav>
+
+      <div class="header__actions">
+
+        <!-- Se connecter : masqué sur mobile -->
+        <button type="button" class="btn btn--outline btn--sm header__login" (click)="goToLogin()">
+          Se connecter
+        </button>
+
+        <!-- Vérifier un diplôme : masqué sur mobile -->
+        <button type="button" class="btn btn--primary btn--sm header__verify" (click)="goToVerify()"
+          aria-label="Vérifier un diplôme">
+          <span class="material-symbols-outlined">verified</span>
+          <span class="hide-md">Vérifier un diplôme</span>
+          <span class="material-symbols-outlined hide-md">arrow_forward</span>
+        </button>
+
+        <!-- Langue : TOUJOURS visible sur tous les écrans -->
+        <div class="lang" (click)="$event.stopPropagation()">
+          <button type="button" class="lang__btn" (click)="langOpen.set(!langOpen())" [attr.aria-expanded]="langOpen()"
+            aria-haspopup="listbox" aria-label="Choisir la langue">
+            <app-flag-icon [code]="lang()" />
+            <b>{{ lang() }}</b>
+            <span class="material-symbols-outlined lang__chev" [class.is-up]="langOpen()">keyboard_arrow_down</span>
+          </button>
+
+          @if (langOpen()) {
+          <ul class="lang__menu" role="listbox" aria-label="Langue">
+            <li class="lang__title" aria-hidden="true">Langue</li>
+            <li>
+              <button type="button" role="option" class="lang__item" [attr.aria-selected]="lang() === 'FR'"
+                [class.is-selected]="lang() === 'FR'" (click)="setLang('FR')">
+                <app-flag-icon code="FR" />
+                <span>Français</span>
+                @if (lang() === 'FR') { <span class="material-symbols-outlined lang__tick">check</span> }
+              </button>
+            </li>
+            <li>
+              <button type="button" role="option" class="lang__item" [attr.aria-selected]="lang() === 'EN'"
+                [class.is-selected]="lang() === 'EN'" (click)="setLang('EN')">
+                <app-flag-icon code="EN" />
+                <span>English</span>
+                @if (lang() === 'EN') { <span class="material-symbols-outlined lang__tick">check</span> }
+              </button>
+            </li>
+          </ul>
+          }
+        </div>
+
+        <!-- Thème : TOUJOURS visible sur tous les écrans -->
+        <button type="button" class="icon-btn" (click)="toggleDarkMode()" aria-label="Changer le thème">
+          <span class="material-symbols-outlined">{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+
+        <!-- Burger : visible sur mobile -->
+        <button type="button" class="icon-btn burger" (click)="toggleMenu()" aria-label="Ouvrir le menu"
+          [attr.aria-expanded]="menuOpen()" aria-controls="mobile-drawer">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MENU MOBILE ================= -->
+  <div class="overlay" [class.overlay--open]="menuOpen()" (click)="closeMenu()" aria-hidden="true"></div>
+  <aside id="mobile-drawer" class="drawer" [class.drawer--open]="menuOpen()" role="dialog" aria-modal="true"
+    aria-label="Menu mobile" [attr.aria-hidden]="!menuOpen()">
+    <div class="drawer__head">
+      <strong>Navigation</strong>
+      <button type="button" class="icon-btn" (click)="closeMenu()" aria-label="Fermer le menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <nav class="drawer__nav">
+      @for (item of navItems; track item.target) {
+      <a [class.is-active]="activeNav() === item.target" [href]="'#' + item.target"
+        (click)="scrollTo(item.target, $event)">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="drawer__foot">
+      <button type="button" class="btn btn--primary btn--block" (click)="goToVerify()">
+        <span class="material-symbols-outlined">verified</span> Vérifier un diplôme
+      </button>
+      <button type="button" class="btn btn--outline btn--block" (click)="goToLogin()">Se connecter</button>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ================= 1. HERO ================= -->
+    <section id="accueil" class="hero">
+      <div class="container hero__grid">
+
+        <div class="hero__copy" appReveal="right" [revealDuration]="900">
+          <div class="badge-pill">
+            <span class="badge-pill__tag">Nouveau</span>
+            <span>Plateforme de certification cryptographique</span>
+          </div>
+
+          <h1 class="hero__title">
+            Vérifiez vos diplômes avec une <span class="text-gold">confiance</span> absolue.
+          </h1>
+
+          <p class="lead">
+            CertiUni centralise l'émission, la notarisation et la vérification des diplômes universitaires
+            camerounais. Authentifiez un document en quelques secondes, sans intermédiaire.
+          </p>
+
+          <div class="hero__cta">
+            <button type="button" class="btn btn--primary" (click)="goToVerify()">
+              <span class="material-symbols-outlined">verified</span>
+              Vérifier un diplôme
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+            <button type="button" class="btn btn--ghost" (click)="scrollTo('fonctionnalites')">
+              <span class="material-symbols-outlined text-primary">explore</span>
+              Voir les fonctionnalités
+            </button>
+          </div>
+
+          <ul class="trust">
+            @for (item of heroTrust; track item) {
+            <li>
+              <span class="material-symbols-outlined fill text-primary">check_circle</span>
+              {{ item }}
+            </li>
+            }
+          </ul>
+        </div>
+
+        <div class="hero__visual" appReveal="left" [revealDelay]="150" [revealDuration]="900">
+          <div class="hero__glow" aria-hidden="true"></div>
+
+          <article class="diploma">
+            <header class="diploma__head">
+              <div class="diploma__id">
+                <span class="diploma__crest"><span class="material-symbols-outlined">school</span></span>
+                <div>
+                  <small>ATTESTATION NUMÉRIQUE</small>
+                  <strong>Exemple de certificat</strong>
+                </div>
+              </div>
+              <span class="chip"><i class="dot"></i>Sceau actif</span>
+            </header>
+
+            <div class="diploma__body">
+              <div>
+                <small class="label">Diplômé / Récipiendaire</small>
+                <h3>EXEMPLE Marie</h3>
+                <p>Master II • Génie Logiciel &amp; Cybersécurité</p>
+              </div>
+              <div class="diploma__qr"><span class="material-symbols-outlined">qr_code_2</span></div>
+            </div>
+
+            <div class="hash">
+              <code>SHA256: e8bf07d2f9a14...59a8c</code>
+              <span class="material-symbols-outlined text-primary">lock</span>
+            </div>
+          </article>
+
+          <div class="float float--tl">
+            <span class="float__icon"><span class="material-symbols-outlined">trending_up</span></span>
+            <div><small>Vérification</small><strong>Instantanée</strong></div>
+          </div>
+          <div class="float float--tr">
+            <span class="float__icon float__icon--neutral"><span
+                class="material-symbols-outlined">verified_user</span></span>
+            <div><small>Intégrité</small><strong>SHA-256</strong></div>
+          </div>
+          <div class="float float--bl">
+            <span class="float__icon float__icon--gold"><span class="material-symbols-outlined">bolt</span></span>
+            <div><small>Objectif</small><strong>&lt; 3 s</strong></div>
+          </div>
+          <div class="float float--br">
+            <span class="material-symbols-outlined">done_all</span>
+            <strong>Registre sécurisé CertiUni</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 2. FONCTIONNALITÉS ================= -->
+    <section id="fonctionnalites" class="section section--surface">
+      <div class="container">
+        <header class="section-head" appReveal="up">
+          <span class="eyebrow eyebrow--pill"><i class="dot"></i>Fonctionnalités</span>
+          <h2 class="h2">Tout ce dont vous avez besoin pour <span class="text-primary">certifier</span> et vérifier.
+          </h2>
+          <p class="lead">
+            De l'import des listes de diplômés à la vérification en masse, CertiUni couvre l'intégralité du
+            cycle de vie académique.
+          </p>
+        </header>
+
+        <div class="grid grid--3" appReveal="up" [revealStagger]="90">
+          @for (f of features; track f.title) {
+          <article class="feature">
+            <span class="icon-tile"><span class="material-symbols-outlined">{{ f.icon }}</span></span>
+            <h3>{{ f.title }}</h3>
+            <p>{{ f.text }}</p>
+          </article>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. GESTION ACADÉMIQUE ================= -->
+    <section id="gestion" class="section section--tint">
+      <div class="container split">
+        <div class="split__copy" appReveal="right">
+          <span class="eyebrow">Gestion académique</span>
+          <h2 class="h2">Importez vos diplômés et <span class="text-primary">certifiez</span> en quelques minutes.</h2>
+          <p class="lead">
+            Supprimez les lourdeurs de gestion manuelle des registres. Les secrétariats académiques téléchargent
+            leurs promotions complètes pour les certifier dans le registre CertiUni de manière fluide et contrôlée.
+          </p>
+          <ul class="checklist">
+            @for (item of importChecklist; track item) {
+            <li>
+              <span class="check"><span class="material-symbols-outlined">check</span></span>
+              <span>{{ item }}</span>
+            </li>
+            }
+          </ul>
+          <button type="button" class="link" (click)="goToLogin()">
+            En savoir plus sur le flux d'émission
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+
+        <div class="mock" appReveal="left" [revealDelay]="120">
+          <div class="mock__head">
+            <div>
+              <h4>Nouveau lot de diplômes</h4>
+              <p>Session Juin 2026 • Faculté des Sciences</p>
+            </div>
+            <span class="chip">En cours</span>
+          </div>
+
+          <div class="stepper">
+            @for (step of importSteps; track step; let i = $index) {
+            <span class="stepper__item" [class.stepper__item--active]="i === 0">{{ step }}</span>
+            }
+          </div>
+
+          <div class="dropzone">
+            <span class="dropzone__icon"><span class="material-symbols-outlined">cloud_upload</span></span>
+            <strong>Déposez votre fichier .xlsx ou .csv</strong>
+            <p>Glissez-déposez ou parcourez vos dossiers locaux (taille max. 50 Mo)</p>
+            <button type="button" class="btn btn--ghost btn--xs" (click)="goToLogin()">Parcourir les fichiers</button>
+          </div>
+
+          <div class="file">
+            <div class="file__info">
+              <span class="material-symbols-outlined text-primary">table_chart</span>
+              <div>
+                <strong>Promotion_2026_Licence_Informatique.xlsx</strong>
+                <p>142 étudiants détectés</p>
+              </div>
+            </div>
+            <span class="chip chip--solid">Prêt</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. SÉCURITÉ & CERTIFICATION ================= -->
+    <section id="securite" class="section section--surface">
+      <div class="container split split--reverse">
+        <div class="split__copy" appReveal="left">
+          <span class="eyebrow eyebrow--gold">Sécurité &amp; certification</span>
+          <h2 class="h2">La notarisation cryptographique au service de la <span class="text-gold">conformité</span>.
+          </h2>
+          <p class="lead">
+            Grâce à l'empreinte SHA-256 et à l'isolation sécurisée des registres de chaque établissement,
+            CertiUni aide à protéger chaque diplôme contre l'usurpation et la falsification.
+          </p>
+          <ul class="checklist">
+            @for (line of securityLines; track line.text) {
+            <li>
+              <span class="check check--square"><span class="material-symbols-outlined">{{ line.icon }}</span></span>
+              <span>{{ line.text }}</span>
+            </li>
+            }
+          </ul>
+          <div>
+            <button type="button" class="btn btn--primary" (click)="goToVerify()">
+              Découvrir la sécurité CertiUni
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mock mock--tint" appReveal="right" [revealDelay]="120">
+          <div class="mock__head">
+            <div class="mock__title">
+              <i class="dot"></i>
+              <h4>Inspecteur de conformité de registre</h4>
+            </div>
+            <div class="score"><small>Conformes :</small> <b>3 / 3</b></div>
+          </div>
+
+          @for (row of inspectorRows; track row.name) {
+          <div class="row row--ok">
+            <div class="row__main">
+              <span class="material-symbols-outlined text-primary">{{ row.icon }}</span>
+              <div>
+                <strong>{{ row.name }}</strong>
+                <small>{{ row.meta }}</small>
+              </div>
+            </div>
+            <span class="chip">{{ row.badge }}</span>
+          </div>
+          }
+
+          <div class="mock__foot">
+            <small>Intégrité vérifiée par empreinte SHA-256</small>
+            <button type="button" class="btn btn--primary btn--xs" (click)="goToVerify()">Consulter le registre</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. SURVEILLANCE & AUDIT ================= -->
+    <section id="audit" class="section section--tint">
+      <div class="container split">
+        <div class="split__copy" appReveal="right">
+          <span class="eyebrow">Sécurité &amp; audit</span>
+          <h2 class="h2">Surveillez chaque vérification en <span class="text-primary">temps réel</span>.</h2>
+          <p class="lead">
+            Chaque lecture QR, requête d'API et demande d'authenticité est journalisée dans un registre d'audit
+            horodaté. Gardez la maîtrise sur l'usage de vos certificats académiques.
+          </p>
+          <ul class="checklist checklist--icons">
+            @for (line of auditLines; track line.text) {
+            <li>
+              <span class="material-symbols-outlined text-primary">{{ line.icon }}</span>
+              <span>{{ line.text }}</span>
+            </li>
+            }
+          </ul>
+          <div>
+            <button type="button" class="btn btn--ghost" (click)="goToLogin()">
+              Voir le tableau de bord
+              <span class="material-symbols-outlined">trending_flat</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mock" appReveal="left" [revealDelay]="120">
+          <div class="mock__head">
+            <div class="mock__title">
+              <i class="dot dot--pulse"></i>
+              <h4>Journal d'audit</h4>
+            </div>
+            <small>Aperçu</small>
+          </div>
+
+          @for (event of auditEvents; track event.title) {
+          <div class="event" [class]="'event--' + event.tone">
+            <div class="row__main">
+              <span class="event__icon"><span class="material-symbols-outlined">{{ event.icon }}</span></span>
+              <div>
+                <strong>{{ event.title }}</strong>
+                <small class="event__meta">{{ event.meta }}</small>
+              </div>
+            </div>
+            <div class="event__side">
+              <b>{{ event.status }}</b>
+              <small>{{ event.time }}</small>
+            </div>
+          </div>
+          }
+
+          <div class="alert">
+            <span class="material-symbols-outlined">shield_with_heart</span>
+            Alerte de sécurité déclenchée après 10 tentatives infructueuses en 5 minutes.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 6. TARIFS ================= -->
+    <section id="tarifs" class="section section--surface">
+      <div class="container">
+        <header class="section-head" appReveal="up">
+          <span class="eyebrow">Tarifs</span>
+          <h2 class="h2">Des tarifs <span class="text-primary">simples</span> et transparents.</h2>
+          <p class="lead">Commencez gratuitement. Évoluez selon vos besoins académiques et professionnels.</p>
+        </header>
+
+        <div class="pricing" appReveal="up" [revealStagger]="110">
+          @for (plan of plans; track plan.id) {
+          <article class="plan" [class.plan--featured]="plan.featured">
+            @if (plan.featured) {
+            <span class="plan__badge">Recommandé</span>
+            }
+            <div class="plan__top">
+              <div>
+                <span class="plan__name">{{ plan.name }}</span>
+                <p>{{ plan.tagline }}</p>
+              </div>
+              <div class="plan__price">
+                <strong>{{ plan.price }}</strong>
+                @if (plan.unit) { <small>{{ plan.unit }}</small> }
+              </div>
+              <ul class="plan__features">
+                @for (feature of plan.features; track feature) {
+                <li>
+                  <span class="material-symbols-outlined text-primary">check</span>
+                  <span>{{ feature }}</span>
+                </li>
+                }
+              </ul>
+            </div>
+            <button type="button" class="btn btn--block" [class.btn--primary]="plan.featured"
+              [class.btn--ghost]="!plan.featured" (click)="onPlanAction(plan)">{{ plan.cta }}</button>
+          </article>
+          }
+        </div>
+
+        <!-- Packs prépayés Recruteur -->
+        <div class="packs-strip" appReveal="up">
+          <div class="packs-strip__intro">
+            <span class="eyebrow">Recruteurs &amp; RH</span>
+            <h3>Au-delà de vos {{ freeMonthly }} vérifications gratuites</h3>
+            <p>
+              Rechargez au rythme de vos besoins, sans abonnement ni expiration.
+              Vous n'êtes facturé que si le verdict est Valide ou Révoqué.
+            </p>
+          </div>
+
+          <ul class="packs-strip__list">
+            @for (pack of recruiterPacks; track pack.id) {
+            <li>
+              <button type="button" class="pk" [class.pk--featured]="pack.featured" (click)="buyPack(pack)"
+                [attr.aria-label]="'Acheter ' + pack.name + ' pour ' + pack.price + ' FCFA'">
+                @if (pack.featured) { <span class="pk__badge">Populaire</span> }
+                <span class="pk__name">{{ pack.name }}</span>
+                <span class="pk__price"><strong>{{ pack.price }}</strong> FCFA</span>
+                <span class="pk__per">
+                  {{ pack.perUnit }} FCFA / vérification
+                  @if (pack.savings > 0) { <b class="pk__save">−{{ pack.savings }}%</b> }
+                </span>
+              </button>
+            </li>
+            }
+          </ul>
+        </div>
+
+        <div class="pricing-note" appReveal="up">
+          <p>
+            <b>Note :</b> vérification administrative manuelle auprès d'un établissement non partenaire :
+            <b class="text-primary">2 000 FCFA</b>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 7. FAQ ================= -->
+    <section id="faq" class="section section--surface section--flush-top">
+      <div class="container faq-layout">
+        <div class="faq-layout__intro" appReveal="right">
+          <span class="eyebrow">Aide &amp; support</span>
+          <h2 class="h2">Questions <span class="text-primary">fréquentes</span>.</h2>
+          <p class="lead">Tout ce que vous devez savoir pour démarrer avec la notarisation académique CertiUni.</p>
+          <button type="button" class="link" (click)="scrollTo('a-propos')">
+            Voir toutes les ressources
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+
+        <div class="faq" appReveal="up" [revealStagger]="90">
+          @for (item of faqs; track item.q; let i = $index) {
+          <div class="faq__item" [class.faq__item--open]="openFaq() === i">
+            <button type="button" class="faq__q" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq() === i"
+              [attr.aria-controls]="'faq-panel-' + i">
+              <span>{{ item.q }}</span>
+              <span class="material-symbols-outlined faq__icon">expand_more</span>
+            </button>
+            <div class="faq__a" [id]="'faq-panel-' + i" role="region">
+              <div>
+                <p>{{ item.a }}</p>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 8. CTA FINAL ================= -->
+    <section class="cta">
+      <div class="cta__card" appReveal="zoom" [revealDuration]="900">
+        <span class="cta__blob cta__blob--1" aria-hidden="true"></span>
+        <span class="cta__blob cta__blob--2" aria-hidden="true"></span>
+
+        <span class="cta__tag">Commencez aujourd'hui</span>
+        <h2>Prêt à <span class="text-gold">sécuriser</span> vos diplômes ?</h2>
+        <p>
+          Rejoignez la certification numérique des diplômes au Cameroun et préservez la valeur de vos
+          titres universitaires.
+        </p>
+        <div class="cta__actions">
+          <button type="button" class="btn btn--accent btn--lg" (click)="goToVerify()">Commencer maintenant</button>
+          <button type="button" class="btn btn--glass btn--lg" (click)="scrollTo('fonctionnalites')">Voir comment ça
+            marche</button>
+        </div>
+        <ul class="cta__points">
+          @for (point of ctaPoints; track point) {
+          <li><span class="material-symbols-outlined">done</span>{{ point }}</li>
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="a-propos" class="footer">
+    <div class="container">
+
+      <div class="footer__grid" appReveal="up" [revealStagger]="80">
+        <div class="footer__brand">
+          <div class="brand brand--footer">
+            <img src="images/logo.png" alt="" class="brand__logo" />
+            <strong>CertiUni</strong>
+          </div>
+          <p>
+            Plateforme de certification, de sécurisation cryptographique et de vérification
+            instantanée des diplômes universitaires au Cameroun.
+          </p>
+          <div class="official">
+            <span class="material-symbols-outlined text-primary">verified_user</span>
+            <div>
+              <small>Sécurité des documents</small>
+              <strong>Empreinte SHA-256 &amp; chiffrement</strong>
+            </div>
+          </div>
+        </div>
+
+        @for (col of footerColumns; track col.title) {
+        <nav class="footer__col" [attr.aria-label]="col.title">
+          <h3>{{ col.title }}</h3>
+          @for (link of col.links; track link.label) {
+          <a href="#" [class.is-soon]="!link.route && !link.section"
+            [attr.aria-disabled]="!link.route && !link.section ? 'true' : null"
+            (click)="onLink($event, link)">{{ link.label }}</a>
+          }
+        </nav>
+        }
+      </div>
+
+      <div class="newsletter" appReveal="up">
+        <div class="newsletter__text">
+          <h3>Lettre d'information CertiUni</h3>
+          <p>Recevez nos actualités et les nouveaux établissements intégrés à la plateforme.</p>
+        </div>
+        <div class="newsletter__form-wrap">
+          <form class="newsletter__form" (ngSubmit)="submitNewsletter()" novalidate>
+            <input type="email" name="email" placeholder="Votre adresse email professionnelle"
+              aria-label="Adresse email" autocomplete="email" inputmode="email" [ngModel]="email()"
+              (ngModelChange)="email.set($event)" [class.is-invalid]="newsletterStatus() === 'error'" />
+            <button type="submit" class="btn btn--primary btn--sm">S'abonner</button>
+          </form>
+          @if (newsletterStatus() === 'error') {
+          <small class="newsletter__msg newsletter__msg--error" role="alert">Veuillez saisir une adresse email
+            valide.</small>
+          }
+          @if (newsletterStatus() === 'success') {
+          <small class="newsletter__msg newsletter__msg--ok" role="status">Merci, votre inscription est bien
+            enregistrée.</small>
+          }
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© {{ currentYear }} CertiUni Cameroun. Tous droits réservés.</p>
+        <span class="status"><i class="dot dot--pulse"></i>Plateforme sécurisée</span>
+      </div>
+    </div>
+  </footer>
+</div>

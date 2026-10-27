@@ -1,0 +1,431 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* ================================================================ */
+/* MODE SOMBRE GLOBAL — theme premium « Nuit Emeraude CertiUni »    */
+/* Fond bleu nuit profond, surfaces ardoise, accent vert CertiUni.  */
+/* Mecanique identique au Module 1 : classe .dark-mode sur <body>   */
+/* appliquee par DarkModeDirective montee sur l'app racine.         */
+/* ================================================================ */
+:root {
+  --dm-bg: #070d1a;
+  --dm-bg-soft: #0b1428;
+  --dm-surface: #101c34;
+  --dm-surface-2: #14233f;
+  --dm-border: #22345a;
+  --dm-text: #eaf0fa;
+  --dm-muted: #9db0cc;
+  --dm-accent: #34d399;
+  --dm-accent-soft: rgba(52, 211, 153, 0.14);
+  --dm-gold: #f9c31f;
+}
+
+body.dark-mode {
+  background: radial-gradient(1200px 600px at 70% -10%, #0e2a22 0%, var(--dm-bg) 55%);
+  background-color: var(--dm-bg);
+  color: var(--dm-text);
+}
+
+/* --- Coquilles / fonds principaux --- */
+body.dark-mode .admin-shell,
+body.dark-mode .superadmin-shell,
+body.dark-mode .dashboard-page,
+body.dark-mode .page,
+body.dark-mode .wizard-page,
+body.dark-mode .generation-page,
+body.dark-mode .emission-page,
+body.dark-mode .institution-page,
+body.dark-mode .studio-page,
+body.dark-mode .registration-page,
+body.dark-mode .auth-page,
+body.dark-mode .login-page,
+body.dark-mode .help-page {
+  background: transparent !important;
+  color: var(--dm-text) !important;
+}
+
+body.dark-mode .sidebar {
+  background: linear-gradient(180deg, #0c1a30 0%, #0a1428 100%) !important;
+  color: var(--dm-text) !important;
+  border-right: 1px solid var(--dm-border) !important;
+}
+
+body.dark-mode .topbar,
+body.dark-mode .auth-header,
+body.dark-mode .page-header,
+body.dark-mode .help-header {
+  background: rgba(16, 28, 52, 0.85) !important;
+  backdrop-filter: blur(8px);
+  color: var(--dm-text) !important;
+  border-bottom-color: var(--dm-border) !important;
+}
+
+body.dark-mode .main-column,
+body.dark-mode .page-content,
+body.dark-mode .dashboard-main,
+body.dark-mode .archive-main,
+body.dark-mode .auth-main,
+body.dark-mode .help-main {
+  background: transparent !important;
+  color: var(--dm-text) !important;
+}
+
+/* --- Surfaces (cartes, tableaux, formulaires) --- */
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .stats-card,
+body.dark-mode .panel,
+body.dark-mode .panel-card,
+body.dark-mode .table-card,
+body.dark-mode .content-card,
+body.dark-mode .form-card,
+body.dark-mode .auth-card,
+body.dark-mode .login-card,
+body.dark-mode .welcome-card,
+body.dark-mode .diploma-card,
+body.dark-mode .banner-card,
+body.dark-mode .help-card,
+body.dark-mode .help-contact,
+body.dark-mode .invoice-card,
+body.dark-mode .detail-card,
+body.dark-mode .info-card,
+body.dark-mode .list-card {
+  background: linear-gradient(180deg, var(--dm-surface-2) 0%, var(--dm-surface) 100%) !important;
+  color: var(--dm-text) !important;
+  border: 1px solid var(--dm-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* --- Textes --- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+  color: #ffffff;
+}
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode li,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode span,
+body.dark-mode .nav-item,
+body.dark-mode .user-name,
+body.dark-mode .section-title {
+  color: var(--dm-muted);
+}
+
+/* Accent emeraude sur les liens et la navigation active */
+body.dark-mode a { color: var(--dm-accent); }
+body.dark-mode .nav-item.is-active,
+body.dark-mode .nav-item.active {
+  background: linear-gradient(135deg, #19764A, #0B4D3A) !important;
+  color: #fff !important;
+}
+
+/* Texte des boutons a fond colore conserve (recoloration ciblee) */
+body.dark-mode .btn-danger,
+body.dark-mode .btn-primary,
+body.dark-mode .btn-primary-dark,
+body.dark-mode .logout-btn,
+body.dark-mode .btn-add-credential,
+body.dark-mode .help-cta,
+body.dark-mode .pdf-cta {
+  color: #ffffff;
+}
+
+/* --- Champs de formulaire --- */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #0a1327 !important;
+  color: var(--dm-text) !important;
+  border-color: var(--dm-border) !important;
+}
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* --- Tableaux --- */
+body.dark-mode table,
+body.dark-mode .mat-mdc-table,
+body.dark-mode .mat-mdc-header-row {
+  background: transparent !important;
+  color: var(--dm-muted);
+}
+body.dark-mode .mat-mdc-row,
+body.dark-mode tbody tr {
+  background: linear-gradient(180deg, var(--dm-surface-2), var(--dm-surface)) !important;
+  color: #cbd5e1 !important;
+}
+body.dark-mode .mat-mdc-header-cell,
+body.dark-mode th {
+  color: #9aa4b2 !important;
+}
+
+/* --- Liens / separations --- */
+body.dark-mode a { color: var(--dm-accent); }
+body.dark-mode a.nav-item,
+body.dark-mode a.brand,
+body.dark-mode a.sidebar-brand,
+body.dark-mode a.topbar-brand,
+body.dark-mode a.hub-brand,
+body.dark-mode a.cs-brand { color: inherit; }
+body.dark-mode hr { border-color: var(--dm-border); }
+
+/* --- Dialogues / overlays Material --- */
+body.dark-mode .cdk-overlay-pane,
+body.dark-mode .certiuni-dialog,
+body.dark-mode .certiuni-bottom-sheet {
+  background: #111c2e !important;
+  color: var(--dm-text) !important;
+}
+body.dark-mode .mat-mdc-dialog-container .mdc-dialog__surface,
+body.dark-mode .mat-mdc-bottom-sheet-container .mdc-bottom-sheet__surface {
+  background: #111c2e !important;
+  color: var(--dm-text) !important;
+}
+
+/* --- Scrollbars --- */
+body.dark-mode ::-webkit-scrollbar { width: 10px; height: 10px; }
+body.dark-mode ::-webkit-scrollbar-track { background: var(--dm-bg); }
+body.dark-mode ::-webkit-scrollbar-thumb { background: #2a3f66; border-radius: 6px; }
+
+/* ================================================================ */
+/* SOCLE RESPONSIVE GLOBAL — anti-debordement, tactile, fluide      */
+/* Les @media specifiques de chaque page restent la reference ;     */
+/* ce socle garantit seulement qu'aucune page ne casse sous 360px.  */
+/* ================================================================ */
+
+/* frontend/src/styles.css */
+
+/* ============================================ */
+/* ===== ANIMATIONS AU SCROLL (global) ===== */
+/* ============================================ */
+
+.scroll-animate {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition-property: opacity, transform;
+  transition-duration: var(--anim-duration, 800ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--anim-delay, 0ms);
+}
+
+/* --- fade-up (défaut) --- */
+.scroll-animate--fade-up {
+  transform: translate3d(0, 40px, 0);
+}
+
+/* --- fade-down --- */
+.scroll-animate--fade-down {
+  transform: translate3d(0, -40px, 0);
+}
+
+/* --- fade-left --- */
+.scroll-animate--fade-left {
+  transform: translate3d(50px, 0, 0);
+}
+
+/* --- fade-right --- */
+.scroll-animate--fade-right {
+  transform: translate3d(-50px, 0, 0);
+}
+
+/* --- zoom-in --- */
+.scroll-animate--zoom-in {
+  transform: scale(0.88);
+}
+
+/* --- zoom-out --- */
+.scroll-animate--zoom-out {
+  transform: scale(1.1);
+}
+
+/* --- flip-up --- */
+.scroll-animate--flip-up {
+  transform: perspective(1000px) rotateX(-15deg) translate3d(0, 30px, 0);
+  transform-origin: bottom center;
+}
+
+/* --- fade simple --- */
+.scroll-animate--fade {
+  transform: none;
+}
+
+/* --- État final visible --- */
+.scroll-animate.scroll-animate--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* ============================================ */
+/* ===== ACCESSIBILITÉ ===== */
+/* ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-animate {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ===== Défilement fluide ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== Scroll Reveal (utilisé par la directive appReveal) ===== */
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 700ms) cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal--up    { transform: translate3d(0, 36px, 0); }
+.reveal--down  { transform: translate3d(0, -36px, 0); }
+.reveal--right { transform: translate3d(-48px, 0, 0); }  /* glisse vers la droite */
+.reveal--left  { transform: translate3d(48px, 0, 0); }   /* glisse vers la gauche */
+.reveal--zoom  { transform: scale(0.92); }
+.reveal--fade  { transform: none; }
+
+.reveal.reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== Transition de page douce (View Transitions) ===== */
+::view-transition-old(root) {
+  animation: vt-out 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes vt-out {
+  to { opacity: 0; transform: scale(0.99); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: scale(1.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
+
+/* ===== Fondations responsive globales ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  max-width: 100%;
+
+  text-size-adjust: 100%;
+}
+
+/* Le body avait la marge par défaut de 8px : elle créait un liseré blanc */
+/* Le body avait la marge par défaut de 8px : elle créait un liseré blanc */
+html, body {
+  margin: 0;
+  min-height: 100%;
+  /* "clip" au lieu de "hidden" : n'active pas de conteneur de scroll,
+     ce qui permet à position: sticky (sidebar, topbar) de fonctionner */
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #f9fafb;
+}
+
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+img { display: inline-block; vertical-align: middle; }
+
+/* Tableaux : scroll horizontal localise, jamais de scroll de page */
+.table-wrapper, .table-card, .table-responsive, .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+table { border-collapse: collapse; }
+
+/* Champs et boutons tactiles (min 40px), jamais plus larges que l'ecran */
+button, a, input, select, textarea { max-width: 100%; }
+button, [role="button"], a.btn, input[type="submit"], input[type="button"] {
+  min-height: 40px;
+  touch-action: manipulation;
+}
+input, select, textarea { font-size: max(14px, 1rem); }
+
+/* Conteneurs de page : gouttieres fluides, contenus resserres */
+.app-container { min-height: 100vh; min-height: 100svh; overflow-x: clip; }
+.page, .main-column, .page-content, .main-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Grilles auto-adaptatives par defaut (sauf surcharge du composant) */
+.grid-auto { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+
+/* Dialogues / bottom-sheets Material : tiennent dans le viewport mobile */
+.cdk-overlay-pane { max-width: 96vw !important; }
+.mat-mdc-dialog-container { max-width: 96vw; }
+
+/* Breakpoint tablette : resserre les gouttieres globales */
+@media (max-width: 900px) {
+  .page, .main-column, .page-content, .main-content { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Breakpoint mobile : titres fluides, actions empilees si flex row serree */
+@media (max-width: 600px) {
+  h1 { font-size: clamp(1.4rem, 6vw, 1.9rem); line-height: 1.2; }
+  h2 { font-size: clamp(1.15rem, 5vw, 1.5rem); line-height: 1.25; }
+  .actions-row, .btn-row, .form-actions { flex-wrap: wrap; }
+}
+
+/* Tres petits ecrans (<= 360px) : filets de securite */
+@media (max-width: 360px) {
+  body { font-size: 14px; }
+  .page, .main-column, .page-content, .main-content { padding-left: 12px; padding-right: 12px; }
+}
+
+/* Mouvements reduits : respect accessibilite */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f4f6f8;
+}
+
+body.dark-mode { background: #0b0d12; }
+
+img, video, canvas { max-width: 100%; height: auto; }
+
+/* Évite les débordements de textes longs (UUID, hash SHA-256, e-mails) */
+p, h1, h2, h3, h4, td, th { overflow-wrap: anywhere; }
+
+/* Zones tactiles confortables sur écrans tactiles */
+@media (pointer: coarse) {
+  button, a, [role='button'] { touch-action: manipulation; }
+}

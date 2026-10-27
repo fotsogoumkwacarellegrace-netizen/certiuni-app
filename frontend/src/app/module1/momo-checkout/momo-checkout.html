@@ -1,0 +1,181 @@
+<!-- src/app/module1/momo-checkout/momo-checkout.html -->
+<div class="page" appDarkMode>
+
+  <header class="top">
+    <div class="brand">
+      <img src="images/logo1.png" alt="" class="brand__logo" />
+      <div class="brand__text">
+        <strong>CertiUni</strong>
+        <small>Diplômes sûrs, avenir sûr</small>
+      </div>
+    </div>
+    <span class="secure">
+      <span class="material-symbols-outlined">lock</span>
+      Paiement sécurisé
+    </span>
+    <app-back-button variant="pill"></app-back-button>
+    <button type="button" class="close" (click)="goBack()" aria-label="Fermer et revenir">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </header>
+
+  <main class="wrap" [class.wrap--single]="step() === 'success'">
+
+    @if (step() === 'success' && receipt(); as r) {
+
+    <!-- ================= SUCCÈS ================= -->
+    <section class="card done" aria-live="polite">
+      <span class="done__icon"><span class="material-symbols-outlined">check</span></span>
+      <h1>Paiement confirmé</h1>
+
+      @if (r.credited) {
+      <p class="done__text">
+        <strong>{{ r.credited }}</strong> crédit(s) ajouté(s) à votre compte.
+        Solde disponible : <strong>{{ r.balance }}</strong> crédit(s).
+      </p>
+      } @else {
+      <p class="done__text">
+        Votre demande est enregistrée. Notre équipe contacte l'établissement concerné et vous répond sous 48 heures.
+      </p>
+      }
+
+      <dl class="receipt">
+        <div><dt>Référence</dt><dd class="mono">{{ r.reference }}</dd></div>
+        <div><dt>Article</dt><dd>{{ r.label }}</dd></div>
+        <div><dt>Opérateur</dt><dd>{{ operatorLabel(r.operator) }}</dd></div>
+        <div><dt>Numéro</dt><dd>{{ r.phone }}</dd></div>
+        <div><dt>Date</dt><dd>{{ r.paidAt | date: 'dd/MM/yyyy · HH:mm' }}</dd></div>
+        <div class="receipt__total"><dt>Montant payé</dt><dd>{{ fmt(r.amount) }} FCFA</dd></div>
+      </dl>
+
+      <div class="done__actions">
+        <button type="button" class="cta" (click)="goBack()">
+          {{ r.credited ? 'Reprendre mes vérifications' : 'Continuer' }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+        @if (r.credited) {
+        <button type="button" class="ghost" (click)="goCredits()">Voir mon solde</button>
+        } @else {
+        <button type="button" class="ghost" (click)="goHome()">Retour à l'accueil</button>
+        }
+      </div>
+    </section>
+
+    } @else {
+
+    <!-- ================= RÉCAPITULATIF ================= -->
+    <section class="card summary" aria-labelledby="sum-title">
+      <span class="eyebrow">Récapitulatif</span>
+      <h1 id="sum-title">{{ title() }}</h1>
+
+      @if (mode() === 'credits') {
+
+      @if (reason() === 'no-allowance') {
+      <p class="notice">
+        <span class="material-symbols-outlined">info</span>
+        Votre quota de vérifications est épuisé. Rechargez pour reprendre là où vous vous êtes arrêté.
+      </p>
+      }
+
+      <div class="opts" role="radiogroup" aria-label="Choisir un pack">
+        @for (p of billing.packs; track p.id) {
+        <button type="button" role="radio" class="opt" [class.opt--on]="pack()?.id === p.id"
+          [attr.aria-checked]="pack()?.id === p.id" [disabled]="step() === 'pending'" (click)="selectPack(p)">
+          <span class="opt__radio"></span>
+          <span class="opt__main">
+            <strong>{{ packName(p) }}</strong>
+            <small>{{ fmt(perUnit(p)) }} FCFA / vérification</small>
+          </span>
+          <b>{{ fmt(p.price) }} <small>FCFA</small></b>
+        </button>
+        }
+      </div>
+
+      <ul class="perks">
+        <li><span class="material-symbols-outlined">bolt</span>Crédits ajoutés instantanément</li>
+        <li><span class="material-symbols-outlined">all_inclusive</span>Sans abonnement, sans expiration</li>
+        <li><span class="material-symbols-outlined">verified</span>Débités uniquement si le verdict est Valide ou Révoqué</li>
+      </ul>
+
+      } @else {
+
+      <p class="lead">
+        L'établissement n'est pas encore partenaire. Notre équipe contacte directement son secrétariat
+        pour authentifier votre document sous 48 heures.
+      </p>
+
+      }
+
+      <dl class="total">
+        <div><dt>Sous-total</dt><dd>{{ fmt(amount()) }} FCFA</dd></div>
+        <div><dt>Frais</dt><dd>0 FCFA</dd></div>
+        <div class="total__grand"><dt>Total</dt><dd>{{ fmt(amount()) }} FCFA</dd></div>
+      </dl>
+      <p class="ref">Commande {{ orderRef }}</p>
+    </section>
+
+    <!-- ================= PAIEMENT ================= -->
+    <section class="card pay" aria-labelledby="pay-title">
+      <h2 id="pay-title">Paiement Mobile Money</h2>
+
+      @if (error()) {
+      <p class="alert" role="alert">
+        <span class="material-symbols-outlined">error</span>
+        {{ error() }}
+      </p>
+      }
+
+      @if (step() === 'form') {
+
+      <fieldset class="ops">
+        <legend>Votre opérateur</legend>
+        <button type="button" class="op" [class.op--on]="operator() === 'mtn'" [attr.aria-pressed]="operator() === 'mtn'"
+          (click)="selectOperator('mtn')">
+          <i class="dot dot--mtn"></i>MTN MoMo
+        </button>
+        <button type="button" class="op" [class.op--on]="operator() === 'orange'"
+          [attr.aria-pressed]="operator() === 'orange'" (click)="selectOperator('orange')">
+          <i class="dot dot--orange"></i>Orange Money
+        </button>
+      </fieldset>
+
+      <div class="field">
+        <label for="phone">Numéro de téléphone</label>
+        <div class="phone" [class.phone--bad]="phone().length > 0 && !phoneValid() && phone().length === 9">
+          <span class="phone__prefix">+237</span>
+          <input id="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="6XX XX XX XX"
+            [value]="phoneDisplay()" (input)="onPhoneInput($event)" (keyup.enter)="pay()" />
+        </div>
+        <small class="hint">Vous recevrez une demande de confirmation sur ce numéro.</small>
+      </div>
+
+      <button type="button" class="cta" (click)="pay()">
+        <span class="material-symbols-outlined">lock</span>
+        Payer {{ fmt(amount()) }} FCFA
+      </button>
+
+      <button type="button" class="ghost" (click)="goBack()">Annuler</button>
+
+      } @else {
+
+      <div class="wait" aria-live="polite">
+        <div class="ring"><span>{{ countdown() }}</span></div>
+        <h3>Validez sur votre téléphone</h3>
+        <p>
+          Une demande de <strong>{{ fmt(amount()) }} FCFA</strong> vient d'être envoyée au
+          <strong>{{ maskedPhone() }}</strong>. Saisissez votre code secret pour confirmer.
+        </p>
+        <button type="button" class="ghost" (click)="cancelPending()">Annuler la demande</button>
+      </div>
+
+      }
+
+      <p class="safe">
+        <span class="material-symbols-outlined">shield</span>
+        Aucune donnée bancaire n'est conservée. Le montant débité est celui affiché ici.
+      </p>
+    </section>
+
+    }
+  </main>
+</div>

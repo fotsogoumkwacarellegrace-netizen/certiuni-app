@@ -1,0 +1,90 @@
+<!-- src/app/module1/ecran-accueil/ecran-accueil.html -->
+<div class="accueil-container" [class.dark-mode]="isDarkMode()" appDarkMode appScrollToTop>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+
+      <h1 class="hero-title">
+        {{ i18n.t('homeTitlePrefix') }}<br />
+        <span class="highlight">{{ i18n.t('homeTitleHighlight') }}</span>
+      </h1>
+
+      <div class="search-box">
+        <div class="search-wrapper">
+          <span class="material-symbols-outlined search-icon">search</span>
+          <input
+            type="text"
+            class="search-input"
+            [placeholder]="i18n.t('homeSearchPh')"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearchSubmit()"
+          />
+          <button class="search-btn" (click)="onSearchSubmit()" [disabled]="isProcessing()">
+            {{ isProcessing() ? i18n.t('homeChecking') : i18n.t('verify') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTES -->
+  <section class="cards-section">
+    <div class="cards-grid">
+      <div class="card" (click)="openCameraScan()">
+        <div class="card-top green"></div>
+        <div class="card-icon green">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+        </div>
+        <h3>{{ i18n.t('homeScan') }}</h3>
+        <p>{{ i18n.t('homeScanDesc') }}</p>
+        <div class="card-link">
+          {{ i18n.t('homeScanLink') }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="card" (click)="openOCRScan()">
+        <div class="card-top yellow"></div>
+        <div class="card-icon yellow">
+          <span class="material-symbols-outlined">document_scanner</span>
+        </div>
+        <h3>{{ i18n.t('homeOcr') }}</h3>
+        <p>{{ i18n.t('homeOcrDesc') }}</p>
+        <div class="card-link">
+          {{ i18n.t('homeOcrLink') }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="card" (click)="navigateToBulk()">
+        <div class="card-top red"></div>
+        <div class="card-icon red">
+          <span class="material-symbols-outlined">checklist_rtl</span>
+        </div>
+        <h3>{{ i18n.t('homeBulk') }}</h3>
+        <p>{{ i18n.t('homeBulkDesc') }}</p>
+        <div class="card-link">
+          {{ i18n.t('homeBulkLink') }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <img src="images/logo.png" alt="CertiUni" class="footer-logo" />
+      <nav class="footer-nav">
+        <a (click)="goToLanding()">{{ i18n.t('homeFooterVerify') }}</a>
+        <a (click)="goToInstitutions()">{{ i18n.t('homeFooterInstitutions') }}</a>
+        <a (click)="goToEtudiants()">{{ i18n.t('homeFooterStudents') }}</a>
+        <a href="#">{{ i18n.t('homeFooterPrivacy') }}</a>
+        <a href="#">{{ i18n.t('homeFooterTerms') }}</a>
+        <a href="#">{{ i18n.t('homeFooterAudit') }}</a>
+      </nav>
+      <p class="footer-copy">{{ i18n.t('homeFooterCopy') }}</p>
+    </div>
+  </footer>
+</div>

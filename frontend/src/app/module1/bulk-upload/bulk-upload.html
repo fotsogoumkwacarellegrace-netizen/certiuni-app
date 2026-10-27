@@ -1,0 +1,175 @@
+<!-- src/app/module1/bulk-upload/bulk-upload.html -->
+<div class="bulk-page" [class.dark-mode]="isDarkMode()" appDarkMode>
+
+  <main class="main-content">
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+      <div class="page-header">
+        <div class="page-title-group">
+          <h1 class="page-title">{{ i18n.t('bulkTitle') }}</h1>
+          <p class="page-subtitle">{{ i18n.t('bulkSubtitle') }}</p>
+        </div>
+      </div>
+
+      <!-- CARTE PRINCIPALE : UPLOAD -->
+      <div class="upload-card">
+
+        <div class="upload-left">
+          <div class="upload-badge">
+            <span class="material-symbols-outlined">groups</span>
+            {{ i18n.t('bulkBadge') }}
+          </div>
+          <h2>{{ i18n.t('bulkHeading') }}</h2>
+          <p>{{ i18n.t('bulkDescription') }}</p>
+
+          <div class="tags">
+            <span class="tag">
+              <span class="material-symbols-outlined">description</span>
+              {{ i18n.t('bulkCsvSupport') }}
+            </span>
+            <span class="tag">
+              <span class="material-symbols-outlined">data_object</span>
+              {{ i18n.t('bulkJsonSupport') }}
+            </span>
+          </div>
+
+          <ul class="upload-steps">
+            <li>
+              <span class="step-number">1</span>
+              {{ i18n.t('bulkStep1') }}
+            </li>
+            <li>
+              <span class="step-number">2</span>
+              {{ i18n.t('bulkStep2') }}
+            </li>
+            <li>
+              <span class="step-number">3</span>
+              {{ i18n.t('bulkStep3') }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="upload-right">
+
+          <div class="drop-zone"
+            [class.paywall]="paywall() !== null"
+            [class.dragging]="isDragging()"
+            [class.processing]="isProcessing()"
+            [class.done]="uploadComplete()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)">
+
+            @if (isProcessing()) {
+            <div class="drop-state">
+              <div class="spinner"></div>
+              <span class="drop-title">{{ i18n.t('bulkProcessing') }}</span>
+              <span class="drop-hint">{{ fileName() }}</span>
+            </div>
+            } @else if (uploadComplete()) {
+            <div class="drop-state">
+              <span class="material-symbols-outlined drop-icon success">check_circle</span>
+              <span class="drop-title">{{ i18n.t('bulkDone') }}</span>
+              <span class="drop-hint">{{ processedCandidates().length }} {{ i18n.t('bulkCandidates') }}</span>
+            </div>
+            } @else if (paywall(); as wall) {
+            <div class="drop-state">
+              <span class="material-symbols-outlined drop-icon warn">lock</span>
+              <span class="drop-title">{{ i18n.t('bulkCreditsInsufficient') }}</span>
+              <span class="drop-hint">
+                {{ i18n.t('bulkCreditsNeeded') }} <strong>{{ wall.needed }}</strong> {{ i18n.t('bulkCreditsBillable') }}
+                {{ i18n.t('bulkCreditsMissing') }} <strong>{{ wall.missing }}</strong>.
+              </span>
+            </div>
+            } @else {
+            <div class="drop-state">
+              <span class="material-symbols-outlined drop-icon">cloud_upload</span>
+              <span class="drop-title">{{ i18n.t('bulkDropTitle') }}</span>
+              <span class="drop-hint">
+                {{ i18n.t('bulkDropHint') }} <span class="browse-link" (click)="fileInput.click()">{{ i18n.t('bulkDropBrowse') }}</span>
+              </span>
+              <input #fileInput type="file" accept=".xlsx,.xls,.csv,.json" (change)="onFileSelected($event)" style="display:none;" />
+            </div>
+            }
+          </div>
+          @if (paywall()) {
+          <div class="result-actions">
+            <button class="secondary-btn" (click)="onReset()">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('bulkChangeFile') }}
+            </button>
+            <button class="primary-btn" (click)="buyMissing()">
+              <span class="material-symbols-outlined">account_balance_wallet</span>
+              {{ i18n.t('bulkRecharge') }}
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+          }
+
+          <p class="charge-note">
+            <span class="material-symbols-outlined">receipt_long</span>
+            {{ chargedCount() }} {{ i18n.t('bulkCharged') }}
+          </p>
+          @if (uploadComplete()) {
+
+          <!-- RÉSUMÉ APRÈS ANALYSE -->
+          <div class="result-summary">
+            <div class="result-stat valid">
+              <span class="material-symbols-outlined">check_circle</span>
+              <div>
+                <strong>{{ totalValid() }}</strong>
+                <span>{{ i18n.t('bulkValid') }}</span>
+              </div>
+            </div>
+            <div class="result-stat revoked">
+              <span class="material-symbols-outlined">cancel</span>
+              <div>
+                <strong>{{ totalRevoked() }}</strong>
+                <span>{{ i18n.t('bulkRevoked') }}</span>
+              </div>
+            </div>
+            <div class="result-stat unknown">
+              <span class="material-symbols-outlined">help</span>
+              <div>
+                <strong>{{ totalUnknown() }}</strong>
+                <span>{{ i18n.t('bulkUnknown') }}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (fileErrors().length) {
+          <div class="error-list">
+            <span class="material-symbols-outlined">warning</span>
+            <div>
+              @for (err of fileErrors(); track err) {
+              <span class="error-line">{{ err }}</span>
+              }
+            </div>
+          </div>
+          }
+
+          <div class="result-actions">
+            <button class="secondary-btn" (click)="onReset()">
+              <span class="material-symbols-outlined">refresh</span>
+              {{ i18n.t('bulkReset') }}
+            </button>
+            <button class="primary-btn" (click)="onViewResults()">
+              <span class="material-symbols-outlined">visibility</span>
+              {{ i18n.t('bulkViewResults') }}
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

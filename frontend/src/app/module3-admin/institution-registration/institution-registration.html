@@ -1,0 +1,331 @@
+<div class="registration-page">
+  <header class="page-header">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark" aria-hidden="true"><span class="material-icons">security</span></span>
+      <span class="brand-name">CertiUni</span>
+    </a>
+    <a class="help-link" routerLink="/admin/bientot" [queryParams]="{page: 'Aide et support'}">
+      <span class="material-icons" aria-hidden="true">help_outline</span> Besoin d'aide ?
+    </a>
+    <app-back-button variant="pill"></app-back-button>
+  </header>
+
+  <main class="page-main">
+    @if (!submitted()) {
+      <ol class="stepper">
+        @for (step of steps; track step.index) {
+          <li
+            class="stepper-item"
+            [class.is-active]="currentStep() === step.index"
+            [class.is-done]="currentStep() > step.index"
+          >
+            <button
+              type="button"
+              class="stepper-dot"
+              (click)="goToStep(step.index)"
+              [disabled]="step.index >= currentStep()"
+            >
+              @if (currentStep() > step.index) {
+                <span aria-hidden="true"><span class="material-icons">check_circle</span></span>
+              } @else {
+                {{ step.index }}
+              }
+            </button>
+            <span class="stepper-label">{{ step.label }}</span>
+          </li>
+        }
+      </ol>
+
+      <div class="form-card">
+        @if (currentStep() === 1) {
+          <h1>Demande d'inscription d'une institution</h1>
+          <p class="form-intro">Veuillez renseigner les informations ci-dessous avec exactitude.</p>
+
+          <form [formGroup]="institutionInfoForm">
+            <h2 class="section-title">Informations institutionnelles</h2>
+
+            <div class="field-grid">
+              <div class="form-field">
+                <label for="nomOfficiel">Nom officiel de l'institution *</label>
+                <input
+                  id="nomOfficiel"
+                  type="text"
+                  formControlName="nomOfficiel"
+                  placeholder="Ex : Université de Yaoundé I"
+                  [class.has-error]="isInvalid('institutionInfo', 'nomOfficiel')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="typeEtablissement">Type d'établissement *</label>
+                <select
+                  id="typeEtablissement"
+                  formControlName="typeEtablissement"
+                  [class.has-error]="isInvalid('institutionInfo', 'typeEtablissement')"
+                >
+                  <option value="" disabled>Sélectionner le type</option>
+                  @for (type of typesEtablissement; track type) {
+                    <option [value]="type">{{ type }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="domaineDns">Domaine DNS *</label>
+                <input
+                  id="domaineDns"
+                  type="text"
+                  formControlName="domaineDns"
+                  placeholder="Ex : univ-yaounde1.cm"
+                  [class.has-error]="isInvalid('institutionInfo', 'domaineDns')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="emailInstitutionnel">Email institutionnel *</label>
+                <input
+                  id="emailInstitutionnel"
+                  type="email"
+                  formControlName="emailInstitutionnel"
+                  placeholder="Ex : contact@univ-yaounde1.cm"
+                  [class.has-error]="isInvalid('institutionInfo', 'emailInstitutionnel')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="telephoneInstitutionnel">Téléphone institutionnel *</label>
+                <input
+                  id="telephoneInstitutionnel"
+                  type="tel"
+                  formControlName="telephoneInstitutionnel"
+                  placeholder="Ex : +237 6 12 34 56 78"
+                  [class.has-error]="isInvalid('institutionInfo', 'telephoneInstitutionnel')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="adresseComplete">Adresse complète *</label>
+                <input
+                  id="adresseComplete"
+                  type="text"
+                  formControlName="adresseComplete"
+                  placeholder="Ex : BP 812, Yaoundé - Cameroun"
+                  [class.has-error]="isInvalid('institutionInfo', 'adresseComplete')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="siteWeb">Site web (optionnel)</label>
+                <input
+                  id="siteWeb"
+                  type="url"
+                  formControlName="siteWeb"
+                  placeholder="Ex : https://www.univ-yaounde1.cm"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="ville">Ville *</label>
+                <select
+                  id="ville"
+                  formControlName="ville"
+                  [class.has-error]="isInvalid('institutionInfo', 'ville')"
+                >
+                  <option value="" disabled>Sélectionner la ville</option>
+                  <option value="Yaoundé">Yaoundé</option>
+                  <option value="Douala">Douala</option>
+                  <option value="Bafoussam">Bafoussam</option>
+                  <option value="Buea">Buea</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="paysSelect">Pays *</label>
+                <select
+                  id="paysSelect"
+                  formControlName="pays"
+                  [class.has-error]="isInvalid('institutionInfo', 'pays')"
+                >
+                  <option value="" disabled>Sélectionner le pays</option>
+                  @for (p of pays; track p) {
+                    <option [value]="p">{{ p }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label for="region">Région *</label>
+                <select
+                  id="region"
+                  formControlName="region"
+                  [class.has-error]="isInvalid('institutionInfo', 'region')"
+                >
+                  <option value="" disabled>Sélectionner la région</option>
+                  <option value="Centre">Centre</option>
+                  <option value="Littoral">Littoral</option>
+                  <option value="Ouest">Ouest</option>
+                  <option value="Sud-Ouest">Sud-Ouest</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        }
+
+        @if (currentStep() === 2) {
+          <h1>Documents officiels</h1>
+          <p class="form-intro">Veuillez transmettre le décret ministériel de création de l'institution.</p>
+
+          <h2 class="section-title">
+            Décret ministériel
+            <span class="info-icon" title="Format accepté : PDF - taille max 5 Mo" aria-hidden="true"><span class="material-icons">info</span></span>
+          </h2>
+
+          <div
+            class="dropzone"
+            [class.has-error]="!!decretFileError()"
+            (drop)="onFileDropped($event)"
+            (dragover)="onDragOver($event)"
+          >
+              @if (!decretFileName()) {
+              <span class="dropzone-icon" aria-hidden="true"><span class="material-icons">cloud_upload</span></span>
+              <p>Télécharger le fichier (PDF)</p>
+              <p class="dropzone-hint">Glissez-déposez le fichier ici ou cliquez sur "Parcourir"</p>
+              <label class="btn-secondary">
+                Parcourir
+                <input type="file" accept="application/pdf" (change)="onFileSelected($event)" hidden />
+              </label>
+            } @else {
+              <span class="file-chip">
+                <span class="material-icons">description</span> {{ decretFileName() }}
+                <button type="button" (click)="removeFile()" aria-label="Retirer le fichier"><span class="material-icons">close</span></button>
+              </span>
+            }
+            <p class="dropzone-format">Format accepté : PDF - Taille max : 5 Mo</p>
+          </div>
+
+          @if (decretFileError()) {
+            <span class="field-error">{{ decretFileError() }}</span>
+          }
+        }
+
+        @if (currentStep() === 3) {
+          <h1>Représentant légal et signature</h1>
+          <p class="form-intro">Renseignez les informations du représentant légal de l'institution.</p>
+
+          <form [formGroup]="representantForm">
+            <h2 class="section-title">Représentant légal</h2>
+
+            <div class="field-grid">
+              <div class="form-field">
+                <label for="nomComplet">Nom complet *</label>
+                <input
+                  id="nomComplet"
+                  type="text"
+                  formControlName="nomComplet"
+                  placeholder="Ex : Pr. Jean Bosco NDO"
+                  [class.has-error]="isInvalid('representant', 'nomComplet')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="fonction">Fonction *</label>
+                <input
+                  id="fonction"
+                  type="text"
+                  formControlName="fonction"
+                  placeholder="Ex : Recteur"
+                  [class.has-error]="isInvalid('representant', 'fonction')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="telephoneRep">Téléphone *</label>
+                <input
+                  id="telephoneRep"
+                  type="tel"
+                  formControlName="telephone"
+                  placeholder="Ex : +237 6 98 76 54 32"
+                  [class.has-error]="isInvalid('representant', 'telephone')"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="emailProfessionnel">Email professionnel *</label>
+                <input
+                  id="emailProfessionnel"
+                  type="email"
+                  formControlName="emailProfessionnel"
+                  placeholder="Ex : recteur@univ-yaounde1.cm"
+                  [class.has-error]="isInvalid('representant', 'emailProfessionnel')"
+                />
+              </div>
+            </div>
+          </form>
+
+          <div class="signature-block">
+            <div class="signature-header">
+              <label>
+                Signature numérique du représentant légal
+                <span class="info-icon" title="Signez avec votre souris ou votre stylet" aria-hidden="true">ⓘ</span>
+              </label>
+              <button type="button" class="link-danger" (click)="clearSignature()">
+                <span class="material-icons">delete</span> Effacer
+              </button>
+            </div>
+            <div class="signature-pad" [class.has-error]="!!signatureError()">
+              <canvas
+                #signatureCanvas
+                width="700"
+                height="180"
+                (pointerdown)="startDrawing($event)"
+                (pointermove)="draw($event)"
+                (pointerup)="stopDrawing()"
+                (pointerleave)="stopDrawing()"
+              ></canvas>
+              @if (!hasSignature()) {
+                <div class="signature-placeholder">
+                  <span aria-hidden="true"><span class="material-icons">edit</span></span>
+                  <p>Signez ici</p>
+                  <p class="signature-hint">Utilisez votre souris ou votre stylet pour signer dans la zone ci-dessous.</p>
+                </div>
+              }
+            </div>
+            @if (signatureError()) {
+              <span class="field-error">{{ signatureError() }}</span>
+            }
+          </div>
+        }
+
+        <div class="form-footer">
+          <span class="required-note">* Champs obligatoires</span>
+          <div class="form-actions">
+            @if (currentStep() > 1) {
+              <button type="button" class="btn-secondary" (click)="previousStep()">
+                Précédent
+              </button>
+            }
+            @if (currentStep() < 3) {
+              <button type="button" class="btn-primary" (click)="nextStep()">
+                Suivant →
+              </button>
+            } @else {
+              <button type="button" class="btn-primary" [disabled]="submitting()" (click)="onSubmit()">
+                {{ submitting() ? 'Envoi en cours…' : 'Soumettre la demande →' }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="confirmation-card">
+      <span class="confirmation-icon" aria-hidden="true"><span class="material-icons">check_circle</span></span>
+        <h1>Demande envoyée avec succès !</h1>
+        <p>
+          Votre demande d'inscription a été transmise au MINESUP pour validation.
+          Vous serez notifié par email dès que votre institution sera validée.
+        </p>
+        <a class="btn-primary" (click)="submitRegistration()" routerLink="/admin-login">Retour à la connexion</a>
+      </div>
+    }
+  </main>
+</div>

@@ -1,0 +1,107 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- Bandeau supérieur -->
+    <div class="top-bar">
+      <a routerLink="/public/landing" title="Accueil CertiUni"><img src="assets/logos/logo.png" alt="CertiUni" class="top-bar-logo" /></a>
+      <div class="top-bar-divider"></div>
+      <div class="top-bar-text">
+        <span class="top-bar-title">Session Sécurisée</span>
+        <span class="top-bar-subtitle">Accédez à votre espace étudiant CertiUni</span>
+      </div>
+      <div class="top-bar-actions">
+        <app-back-button></app-back-button>
+        <app-theme-toggle></app-theme-toggle>
+      </div>
+      <mat-icon class="cap-icon">school</mat-icon>
+    </div>
+
+    <!-- ÉCRAN 11 : Formulaire de connexion -->
+    @if (!emailSent()) {
+      <div class="card-body">
+        <img src="assets/logos/logo.png" alt="CertiUni" class="main-logo" />
+
+        <h1>Accédez à votre espace sécurisé d'étudiant</h1>
+        <div class="title-underline"></div>
+
+        <p class="subtitle">
+          Saisissez votre adresse email institutionnelle. Nous vous enverrons
+          un lien magique pour vous connecter sans mot de passe.
+        </p>
+
+        <form (ngSubmit)="onSubmit()">
+          <label for="email">Email institutionnel</label>
+          <div class="input-wrapper">
+            <mat-icon class="icon">mail</mat-icon>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="prenom.nom@universite.cm"
+              [(ngModel)]="email"
+              required
+            />
+          </div>
+
+          @if (errorMessage()) {
+            <p class="error-message">{{ errorMessage() }}</p>
+          }
+
+          @if (infoMessage()) {
+            <p class="info-message">{{ infoMessage() }}</p>
+          }
+
+          <button type="submit" class="btn-primary">
+            <mat-icon class="btn-icon">send</mat-icon> Recevoir mon lien d'accès sécurisé
+          </button>
+        </form>
+
+        @if (demoEnabled) {
+          <div class="demo-separator"><span>Ou</span></div>
+          <button type="button" class="btn-demo" (click)="loginWithDemo()" [disabled]="isDemoLoading()">
+            <mat-icon class="btn-icon">person</mat-icon>
+            @if (isDemoLoading()) { Connexion en cours… }
+            @else { Se connecter avec un compte de démonstration }
+          </button>
+          <p class="demo-badge">Mode démonstration — données fictives</p>
+        }
+      </div>
+    }
+
+    <!-- ÉCRAN 12 : Succès de connexion -->
+    @if (emailSent()) {
+      <div class="card-body success-body">
+        <div class="envelope-animation" (click)="simulateClickOnEnvelope()">
+          <div class="envelope-badge">
+            <mat-icon>mark_email_read</mat-icon>
+          </div>
+        </div>
+
+        <h2><mat-icon class="check-icon-inline">check_circle</mat-icon> Email envoyé avec succès !</h2>
+        <div class="title-underline"></div>
+
+        <p class="subtitle">
+          Nous avons envoyé un lien de connexion sécurisé à votre adresse email.
+          Veuillez vérifier votre boîte de réception pour continuer.
+        </p>
+
+        <p class="hint-click">(Cliquez sur l'enveloppe pour simuler la connexion)</p>
+
+        <button
+          class="btn-secondary"
+          [disabled]="countdown() > 0"
+          (click)="resendEmail()"
+        >
+          @if (countdown() > 0) {
+            Renvoyer l'email ({{ countdown() }}s)
+          } @else {
+            Renvoyer l'email
+          }
+        </button>
+
+        <p class="spam-hint">Vous ne trouvez pas l'email ? Vérifiez vos spams.</p>
+      </div>
+    }
+
+  </div>
+</div>
