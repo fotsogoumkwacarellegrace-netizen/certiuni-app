@@ -5,9 +5,7 @@
     "@nestjs/throttler": "^6.7.0",
     "@prisma/client": "^7.10.0",
     "@zxing/library": "^0.23.0",
-    "@zxing/ngx-scanner": "^22.0.1",
     "bootstrap-icons": "^1.13.1",
-    "lucide-angular": "^1.0.0",
     "otplib": "^13.5.0",
     "tesseract.js": "^7.0.0"
   },
