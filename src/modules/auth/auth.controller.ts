@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Req, Delete, Res, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
@@ -7,6 +7,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { GetUser } from '../../common/decorators/get-user.decorator';
 import { RegisterDto } from '@modules/auth/dto';
+import { Roles } from '@auth/decorators/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 @ApiTags('Auth')
 // Pas de 'v1' en dur : le versioning URI global (/api/v1) s'en charge.
@@ -49,5 +51,12 @@ export class AuthController {
   @ApiBearerAuth()
   async logout(@GetUser('id') userId: string) {
     return this.authService.logout(userId);
+  }
+
+  @Delete(':id')
+  @Roles(UserRole.SUPER_ADMIN)
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param('id') id: string) {
+    return this.authService.delete(id);
   }
 }

@@ -143,6 +143,12 @@ export class AuthService {
     return { success: true };
   }
 
+  async delete(userId: string) {
+    await this.prisma.user.delete({
+      where: { id: userId },
+    })
+  }
+
   async refreshToken(refreshTokenValue: string) {
     try {
       const payload = await this.jwtService.verifyAsync(refreshTokenValue, {
