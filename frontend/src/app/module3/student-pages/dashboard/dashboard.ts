@@ -48,9 +48,16 @@ export class Dashboard implements OnInit {
   }
 
   onSidebarLinkClick(section: string) {
-    // « Besoin d'aide » ouvre la page d'aide plein ecran (sans sidebar/navbar)
     if (section === 'support') {
       this.router.navigate(['/student/help']);
+      return;
+    }
+    if (section === 'overview') {
+      this.router.navigate(['/student/dashboard']);
+      return;
+    }
+    if (section === 'add-credential') {
+      this.router.navigate(['/public/espaces']);
       return;
     }
     this.router.navigate(['/student/bientot'], { queryParams: { page: section } });

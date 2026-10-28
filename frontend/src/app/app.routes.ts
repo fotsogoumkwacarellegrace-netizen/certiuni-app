@@ -53,10 +53,8 @@ export const routes: Routes = [
   // Module 4 : superadmin
   {
     path: 'superadmin-login',
-    loadComponent: () =>
-      import('./module4-superadmin/superadmin-login/superadmin-login').then(
-        (m) => m.SuperadminLogin
-      ),
+    redirectTo: 'superadmin/login',
+    pathMatch: 'full',
   },
   {
     path: 'superadmin',
@@ -65,6 +63,12 @@ export const routes: Routes = [
         (m) => m.superadminRoutes
       ),
   },
+
+  // Alias historiques et chemins courts conservés pour éviter les liens cassés
+  { path: 'landing', redirectTo: 'public/landing', pathMatch: 'full' },
+  { path: 'espaces', redirectTo: 'public/espaces', pathMatch: 'full' },
+  { path: 'login', redirectTo: 'public/login', pathMatch: 'full' },
+  { path: 'accueil', redirectTo: 'public/accueil', pathMatch: 'full' },
 
   // Hub central de connexion
   {

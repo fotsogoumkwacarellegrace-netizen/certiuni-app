@@ -45,6 +45,14 @@ export class Archive {
       'add-credential': 'Ajouter un certificat',
       'user-menu': 'Menu utilisateur',
     };
+    if (section === 'home') {
+      this.router.navigate(['/student/dashboard']);
+      return;
+    }
+    if (section === 'support') {
+      this.router.navigate(['/student/help']);
+      return;
+    }
     this.router.navigate(['/student/bientot'], { queryParams: { page: labels[section] ?? section } });
   }
 

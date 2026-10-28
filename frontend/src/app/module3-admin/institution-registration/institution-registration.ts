@@ -251,7 +251,7 @@ export class InstitutionRegistration implements AfterViewInit {
 
     // Simulation de l'envoi de la demande
 
-    this.router.navigate(['/admin-login']);
+    this.router.navigate(['/admin/login']);
   }
 
 
