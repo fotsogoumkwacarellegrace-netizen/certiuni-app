@@ -1,6 +1,4 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BulkUpload } from './bulk-upload';
 
 describe('BulkUpload', () => {
@@ -10,7 +8,6 @@ describe('BulkUpload', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BulkUpload],
-      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BulkUpload);

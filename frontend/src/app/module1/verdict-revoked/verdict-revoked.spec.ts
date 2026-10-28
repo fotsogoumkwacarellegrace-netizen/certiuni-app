@@ -1,6 +1,4 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VerdictRevoked } from './verdict-revoked';
 
 describe('VerdictRevoked', () => {
@@ -10,7 +8,6 @@ describe('VerdictRevoked', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VerdictRevoked],
-      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VerdictRevoked);

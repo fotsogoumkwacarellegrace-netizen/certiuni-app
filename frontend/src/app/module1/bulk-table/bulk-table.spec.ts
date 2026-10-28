@@ -1,6 +1,4 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BulkTable } from './bulk-table';
 
 describe('BulkTable', () => {
@@ -10,7 +8,6 @@ describe('BulkTable', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BulkTable],
-      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BulkTable);

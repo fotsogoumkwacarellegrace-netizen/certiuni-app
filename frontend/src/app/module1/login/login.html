@@ -1,165 +1,427 @@
 <!-- frontend/src/app/module1/login/login.html -->
 <div class="login-page" [class.dark-mode]="isDarkMode()">
 
-  <!-- HEADER -->
-  <header class="login-header">
-    <div class="header-inner">
-      <div class="brand">
-        <img src="images/logo.png" alt="CertiUni" class="brand-logo" />
-        <span class="brand-text">CertiUni</span>
+  <!-- ============ PANNEAU GAUCHE : VISUEL ============ -->
+  <aside class="hero">
+    <div class="hero-blob hero-blob--1" aria-hidden="true"></div>
+    <div class="hero-blob hero-blob--2" aria-hidden="true"></div>
+
+    <header class="hero-head">
+      <a class="hero-brand" routerLink="/public/landing" aria-label="CertiUni">
+        <img src="images/logo1.png" alt="" class="hero-logo" />
+        <span class="hero-brand-text">
+          <strong>CertiUni</strong>
+          <small class="hero-tagline">{{ i18n.t('brandTagline') }}</small>
+        </span>
+      </a>
+
+      <h2 class="hero-title">{{ i18n.t('loginHeroTitle') }}</h2>
+      <p class="hero-subtitle">{{ i18n.t('loginHeroSubtitle') }}</p>
+    </header>
+
+    <div class="stage">
+      <img
+        src="images/imagelog.png"
+        alt="Vérification d'un diplôme CertiUni sur ordinateur et smartphone"
+        class="stage-img"
+      />
+
+      <div class="chip chip--tl">
+        <small>Trois verdicts clairs</small>
+        <div class="verdicts">
+          <span class="verdict verdict--ok"><i></i>Valide</span>
+          <span class="verdict verdict--ko"><i></i>Révoqué</span>
+          <span class="verdict verdict--na"><i></i>Introuvable</span>
+        </div>
       </div>
 
-      <div class="header-actions">
-        <button class="btn-back" (click)="goBack()">
-          <span class="material-symbols-outlined">arrow_back</span>
-          <span>Retour</span>
-        </button>
-        <button class="theme-toggle" (click)="toggleDarkMode()">
-          <span class="material-symbols-outlined">
-            {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
-          </span>
-        </button>
+      <div class="chip chip--tr">
+        <small>Intégrité</small>
+        <strong>Sceau SHA-256</strong>
+        <span class="chip-line">Falsification détectée</span>
+      </div>
+
+      <div class="chip chip--br">
+        <small>Recrutement</small>
+        <strong>100+ CV en un lot</strong>
+        <span class="chip-line">Rapport exportable</span>
       </div>
     </div>
-  </header>
+  </aside>
 
-  <!-- MAIN -->
-  <main class="login-main">
-    <div class="login-container">
+  <!-- ============ PANNEAU DROIT : FORMULAIRES ============ -->
+  <section class="auth">
 
-      <div class="login-card">
+    <div class="auth-top">
+      <button type="button" class="btn-back" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>{{ i18n.t('loginBack') }}</span>
+      </button>
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="toggleDarkMode()"
+        aria-label="Basculer le mode sombre"
+      >
+        <span class="material-symbols-outlined">
+          {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+        </span>
+      </button>
+    </div>
 
-        <div class="login-header-card">
-          <div class="login-icon-wrapper">
-            <span class="material-symbols-outlined">manage_search</span>
-          </div>
-          <h1 class="login-title">Espace Recruteur</h1>
-          <p class="login-subtitle">
-            Connectez-vous pour accéder au portail de vérification des diplômes
-          </p>
-        </div>
+    <main class="auth-main">
+      <div class="form-wrap">
 
-        <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        @switch (view()) {
 
-          <!-- Email -->
-          <div class="form-group">
-            <label class="form-label" for="email">
-              Adresse email <span class="required">*</span>
-            </label>
-            <div class="input-wrapper" [class.error]="showEmailError() && !isEmailValid()">
-              <span class="input-icon material-symbols-outlined">mail</span>
-              <input
-                type="email"
-                id="email"
-                class="form-input"
-                placeholder="exemple@entreprise.com"
-                [(ngModel)]="email"
-                name="email"
-                (input)="onEmailChange()"
-              />
-            </div>
-            <!-- AFFICHAGE DE L'ERREUR UNIQUEMENT SI LE CHAMP EST INVALIDE ET QU'ON A CLIQUE SUR VALIDER -->
-            @if (showEmailError() && !isEmailValid()) {
-              <div class="error-message">
-                <span class="material-symbols-outlined">error</span>
-                Veuillez saisir une adresse email valide.
+          @case ('login') {
+            <h1 class="title">{{ i18n.t('loginTitle') }}</h1>
+            <p class="subtitle">
+              {{ i18n.t('loginNoAccount') }}
+              <button type="button" class="link-btn" (click)="setView('register')">{{ i18n.t('loginCreateAccount') }}</button>
+            </p>
+
+            @if (notice()) {
+              <div class="alert alert--ok" role="status">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ notice() }}
               </div>
             }
-          </div>
+            @if (formError()) {
+              <div class="alert alert--error" role="alert">
+                <span class="material-symbols-outlined">error</span>
+                {{ formError() }}
+              </div>
+            }
 
-          <!-- Password -->
-          <div class="form-group">
-            <label class="form-label" for="password">
-              Mot de passe <span class="required">*</span>
-            </label>
-            <div class="input-wrapper" [class.error]="showPasswordError() && !isPasswordValid()">
-              <span class="input-icon material-symbols-outlined">lock</span>
-              <input
-                [type]="showPassword() ? 'text' : 'password'"
-                id="password"
-                class="form-input"
-                placeholder="••••••••"
-                [(ngModel)]="password"
-                name="password"
-                (input)="onPasswordChange()"
-              />
+            <div class="social">
               <button
                 type="button"
-                class="toggle-password"
-                (click)="togglePasswordVisibility()"
+                class="social-btn"
+                [disabled]="socialLoading() !== null || isLoading()"
+                (click)="onSocialLogin('google')"
               >
-                <span class="material-symbols-outlined">
-                  {{ showPassword() ? 'visibility_off' : 'visibility' }}
-                </span>
+                @if (socialLoading() === 'google') {
+                  <span class="spinner spinner--dark"></span>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+                    <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+                    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                    <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/>
+                  </svg>
+                }
+                Google
+              </button>
+              <button
+                type="button"
+                class="social-btn"
+                [disabled]="socialLoading() !== null || isLoading()"
+                (click)="onSocialLogin('facebook')"
+              >
+                @if (socialLoading() === 'facebook') {
+                  <span class="spinner spinner--dark"></span>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/>
+                  </svg>
+                }
+                Facebook
               </button>
             </div>
-            @if (showPasswordError() && !isPasswordValid()) {
-              <div class="error-message">
+
+            <div class="divider"><span>{{ i18n.t('loginOrEmail') }}</span></div>
+
+            <form class="form" (ngSubmit)="onSubmit()" novalidate>
+
+              <div class="field">
+                <label class="label" for="email">{{ i18n.t('loginEmail') }}</label>
+                <div class="input-wrap" [class.error]="submitted() && !isEmailValid(email)">
+                  <span class="input-icon material-symbols-outlined">mail</span>
+                  <input
+                    type="email" id="email" name="email" class="input"
+                    placeholder="votre@email.com" autocomplete="email"
+                    [(ngModel)]="email"
+                  />
+                </div>
+                @if (submitted() && !isEmailValid(email)) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Veuillez saisir une adresse email valide.
+                  </p>
+                }
+              </div>
+
+              <div class="field">
+                <label class="label" for="password">{{ i18n.t('loginPassword') }}</label>
+                <div class="input-wrap" [class.error]="submitted() && !isLoginPasswordValid()">
+                  <span class="input-icon material-symbols-outlined">lock</span>
+                  <input
+                    [type]="showPassword() ? 'text' : 'password'"
+                    id="password" name="password" class="input"
+                    placeholder="Votre mot de passe" autocomplete="current-password"
+                    [(ngModel)]="password"
+                  />
+                  <button
+                    type="button" class="toggle-password"
+                    (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                  >
+                    <span class="material-symbols-outlined">
+                      {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                    </span>
+                  </button>
+                </div>
+                @if (submitted() && !isLoginPasswordValid()) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Le mot de passe doit contenir au moins 6 caractères.
+                  </p>
+                }
+              </div>
+
+              <div class="options">
+                <label class="remember">
+                  <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
+                  <span>{{ i18n.t('loginRemember') }}</span>
+                </label>
+                <button type="button" class="link-btn" (click)="setView('forgot')">
+                  {{ i18n.t('loginForgot') }}
+                </button>
+              </div>
+
+              <button type="submit" class="btn-submit" [disabled]="isLoading() || socialLoading() !== null">
+                @if (isLoading()) {
+                  <span class="spinner"></span>
+                  {{ i18n.t('loginSubmitting') }}
+                } @else {
+                  {{ i18n.t('loginSubmit') }}
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                }
+              </button>
+            </form>
+
+            <div class="demo">
+              <span class="material-symbols-outlined">science</span>
+              <p>{{ i18n.t('loginDemoText') }}</p>
+              <button type="button" class="demo-btn" (click)="useDemoAccount()">{{ i18n.t('loginDemoFill') }}</button>
+            </div>
+
+            <a class="public-link" routerLink="/public/accueil">
+              <span class="material-symbols-outlined">verified</span>
+              {{ i18n.t('loginVerifyNoAccount') }}
+            </a>
+          }
+
+          @case ('register') {
+            <h1 class="title">Créer un compte</h1>
+            <p class="subtitle">
+              Déjà inscrit ?
+              <button type="button" class="link-btn" (click)="setView('login')">Se connecter</button>
+            </p>
+
+            @if (formError()) {
+              <div class="alert alert--error" role="alert">
                 <span class="material-symbols-outlined">error</span>
-                Le mot de passe doit contenir au moins 6 caractères.
+                {{ formError() }}
               </div>
             }
-          </div>
 
-          <!-- Options -->
-          <div class="form-options">
-            <label class="remember-me">
-              <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
-              Se souvenir de moi
-            </label>
-            <button type="button" class="forgot-link" (click)="onForgotPassword()">
-              Mot de passe oublié ?
+            <form class="form" (ngSubmit)="onRegister()" novalidate>
+
+              <div class="field">
+                <label class="label" for="regName">Nom complet</label>
+                <div class="input-wrap" [class.error]="submitted() && regName.trim().length < 2">
+                  <span class="input-icon material-symbols-outlined">person</span>
+                  <input
+                    type="text" id="regName" name="regName" class="input"
+                    placeholder="Votre nom et prénom" autocomplete="name"
+                    [(ngModel)]="regName"
+                  />
+                </div>
+                @if (submitted() && regName.trim().length < 2) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Veuillez saisir votre nom.
+                  </p>
+                }
+              </div>
+
+              <div class="field">
+                <label class="label" for="regEmail">Adresse email professionnelle</label>
+                <div class="input-wrap" [class.error]="submitted() && !isEmailValid(regEmail)">
+                  <span class="input-icon material-symbols-outlined">mail</span>
+                  <input
+                    type="email" id="regEmail" name="regEmail" class="input"
+                    placeholder="votre@entreprise.com" autocomplete="email"
+                    [(ngModel)]="regEmail"
+                  />
+                </div>
+                @if (submitted() && !isEmailValid(regEmail)) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Veuillez saisir une adresse email valide.
+                  </p>
+                }
+              </div>
+
+              <div class="field">
+                <label class="label" for="regPassword">Mot de passe</label>
+                <div class="input-wrap" [class.error]="submitted() && !isRegPasswordValid()">
+                  <span class="input-icon material-symbols-outlined">lock</span>
+                  <input
+                    [type]="showPassword() ? 'text' : 'password'"
+                    id="regPassword" name="regPassword" class="input"
+                    placeholder="Créez un mot de passe" autocomplete="new-password"
+                    [(ngModel)]="regPassword"
+                  />
+                  <button
+                    type="button" class="toggle-password"
+                    (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                  >
+                    <span class="material-symbols-outlined">
+                      {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                    </span>
+                  </button>
+                </div>
+
+                @if (regPassword) {
+                  <div class="strength" [attr.data-score]="passwordStrength().score">
+                    <div class="strength-bars">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <small>{{ passwordStrength().label }}</small>
+                  </div>
+                }
+                <span class="hint">8 caractères minimum, avec majuscule, minuscule et chiffre.</span>
+                @if (submitted() && !isRegPasswordValid()) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Le mot de passe ne respecte pas les critères.
+                  </p>
+                }
+              </div>
+
+              <div class="field">
+                <label class="label" for="regConfirm">Confirmer le mot de passe</label>
+                <div class="input-wrap" [class.error]="submitted() && regPassword !== regConfirm">
+                  <span class="input-icon material-symbols-outlined">lock_reset</span>
+                  <input
+                    [type]="showPassword() ? 'text' : 'password'"
+                    id="regConfirm" name="regConfirm" class="input"
+                    placeholder="Répétez le mot de passe" autocomplete="new-password"
+                    [(ngModel)]="regConfirm"
+                  />
+                </div>
+                @if (submitted() && regPassword !== regConfirm) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Les mots de passe ne correspondent pas.
+                  </p>
+                }
+              </div>
+
+              <div class="field">
+                <label class="remember">
+                  <input type="checkbox" name="acceptTerms" [(ngModel)]="acceptTerms" />
+                  <span>J'accepte les conditions d'utilisation de CertiUni.</span>
+                </label>
+                @if (submitted() && !acceptTerms) {
+                  <p class="error-msg" role="alert">
+                    <span class="material-symbols-outlined">error</span>
+                    Vous devez accepter les conditions pour continuer.
+                  </p>
+                }
+              </div>
+
+              <button type="submit" class="btn-submit" [disabled]="isLoading()">
+                @if (isLoading()) {
+                  <span class="spinner"></span>
+                  Création du compte...
+                } @else {
+                  Créer mon compte
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                }
+              </button>
+            </form>
+          }
+
+          @case ('forgot') {
+            <button type="button" class="back-link" (click)="setView('login')">
+              <span class="material-symbols-outlined">arrow_back</span>
+              Retour à la connexion
             </button>
-          </div>
 
-          <!-- Submit -->
-          <button type="submit" class="btn-submit" [disabled]="isLoading()">
-            @if (isLoading()) {
-              <span class="spinner"></span>
+            @if (!forgotSent()) {
+              <div class="icon-badge">
+                <span class="material-symbols-outlined">lock_reset</span>
+              </div>
+              <h1 class="title">Mot de passe oublié ?</h1>
+              <p class="subtitle subtitle--tight">
+                Saisissez votre adresse email. Nous vous enverrons un lien pour
+                définir un nouveau mot de passe.
+              </p>
+
+              <form class="form" (ngSubmit)="onForgot()" novalidate>
+                <div class="field">
+                  <label class="label" for="forgotEmail">Adresse email</label>
+                  <div class="input-wrap" [class.error]="submitted() && !isEmailValid(forgotEmail)">
+                    <span class="input-icon material-symbols-outlined">mail</span>
+                    <input
+                      type="email" id="forgotEmail" name="forgotEmail" class="input"
+                      placeholder="votre@email.com" autocomplete="email"
+                      [(ngModel)]="forgotEmail"
+                    />
+                  </div>
+                  @if (submitted() && !isEmailValid(forgotEmail)) {
+                    <p class="error-msg" role="alert">
+                      <span class="material-symbols-outlined">error</span>
+                      Veuillez saisir une adresse email valide.
+                    </p>
+                  }
+                </div>
+
+                <button type="submit" class="btn-submit" [disabled]="isLoading()">
+                  @if (isLoading()) {
+                    <span class="spinner"></span>
+                    Envoi en cours...
+                  } @else {
+                    Envoyer le lien
+                    <span class="material-symbols-outlined">send</span>
+                  }
+                </button>
+              </form>
             } @else {
-              <span class="material-symbols-outlined">login</span>
+              <div class="icon-badge icon-badge--ok">
+                <span class="material-symbols-outlined">mark_email_read</span>
+              </div>
+              <h1 class="title">Vérifiez votre boîte mail</h1>
+              <p class="subtitle subtitle--tight">
+                Si un compte existe pour <strong>{{ forgotEmail }}</strong>, un lien de
+                réinitialisation vient d'être envoyé. Pensez à regarder dans vos spams.
+              </p>
+
+              <button type="button" class="btn-submit" (click)="setView('login')">
+                Retour à la connexion
+              </button>
+              <button type="button" class="btn-ghost" (click)="forgotSent.set(false)">
+                Utiliser une autre adresse
+              </button>
             }
-            {{ isLoading() ? 'Connexion en cours...' : 'Se connecter' }}
-          </button>
+          }
+        }
 
-        </form>
-
-        <!-- Divider -->
-        <div class="divider">
-          <span class="divider-line"></span>
-          <span class="divider-text">ou</span>
-          <span class="divider-line"></span>
-        </div>
-
-        <!-- Register -->
-        <div class="register-section">
-          <p class="register-text">
-            Vous n'avez pas encore de compte ?
-            <button class="register-link" (click)="onRegister()">
-              Créer un compte
-            </button>
-          </p>
-        </div>
-
-        <!-- Trust Badges -->
-        <div class="trust-badges">
-          <span class="trust-badge">
-            <span class="material-symbols-outlined">shield</span>
-            Sécurisé
-          </span>
-          <span class="trust-badge">
-            <span class="material-symbols-outlined">verified</span>
-            Certifié
-          </span>
-          <span class="trust-badge">
-            <span class="material-symbols-outlined">lock</span>
-            Chiffré
-          </span>
-        </div>
-
+        <ul class="trust">
+          <li><span class="material-symbols-outlined">shield</span>Sécurisé</li>
+          <li><span class="material-symbols-outlined">verified</span>Certifié</li>
+          <li><span class="material-symbols-outlined">lock</span>Chiffré</li>
+        </ul>
       </div>
+    </main>
 
-    </div>
-  </main>
-
+    <footer class="auth-footer">
+      © 2026 CertiUni Cameroun. Tous droits réservés.
+    </footer>
+  </section>
 </div>

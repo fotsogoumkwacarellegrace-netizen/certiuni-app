@@ -1,6 +1,4 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MomoCheckout } from './momo-checkout';
 
 describe('MomoCheckout', () => {
@@ -10,7 +8,6 @@ describe('MomoCheckout', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MomoCheckout],
-      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MomoCheckout);
