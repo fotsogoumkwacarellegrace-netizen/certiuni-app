@@ -260,11 +260,11 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: 'Ressources',
     links: [
       { label: "Guides d'authentification" },
-      { label: 'Espace Étudiant / Diplômé', route: '/public/login' },
-      { label: 'Pour les établissements', section: 'gestion' },
+      { label: 'Espace Étudiant / Diplômé', route: '/student/login' },
+      { label: 'Pour les établissements', route: '/admin/login' },
       { label: 'Foire Aux Questions', section: 'faq' },
       { label: 'Nous contacter' },
-      { label: 'Espace Étudiant / Diplômé', route: '/public/espaces' }
+      { label: 'Tous les espaces CertiUni', route: '/public/espaces' }
     ]
   },
   {

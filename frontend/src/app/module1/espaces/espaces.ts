@@ -14,7 +14,7 @@ interface Role {
   key: 'recruteur' | 'etudiant' | 'institution' | 'superadmin';
   icon: string;
   tone: Tone;
-  /** Sans route : l'espace n'existe pas encore (toast « bientôt ») */
+  /** Route Angular vers le module correspondant. */
   route?: string;
 }
 
@@ -35,9 +35,9 @@ interface Copy {
 
 const ROLES: Role[] = [
   { key: 'recruteur', icon: 'manage_search', tone: 'green', route: '/public/login' },
-  { key: 'etudiant', icon: 'badge', tone: 'gold' },
-  { key: 'institution', icon: 'account_balance', tone: 'green' },
-  { key: 'superadmin', icon: 'admin_panel_settings', tone: 'blue' }
+  { key: 'etudiant', icon: 'badge', tone: 'gold', route: '/student/login' },
+  { key: 'institution', icon: 'account_balance', tone: 'green', route: '/admin/login' },
+  { key: 'superadmin', icon: 'admin_panel_settings', tone: 'blue', route: '/superadmin/login' }
 ];
 
 const COPY: Record<Lang, Copy> = {
@@ -143,7 +143,7 @@ export class Espaces {
   }
 
   requestInstitution(): void {
-    this.showToast(this.c().soon);
+    void this.router.navigate(['/admin/inscription']);
   }
 
   goBack(): void {
