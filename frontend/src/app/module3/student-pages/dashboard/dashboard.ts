@@ -21,7 +21,7 @@ export class Dashboard implements OnInit {
   private bottomSheet = inject(MatBottomSheet);
   private dialog = inject(MatDialog);
 
-  isSidebarOpen = signal(false);
+    isSidebarOpen = signal(false);
 
   toggleSidebar() {
     this.isSidebarOpen.update(v => !v);
@@ -29,6 +29,13 @@ export class Dashboard implements OnInit {
 
   closeSidebar() {
     this.isSidebarOpen.set(false);
+  }
+
+  // Mode clair par défaut
+  isDarkMode = signal(false);
+
+  toggleTheme() {
+    this.isDarkMode.update(v => !v);
   }
 
   ngOnInit() {

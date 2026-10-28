@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+.certiuni-bottom-sheet .mat-bottom-sheet-container {
+  background-color: #FFFFFF !important;
+  border-radius: 20px 20px 0 0;
+  padding: 0;
+}

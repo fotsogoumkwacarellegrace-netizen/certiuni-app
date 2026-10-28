@@ -39,7 +39,7 @@
 
 .close-btn:hover {
   background: #F3F4F6;
-  color: #19764a;
+  color: #19764A;
 }
 
 /* ===== Logo CertiUni ===== */
@@ -60,7 +60,7 @@
 .tunnel-logo .logo-text {
   font-size: 18px;
   font-weight: 800;
-  color: #19764a;
+  color: #19764A;
 }
 
 /* ===== Titre méthode de paiement (Écran 15) ===== */
@@ -86,7 +86,7 @@
 h2 {
   font-size: 18px;
   font-weight: 700;
-  color: #19764a;
+  color: #19764A;
   margin: 0;
 }
 
@@ -99,14 +99,14 @@ h2 {
 
 .subtitle-inline {
   font-size: 11px;
-  color:#19764a;
+  color:#19764A;
   margin: 0;
 }
 
 .title-divider {
   width: 36px;
   height: 3px;
-  background: #19764a;
+  background: #19764A;
   border-radius: 999px;
   margin: 0 auto 20px;
 }
@@ -136,7 +136,7 @@ input[type="text"] {
 
 input[type="tel"]:focus,
 input[type="text"]:focus {
-  border-color: #19764a;
+  border-color: #19764A;
 }
 
 /* Écran 15 : téléphone */
@@ -150,7 +150,7 @@ input[type="text"]:focus {
 }
 
 .phone-input:focus-within {
-  border-color: #19764a;
+  border-color: #19764A;
 }
 
 .phone-input .prefix {
@@ -160,7 +160,7 @@ input[type="text"]:focus {
   background: #F3F4F6;
   padding: 12px 10px;
   font-size: 13px;
-  color: #19764a;
+  color: #19764A;
   white-space: nowrap;
 }
 
@@ -200,11 +200,11 @@ input[type="text"]:focus {
   border-radius: 10px;
   margin-bottom: 12px;
   font-size: 14px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .amount-row strong {
-  color: #19764a;
+  color: #19764A;
   font-size: 16px;
 }
 
@@ -246,7 +246,7 @@ input[type="text"]:focus {
 .amount-box strong {
   display: block;
   font-size: 22px;
-  color: #19764a;
+  color: #19764A;
   margin: 4px 0;
 }
 
@@ -272,7 +272,7 @@ input[type="text"]:focus {
   width: 48px;
   height: 48px;
   border: 4px solid #D1E7DD;
-  border-top-color: #19764a;
+  border-top-color: #19764A;
   border-radius: 50%;
   margin: 0 auto 20px;
   animation: spin 1s linear infinite;
@@ -285,7 +285,7 @@ input[type="text"]:focus {
 .countdown {
   font-size: 32px;
   font-weight: 700;
-  color: #19764a;
+  color: #19764A;
   margin-bottom: 20px;
 }
 
@@ -297,7 +297,7 @@ input[type="text"]:focus {
 }
 
 .receipt-header {
-  background: #19764a;
+  background: #19764A;
   color: #FFFFFF;
   padding: 16px 24px;
   display: flex;
@@ -309,7 +309,7 @@ input[type="text"]:focus {
 
 .paid-badge {
   background: #F9C31F;
-  color: #19764a;
+  color: #19764A;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -338,7 +338,7 @@ input[type="text"]:focus {
 .receipt-amount {
   font-size: 28px;
   font-weight: 700;
-  color: #19764a;
+  color: #19764A;
   margin-bottom: 20px;
 }
 
@@ -366,7 +366,7 @@ input[type="text"]:focus {
   transform: translate(-50%, -50%) rotate(-30deg);
   font-size: 48px;
   font-weight: 900;
-  color: #19764a;
+  color: #19764A;
   opacity: 0.08;
   pointer-events: none;
   white-space: nowrap;
@@ -379,7 +379,7 @@ input[type="text"]:focus {
   justify-content: center;
   gap: 8px;
   background: #E4F5EA;
-  color: #19764a;
+  color: #19764A;
   font-size: 12px;
   font-weight: 500;
   padding: 12px;
@@ -394,7 +394,7 @@ input[type="text"]:focus {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  background-color: #19764a;
+  background-color: #19764A;
   color: #FFFFFF;
   border: none;
   border-radius: 12px;
@@ -492,7 +492,7 @@ mat-icon {
   font-size: 20px;
   width: 20px;
   height: 20px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .chevron-icon {
@@ -530,7 +530,7 @@ mat-icon {
   font-size: 40px;
   width: 40px;
   height: 40px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .merchant mat-icon {

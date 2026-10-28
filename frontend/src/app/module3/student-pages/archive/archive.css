@@ -1,6 +1,8 @@
 :host {
   display: block;
   font-family: 'Inter', 'Roboto', sans-serif;
+  --green: #19764A;
+  --yellow: #F9C31F;
 }
 
 .archive-page {
@@ -19,7 +21,7 @@
   height: 42px;
   border: none;
   border-radius: 10px;
-  background-color: #19764a;
+  background-color: #19764A;
   color: #FFFFFF;
   font-size: 20px;
   cursor: pointer;
@@ -32,7 +34,7 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background-color: #19764a;
+  background-color: #19764A;
   z-index: 40;
 }
 
@@ -45,7 +47,7 @@
 .sidebar {
   width: 260px;
   flex-shrink: 0;
-  background-color:#19764a ;
+  background-color:#19764A ;
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -106,13 +108,13 @@
 }
 
 .nav-item:hover {
-  background-color:#19764a;
+  background-color:#19764A;
   color: #F9C31F;
 }
 
 .nav-item.active {
   background-color: #F9C31F;
-  color: #19764a;
+  color: #19764A;
 }
 
 .sidebar-bottom {
@@ -184,7 +186,7 @@
   gap: 8px;
   background: none;
   border: none;
-  color: #19764a;
+  color: #19764A;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -306,13 +308,13 @@
 .banner-text h1 {
   font-size: 28px;
   font-weight: 800;
-  color: #0B4D3A;
+  color: #19764A;
   margin: 0 0 8px;
 }
 
 .banner-text p {
   font-size: 14px;
-  color: #19764a;
+  color: #19764A;
   margin: 0;
 }
 
@@ -336,7 +338,7 @@
   align-items: center;
   gap: 18px;
   background: #FFFFFF;
-  border-left: 4px solid #19764a;
+  border-left: 4px solid #19764A;
   border-radius: 14px;
   padding: 18px 22px;
   box-shadow: 0 2px 10px rgba(11, 77, 58, 0.06);
@@ -379,7 +381,7 @@
 
 .invoice-amount {
   background: #E4F5EA;
-  color:#19764a;
+  color:#19764A;
   font-weight: 700;
   font-size: 14px;
   padding: 8px 16px;
@@ -392,7 +394,7 @@
   align-items: center;
   gap: 6px;
   background: #E4F5EA;
-  color: #19764a;
+  color: #19764A;
   border: none;
   border-radius: 999px;
   padding: 10px 18px;

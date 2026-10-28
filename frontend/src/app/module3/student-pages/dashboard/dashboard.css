@@ -5,7 +5,7 @@
 
 .dashboard-page {
   min-height: 100vh;
-  background-color: #F9FAFB;
+  background-color: #f9fffc;
 }
 .body-layout {
   display: flex;
@@ -23,7 +23,7 @@
   height: 42px;
   border: none;
   border-radius: 10px;
-  background-color: #0B4D3A;
+  background-color: #19764A;
   color: #FFFFFF;
   font-size: 20px;
   cursor: pointer;
@@ -36,7 +36,7 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background-color: #19764a;
+  background-color: #19764A;
   z-index: 40;
 }
 
@@ -44,8 +44,8 @@
 .sidebar {
   width: 240px;
   flex-shrink: 0;
-  background-color: #19764a;
-  color: #FFFFFF;
+  background-color: #19764A;
+  color: #131212;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -56,14 +56,14 @@
 .sidebar-logo-box {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   padding: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .brand-logo-sm {
-  width: 36px;
-  height: 36px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
 }
 
@@ -72,6 +72,7 @@
   font-weight: 800;
   color: #FFFFFF;
 }
+
 
 .sidebar-nav {
   display: flex;
@@ -103,12 +104,12 @@
 }
 
 .nav-item:hover {
-  background-color: rgba(240, 185, 6, 0.15);
-  color: #F9C31F;
+  background-color:#F9C31F;
+  color: #282727;
 }
 
 .nav-item.active {
-  background-color:  #F9C31F;
+  background-color: #F9C31F;
   color: #3D2E00;
 }
 
@@ -187,7 +188,7 @@
   gap: 8px;
   background: none;
   border: none;
-  color: #0B4D3A;
+  color: #19764A;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -209,7 +210,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 800;
-  color: #19764a;
+  color: #19764A;
   font-size:15px;
 }
 
@@ -259,7 +260,7 @@
 .greeting-name {
   font-size: 18px;
   font-weight: 800;
-  color: #19764a;
+  color: #19764A;
 }
 
 .greeting-sub {
@@ -277,7 +278,7 @@
   padding: 12px 18px;
   font-size: 13px;
   font-weight: 700;
-  color:#19764a ;
+  color:#19764A ;
   cursor: pointer;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(11, 77, 58, 0.1);
@@ -405,7 +406,7 @@
 
 .badge-valid {
   background-color: #E4F5EC;
-  color: #19764a;
+  color: #19764A;
 }
 
 .badge-locked {
@@ -439,7 +440,7 @@
 }
 
 .btn-download {
-  background-color: #19764a;
+  background-color: #19764A;
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
@@ -452,7 +453,7 @@
 }
 
 .btn-download:hover {
-  background-color: #19764a;
+  background-color: #19764A;
 }
 .action-buttons-row {
   display: flex;
@@ -462,7 +463,7 @@
 .btn-share {
   background-color: #FFFFFF;
   color: #19764a;
-  border: 1.5px solid #19764a;
+  border: 1.5px solid #19764A;
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 12.5px;
@@ -510,21 +511,21 @@ mat-icon {
   font-size: 22px;
   width: 22px;
   height: 22px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .avatar mat-icon {
   font-size: 24px;
   width: 24px;
   height: 24px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .check-icon {
   font-size: 14px !important;
   width: 14px !important;
   height: 14px !important;
-  color: #19764a;
+  color: #19764A;
   vertical-align: text-bottom;
 }
 
@@ -532,14 +533,14 @@ mat-icon {
   font-size: 22px;
   width: 22px;
   height: 22px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .diploma-icon mat-icon {
   font-size: 22px;
   width: 22px;
   height: 22px;
-  color: #19764a;
+  color: #19764A;
 }
 
 .locked .diploma-icon mat-icon {
@@ -676,4 +677,109 @@ mat-icon {
   .diploma-card {
     padding: 24px 28px;
   }
+}
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid #19764A;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #19764A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background-color: #19764A;
+  color: #FFFFFF;
+  transform: rotate(15deg);
+}
+
+.theme-toggle mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+
+/* ===== MODE SOMBRE ===== */
+.dark-mode {
+  background-color: #0D1F17;
+}
+
+.dark-mode .main-content h1,
+.dark-mode .section-title h1 {
+  color: #F3F4F6;
+}
+
+.dark-mode .welcome-card {
+  background: linear-gradient(90deg, #15291F 0%, #0F2A1C 100%);
+}
+
+.dark-mode .greeting-name {
+  color: #4ADE80;
+}
+
+.dark-mode .greeting-sub {
+  color: #9CA3AF;
+}
+
+.dark-mode .avatar,
+.dark-mode .btn-message {
+  background: #1A2E24;
+  color: #4ADE80;
+}
+
+.dark-mode .diploma-card {
+  background: #15241D;
+  border-color: #1F3B2E;
+}
+
+.dark-mode .diploma-card.locked {
+  background-color: #241F11;
+}
+
+.dark-mode .diploma-card.in-progress {
+  background-color: #15241D;
+}
+
+.dark-mode .diploma-info h3 {
+  color: #F3F4F6;
+}
+
+.dark-mode .diploma-meta,
+.dark-mode .diploma-hint {
+  color: #9CA3AF;
+}
+
+.dark-mode .diploma-icon {
+  background: #1F3B2E;
+}
+
+.dark-mode .back-link {
+  color: #4ADE80;
+}
+
+.dark-mode .btn-share {
+  background-color: transparent;
+  color: #4ADE80;
+  border-color: #4ADE80;
+}
+
+.dark-mode .btn-share:hover {
+  background-color: #1A2E24;
+}
+
+.dark-mode .badge-valid {
+  background-color: #1A2E24;
+  color: #4ADE80;
+}
+
+.dark-mode .badge-locked {
+  background-color: #1F2937;
+  color: #9CA3AF;
 }

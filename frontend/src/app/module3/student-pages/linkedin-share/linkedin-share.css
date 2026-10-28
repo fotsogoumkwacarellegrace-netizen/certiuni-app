@@ -37,7 +37,7 @@
   flex: 1;
   font-size: 19px;
   font-weight: 800;
-  color: #19764a;
+  color: #19764A;
   margin: 0;
 }
 
@@ -76,13 +76,13 @@ label {
   gap: 6px;
   font-size: 13px;
   font-weight: 700;
-  color: #19764a;
+  color: #19764A;
   margin-bottom: 10px;
 }
 
 textarea {
   width: 100%;
-  border: 1.5px solid #19764a;
+  border: 1.5px solid #19764A;
   border-radius: 12px;
   padding: 14px;
   font-size: 13.5px;
@@ -124,7 +124,7 @@ textarea:focus {
 .preview-content h3 {
   font-size: 16px;
   font-weight: 800;
-  color: #19764a;
+  color: #19764A;
   margin: 0 0 6px;
 }
 
@@ -145,7 +145,7 @@ textarea:focus {
 .preview-footer strong {
   font-size: 13px;
   font-weight: 700;
-  color: #19764a
+  color: #19764A;
 }
 
 .preview-footer span {
@@ -164,8 +164,8 @@ textarea:focus {
 
 .btn-cancel {
   background: #FFFFFF;
-  color:#19764a;
-  border: 1.5px solid#19764a;
+  color:#19764A;
+  border: 1.5px solid#19764A;
   border-radius: 999px;
   padding: 12px 24px;
   font-size: 13.5px;
@@ -182,7 +182,7 @@ textarea:focus {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #19764a;
+  background: #19764A;
   color: #FFFFFF;
   border: none;
   border-radius: 999px;
@@ -218,7 +218,7 @@ label mat-icon {
   font-size: 32px !important;
   width: 32px !important;
   height: 32px !important;
-  color: #19764a;
+  color: #19764A;
   margin-bottom: 10px;
 }
 

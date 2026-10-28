@@ -28,6 +28,7 @@ export const routes: Routes = [
     component: AdminLayout,
     children: [
       { path: 'dashboard', component: Dashboard },
+      
     //   { path: 'institutions-validees', component: InstitutionsValidees },
 
       // Flux "Créer des diplômes" : institution-registration → admin-login →

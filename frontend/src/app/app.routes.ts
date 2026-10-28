@@ -21,11 +21,18 @@ import { Parametres } from './module3-admin/parametres/parametres';
 
 
 import { AdminLogin } from './module3-admin/admin-login/admin-login';
+import { module3Routes } from './module3/module3.routes';
 
 
 export const routes: Routes = [
   { path: 'institution-registration', component: InstitutionRegistration },
   { path: 'admin-login', component: AdminLogin },   // ← cette ligne manquait
+  {
+    path: 'student',
+    children: module3Routes
+  },
+
+  { path: '', redirectTo: 'student/login', pathMatch: 'full' },
   {
   path: 'admin',
   component: AdminLayout,

@@ -1,4 +1,4 @@
-<div class="dashboard-page">
+<div class="dashboard-page" [class.dark-mode]="isDarkMode()">
 
   <button class="mobile-toggle" (click)="toggleSidebar()" aria-label="Menu">
     <mat-icon>menu</mat-icon>
@@ -12,12 +12,12 @@
 
     <!-- ===== SIDEBAR VERTE ===== -->
     <aside class="sidebar" [class.sidebar-open]="isSidebarOpen()">
+          
       <div class="sidebar-logo-box">
-        <img src="assets/logos/logo2.png" alt="CertiUni" class="brand-logo-sm" />
+        <img src="assets/logos/logo.png" alt="CertiUni" class="brand-logo-sm" />
         <span class="brand-text">CertiUni</span>
       </div>
-
-      <nav class="sidebar-nav">
+       <nav class="sidebar-nav">
         <button class="nav-item" (click)="onSidebarLinkClick('overview'); closeSidebar()">
           <mat-icon class="nav-icon">grid_view</mat-icon> Overview
         </button>
@@ -55,15 +55,15 @@
           <button class="back-link" (click)="goToArchive()">
             <mat-icon>arrow_back</mat-icon> Retour au portefeuille
           </button>
-          <div class="topbar-right">
-           <!----<div class="topbar-logo">
-              <img src="assets/logos/logo.png" alt="CertiUni" class="topbar-logo-img" />
-              <span>CertiUni</span>
-            </div>-->
+                    <div class="topbar-right">
+            <button class="theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Mode clair' : 'Mode sombre'">
+              <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+            </button>
             <button class="profile-btn" (click)="logout()" title="Déconnexion">
               <mat-icon>account_circle</mat-icon>
             </button>
           </div>
+         
         </div>
 
         <!-- Carte de bienvenue -->
@@ -143,7 +143,6 @@
             </div>
           }
         </div>
-
       </div>
     </main>
   </div>
