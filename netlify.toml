@@ -1,5 +1,5 @@
 [build]
-  publish = "frontend/dist/certiuni-frontend"
+  publish = "frontend/dist/certiuni-frontend/browser"
   command = "npm install --prefix frontend && npm run build --prefix frontend"
 
 [[redirects]]
