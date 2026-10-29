@@ -26,7 +26,6 @@
       </nav>
 
       <div class="header__actions">
-
         <!-- Se connecter : masqué sur mobile -->
         <button type="button" class="btn btn--outline btn--sm header__login" (click)="goToLogin()">
           Se connecter
@@ -586,7 +585,7 @@
             <input type="email" name="email" placeholder="Votre adresse email professionnelle"
               aria-label="Adresse email" autocomplete="email" inputmode="email" [ngModel]="email()"
               (ngModelChange)="email.set($event)" [class.is-invalid]="newsletterStatus() === 'error'" />
-            <button type="submit" class="btn btn--primary btn--sm">S'abonner</button>
+            <button type="submit" class="btn btn--primary btn--sm">S'enregistrer</button>
           </form>
           @if (newsletterStatus() === 'error') {
           <small class="newsletter__msg newsletter__msg--error" role="alert">Veuillez saisir une adresse email

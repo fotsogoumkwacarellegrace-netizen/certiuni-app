@@ -78,7 +78,7 @@
             <h1 class="title">{{ i18n.t('loginTitle') }}</h1>
             <p class="subtitle">
               {{ i18n.t('loginNoAccount') }}
-              <button type="button" class="link-btn" (click)="setView('register')">{{ i18n.t('loginCreateAccount') }}</button>
+              <a routerLink="/public/espaces-inscription" class="link-btn">Créer un compte</a>
             </p>
 
             @if (notice()) {

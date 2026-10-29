@@ -264,6 +264,24 @@ p { text-wrap: pretty; }
 
 .burger { display: none; }
 
+/* ============ Responsive mobile ============ */
+@media (max-width: 1024px) {
+  .nav { display: none; }
+  .header__login { display: none; }
+  .header__verify .hide-md { display: none; }
+  .burger { display: grid; }
+}
+
+@media (max-width: 640px) {
+  .header__inner { gap: 8px; }
+  .brand__text small { display: none; }
+  .brand__logo { height: 32px; }
+  .brand__text strong { font-size: 18px; }
+  .lang__btn b { display: none; }
+  .lang__btn { padding: 0 8px; }
+  .header__actions { gap: 8px; }
+}
+
 /* ============ Menu mobile ============ */
 .overlay {
   position: fixed; inset: 0; z-index: 1200; background: rgba(10, 18, 14, 0.5);
