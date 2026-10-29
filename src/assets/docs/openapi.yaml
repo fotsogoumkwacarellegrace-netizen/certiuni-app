@@ -1,0 +1,415 @@
+openapi: 3.0.3
+info:
+  title: CertiUni API
+  description: Spécification officielle des contrats d'API pour la plateforme de certification et de vérification des diplômes CertiUni.
+  version: 1.0.0
+  contact:
+    name: Équipe CertiUni
+    email: support@certiuni.cm
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Serveur de Développement Local
+  - url: https://api.certiuni.cm/v1
+    description: Serveur de Production
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Opération effectuée avec succès.
+        data:
+          type: object
+          nullable: true
+
+    ApiErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: CERTIFICATE_NOT_FOUND
+            message:
+              type: string
+              example: Aucun diplôme ne correspond au hachage fourni.
+            details:
+              nullable: true
+
+    CertificateVerificationData:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [VALID, INVALID, REVOKED, SUSPICIOUS]
+          example: VALID
+        certificate:
+          type: object
+          properties:
+            certificateNumber:
+              type: string
+              example: DIP-2025-UY1-0042
+            studentName:
+              type: string
+              example: Jean Paul NANA
+            degreeTitle:
+              type: string
+              example: Master en Génie Informatique
+            speciality:
+              type: string
+              example: Génie Logiciel
+            mention:
+              type: string
+              example: Très Bien
+            graduationYear:
+              type: integer
+              example: 2025
+            issueDate:
+              type: string
+              format: date
+              example: "2025-07-15"
+            university:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: univ_uy1
+                name:
+                  type: string
+                  example: Université de Yaoundé I
+                logoUrl:
+                  type: string
+                  example: https://cdn.certiuni.cm/logos/uy1.png
+        security:
+          type: object
+          properties:
+            hashSHA256:
+              type: string
+              example: a3f5b789e02c1145879a8bc4512d7890123456789abcdef0123456789abcdef0
+            verificationCount:
+              type: integer
+              example: 14
+
+paths:
+  /certificates/verify/{hash}:
+    get:
+      summary: Vérifier l'authenticité d'un diplôme (Écrans 2 à 5)
+      description: Consultation publique du verdict d'un diplôme via son Hash SHA-256 ou son UUID QR Code.
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          description: Hash SHA-256 ou UUID du diplôme
+          schema:
+            type: string
+            example: a3f5b789e02c1145879a8bc4512d7890123456789abcdef0123456789abcdef0
+      responses:
+        '200':
+          description: Diplôme trouvé et vérifié.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CertificateVerificationData'
+        '404':
+          description: Diplôme introuvable (Feu Gris).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /payments/initiate:
+    post:
+      summary: Initialiser un paiement Mobile Money USSD (Écran 8)
+      description: Déclenche un paiement de 2 000 FCFA via MTN MoMo ou Orange Money.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - certificateHash
+                - phoneNumber
+                - paymentMethod
+              properties:
+                certificateHash:
+                  type: string
+                  example: a3f5b789e02c1145879a8bc4512d7890123456789abcdef0123456789abcdef0
+                phoneNumber:
+                  type: string
+                  example: "237670000000"
+                paymentMethod:
+                  type: string
+                  enum: [MTN_MOMO, ORANGE_MONEY]
+                  example: MTN_MOMO
+      responses:
+        '200':
+          description: Demande de paiement envoyée au réseau mobile.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          transactionId:
+                            type: string
+                            example: tx_987654321
+                          status:
+                            type: string
+                            example: PENDING
+                          amount:
+                            type: integer
+                            example: 2000
+                          currency:
+                            type: string
+                            example: XAF
+
+  /payments/status/{transactionId}:
+    get:
+      summary: Vérifier le statut du paiement (Écran 9)
+      description: Utilisé pour vérifier si le paiement Mobile Money a été confirmé via Webhook.
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: tx_987654321
+      responses:
+        '200':
+          description: Statut de transaction récupéré.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          transactionId:
+                            type: string
+                            example: tx_987654321
+                          status:
+                            type: string
+                            enum: [PENDING, PAID, FAILED]
+                            example: PAID
+                          downloadToken:
+                            type: string
+                            nullable: true
+                            example: dl_token_xyz123
+
+  /auth/magic-link:
+    post:
+      summary: Demander un lien magique de connexion (Écran 11)
+      description: Génère et expédie un lien de connexion asynchrone sécurisé pour l'étudiant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - identifier
+              properties:
+                identifier:
+                  type: string
+                  example: etudiant@univ-yaounde1.cm
+      responses:
+        '200':
+          description: Email d'authentification expédié avec succès.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /student/wallet:
+    get:
+      summary: Consulter le portefeuille numérique étudiant (Écrans 13, 16, 17)
+      description: Liste l'ensemble des titres académiques enregistrés sous le profil de l'étudiant authentifié.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Liste des diplômes récupérée.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          studentProfile:
+                            type: object
+                            properties:
+                              matricule:
+                                type: string
+                                example: 20U12345
+                              fullName:
+                                type: string
+                                example: Jean Paul NANA
+                              email:
+                                type: string
+                                example: jean.nana@gmail.com
+                          certificates:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: cert_01
+                                degreeTitle:
+                                  type: string
+                                  example: Master en Génie Informatique
+                                universityName:
+                                  type: string
+                                  example: Université de Yaoundé I
+                                issueYear:
+                                  type: integer
+                                  example: 2025
+                                qrCodeUrl:
+                                  type: string
+                                  example: https://api.certiuni.cm/v1/qr/cert_01.png
+                                downloadUrl:
+                                  type: string
+                                  example: /api/v1/certificates/download/cert_01?token=dl_token_xyz123
+        '401':
+          description: Jeton non fourni ou exécution expirée.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /admin/certificates/batch-import:
+    post:
+      summary: Importation massive de diplômes par fichier (Écrans 32, 35)
+      description: Reçoit un fichier Excel (.xlsx/.csv) contenant des promotions complètes de candidats.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Fichier tableur au format .xlsx ou .csv
+      responses:
+        '202':
+          description: Fichier mis en file d'attente pour traitement asynchrone (BullMQ).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          jobId:
+                            type: string
+                            example: job_import_99
+                          totalRows:
+                            type: integer
+                            example: 450
+                          status:
+                            type: string
+                            example: PROCESSING
+
+  /admin/cyber-radar/logs:
+    get:
+      summary: Récupérer le journal de cybersécurité en temps réel (Écran 37)
+      description: Extrait le flux d'anomalies, de tentatives de fraude et de faux Hashs analysés par le réseau.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logs du radar cyber récupérés.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          anomaliesCount24h:
+                            type: integer
+                            example: 3
+                          logs:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: log_001
+                                timestamp:
+                                  type: string
+                                  format: date-time
+                                  example: "2026-08-24T14:30:00Z"
+                                ipAddress:
+                                  type: string
+                                  example: 102.244.10.5
+                                location:
+                                  type: string
+                                  example: Douala, Littoral Region, Cameroon
+                                action:
+                                  type: string
+                                  example: VERIFY_ATTEMPT
+                                status:
+                                  type: string
+                                  example: SUSPICIOUS
+                                reason:
+                                  type: string
+                                  example: Hash invalide testé 15 fois en 1 minute
+                                certificateTargeted:
+                                  type: string
+                                  example: DIP-2025-UY1-0042
