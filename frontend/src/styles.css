@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+<<<<<<< HEAD
 
 /* ================================================================ */
 /* MODE SOMBRE GLOBAL (Module 3, Module 3 admin, Module 4)           */
@@ -248,3 +249,5 @@ input, select, textarea { font-size: max(14px, 1rem); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+=======
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60

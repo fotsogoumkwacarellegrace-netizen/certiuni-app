@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿{
+=======
+{
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
@@ -18,32 +22,58 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+<<<<<<< HEAD
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
 
+=======
+            "tsConfig": "tsconfig.app.json",
+                        "assets": [
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
               {
                 "glob": "**/*",
                 "input": "public"
               },
+<<<<<<< HEAD
               {
                 "glob": "**/*",
                 "input": "src/app/assets",
                 "output": "assets"
               }
 
+=======
+              "src/assets"
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
             ],
             "styles": ["src/styles.css"]
           },
           "configurations": {
             "production": {
               "budgets": [
+<<<<<<< HEAD
                 { "type": "initial", "maximumWarning": "2MB", "maximumError": "5MB" },
                 { "type": "anyComponentStyle", "maximumWarning": "32kB", "maximumError": "48kB" }
               ],
               "outputHashing": "all"
             },
             "development": {
+=======
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+                        "development": {
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -60,8 +90,17 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
+<<<<<<< HEAD
             "production": { "buildTarget": "certiuni-frontend:build:production" },
             "development": { "buildTarget": "certiuni-frontend:build:development" }
+=======
+            "production": {
+              "buildTarget": "certiuni-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "certiuni-frontend:build:development"
+            }
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
           },
           "defaultConfiguration": "development"
         },

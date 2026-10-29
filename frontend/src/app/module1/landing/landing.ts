@@ -234,6 +234,11 @@ export class Landing implements AfterViewInit {
     this.router.navigate(['/public/espaces']);
   }
 
+  goToRegister(): void {
+    this.closeMenu();
+    this.router.navigate(['/public/espaces-inscription']);
+  }
+
   // ✅ MODIFIÉ : "Vérifier un diplôme" mène désormais vers la page login
   goToVerify(): void {
     this.closeMenu();

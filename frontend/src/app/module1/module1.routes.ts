@@ -19,8 +19,16 @@ export const MODULE1_ROUTES: Routes = [
         loadComponent: () => import('./espaces/espaces').then(m => m.Espaces)
       },
       {
+        path: 'espaces-inscription',
+        loadComponent: () => import('./espaces-inscription/espaces-inscription').then(m => m.EspacesInscription)
+      },
+      {
         path: 'login',
         loadComponent: () => import('./login/login').then(m => m.Login)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./recruiter-register/recruiter-register').then(m => m.RecruiterRegister)
       },
       {
         path: 'verify/:id',

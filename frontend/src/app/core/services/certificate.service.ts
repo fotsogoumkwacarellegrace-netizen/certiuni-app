@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import { Injectable } from '@angular/core';
+=======
+import { Injectable } from '@angular/core';
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';

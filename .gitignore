@@ -143,3 +143,8 @@ vite.config.ts.timestamp-*
 .vite/
 .ai-code-tracker.json
 .history/
+<<<<<<< HEAD
+=======
+
+.refact/
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60

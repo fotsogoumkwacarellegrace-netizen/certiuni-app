@@ -8,7 +8,7 @@ import { LandingHeader } from '../../shared/ui/landing-header/landing-header';
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, BackButton, ThemeToggle, LandingHeader],
+  imports: [ReactiveFormsModule, RouterLink, LandingHeader],
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.css'
 })

@@ -9,6 +9,7 @@ import { StudentHelp } from './student-pages/student-help/student-help';
 export const module3Routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: Login },
+  { path: 'register', loadComponent: () => import('./student-pages/register/register').then(m => m.StudentRegister) },
   { path: 'dashboard', component: Dashboard },
   { path: 'archive', component: Archive },
   // Page d'aide plein ecran (sans sidebar / navbar du dashboard)

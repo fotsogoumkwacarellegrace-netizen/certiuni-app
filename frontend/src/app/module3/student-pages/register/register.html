@@ -1,0 +1,22 @@
+<div class="auth-page">
+  <main class="card">
+    <div class="header"><img src="assets/logos/logo.png" alt="CertiUni"><app-back-button></app-back-button></div>
+    <h1>Créer un compte étudiant</h1><div class="underline"></div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      @if (message()) { <p class="alert">{{ message() }}</p> }
+      <div class="grid">
+        <label>Nom<input formControlName="nom" autocomplete="family-name" placeholder="Nom"></label>
+        <label>Prénom<input formControlName="prenom" autocomplete="given-name" placeholder="Prénom"></label>
+        <label>Email<input type="email" formControlName="email" autocomplete="email" placeholder="prenom.nom@universite.cm"></label>
+        <label>Matricule<input formControlName="matricule" placeholder="Ex. 24A0123"></label>
+        <label class="full">Université<input formControlName="universite" placeholder="Nom de l'université"></label>
+        <label>Mot de passe<div class="password"><input [type]="showPassword() ? 'text' : 'password'" formControlName="motDePasse" autocomplete="new-password"><button type="button" (click)="showPassword.set(!showPassword())"><mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon></button></div></label>
+        <label>Confirmer le mot de passe<input type="password" formControlName="confirmation" autocomplete="new-password"></label>
+      </div>
+      @if (isInvalid('motDePasse')) { <p class="field-error">8 caractères minimum, avec majuscule, minuscule et chiffre.</p> }
+      @if (form.hasError('passwordsMismatch') && form.controls.confirmation.touched) { <p class="field-error">Les mots de passe ne correspondent pas.</p> }
+      <button class="primary" type="submit" [disabled]="submitting()">{{ submitting() ? 'Création…' : 'Créer mon compte' }}</button>
+      <p class="links">Déjà inscrit ? <a routerLink="/student/login">Se connecter</a></p>
+    </form>
+  </main>
+</div>

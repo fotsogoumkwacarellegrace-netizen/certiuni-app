@@ -1,9 +1,3 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-:root{
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-}
-
 :host {
   --primary: #19764A;
   --primary-dark: #00543f;

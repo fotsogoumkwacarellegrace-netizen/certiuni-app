@@ -1,0 +1,28 @@
+{
+  "university": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "name": "Universite de test",
+    "code": "TEST-UNI"
+  },
+  "student": {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "matricule": "TEST-2026-001",
+    "firstName": "Amina",
+    "lastName": "Exemple",
+    "email": "amina@example.invalid"
+  },
+  "request": {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "requestNumber": "TEST-REQ-0001",
+    "status": "PENDING"
+  },
+  "certificate": {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "publicIdentifier": "TEST-CERT-0001",
+    "canonicalHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "degreeTitle": "Licence de test",
+    "fieldOfStudy": "Informatique",
+    "issueDate": "2026-06-30T00:00:00.000Z",
+    "status": "PENDING"
+  }
+}

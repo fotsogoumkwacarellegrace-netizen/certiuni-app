@@ -1,4 +1,3 @@
-
 <div class="registration-page">
 
   <app-landing-header></app-landing-header>
@@ -179,7 +178,7 @@
             (drop)="onFileDropped($event)"
             (dragover)="onDragOver($event)"
           >
-              @if (!decretFileName()) {
+              @if (!decretFileName) {
               <span class="dropzone-icon" aria-hidden="true"><span class="material-icons">cloud_upload</span></span>
               <p>Télécharger le fichier (PDF)</p>
               <p class="dropzone-hint">Glissez-déposez le fichier ici ou cliquez sur "Parcourir"</p>
@@ -189,7 +188,7 @@
               </label>
             } @else {
               <span class="file-chip">
-                <span class="material-icons">description</span> {{ decretFileName() }}
+                <span class="material-icons">description</span> {{ decretFileName }}
                 <button type="button" (click)="removeFile()" aria-label="Retirer le fichier"><span class="material-icons">close</span></button>
               </span>
             }
@@ -297,7 +296,7 @@
                 Précédent
               </button>
             }
-            @if (currentStep() < 3) {
+            @if (currentStep() < 2) {
               <button type="button" class="btn-primary" (click)="nextStep()">
                 Suivant 
               </button>

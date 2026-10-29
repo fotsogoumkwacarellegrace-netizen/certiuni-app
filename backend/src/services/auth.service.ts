@@ -1,0 +1,45 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import {
+    env,
+    requireJwtAccessSecret,
+    requireJwtRefreshSecret,
+} from '../config/env.config';
+import redisClient from '../config/redis.config';
+import { Injectable, Inject } from '@nestjs/common';
+import Redis from 'ioredis';
+@Injectable()
+export class AuthService {
+    /**
+     * Génère un Access Token et un Refresh Token
+     */
+    constructor(
+        @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
+    ) { }
+    public static generateTokens(payload: { id: string; email: string; role: string; universityId?: string | null }) {
+        const accessToken = jwt.sign(payload, requireJwtAccessSecret(), {
+            expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions['expiresIn'],
+        });
+
+        const refreshToken = jwt.sign({ id: payload.id }, requireJwtRefreshSecret(), {
+            expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions['expiresIn'],
+        });
+
+        return { accessToken, refreshToken };
+    }
+
+    /**
+     * Stocke le Refresh Token dans Redis avec une expiration synchronisée
+     */
+    public async storeRefreshToken(userId: string, refreshToken: string): Promise<void> {
+        const ttlInSeconds = 7 * 24 * 60 * 60; // 7 jours
+        await (this.redisClient as any).set(`refresh_token:${userId}`, refreshToken, 'EX', ttlInSeconds);
+    }
+
+    /**
+     * Supprime le Refresh Token de Redis lors du Logout
+     */
+    public async revokeRefreshToken(userId: string): Promise<void> {
+        await (this.redisClient as any).del(`refresh_token:${userId}`);
+    }
+}

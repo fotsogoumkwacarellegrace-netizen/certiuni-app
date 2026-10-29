@@ -7,7 +7,7 @@ import { MOCK_CSV_VALIDATION,   MOCK_ECHANTILLON_DIPLOMES,
 @Component({
   selector: 'app-generation-diplomes',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './generation-diplomes.html',
   styleUrl: './generation-diplomes.css'
 })

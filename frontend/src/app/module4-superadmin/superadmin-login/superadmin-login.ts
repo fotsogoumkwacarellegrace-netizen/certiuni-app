@@ -8,7 +8,7 @@ import { ThemeToggle } from '../../shared/ui/theme-toggle';
 @Component({
   selector: 'app-superadmin-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, BackButton, ThemeToggle],
+  imports: [ReactiveFormsModule],
   templateUrl: './superadmin-login.html',
   styleUrl: './superadmin-login.css'
 })

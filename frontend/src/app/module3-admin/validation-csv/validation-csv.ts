@@ -5,7 +5,7 @@ import { DiplomaCreationState } from '../services/diploma-creation-state';
 @Component({
   selector: 'app-validation-csv',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './validation-csv.html',
   styleUrl: './validation-csv.css'
 })

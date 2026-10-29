@@ -1,0 +1,1 @@
+DATABASE_URL = "postgresql://postgres:torhu@03@localhost:5432/certiuni_db?schema=public"

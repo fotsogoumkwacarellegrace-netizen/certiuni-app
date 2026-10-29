@@ -1,0 +1,70 @@
+// src/certificates/certificates.controller.ts
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { CertificatesService } from './certificates.service';
+import { IssueCertificateDto } from './dto/issue-certificate.dto';
+import { RevokeCertificateDto } from './dto/revoke-certificate.dto';
+import { Public } from '../../common/decorators/public.decorator';
+import { GetUser } from '../../common/decorators/get-user.decorator';
+
+
+@ApiTags('certificates')
+@Controller('certificates')
+export class CertificatesController {
+  constructor(private readonly certificatesService: CertificatesService) { }
+
+  @Get('verify/:publicIdentifier')
+  @Public()
+  @ApiOperation({ summary: 'Vérification publique d un diplôme (Accès libre)' })
+  async verifyPublic(
+    @Param('publicIdentifier') publicIdentifier: string,
+    @Query('signature') signature?: string,
+  ) {
+    return this.certificatesService.verifyCertificatePublic(publicIdentifier, signature);
+  }
+
+  @Post()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN, UserRole.ISSUER)
+  @ApiOperation({ summary: 'Émettre un nouveau diplôme certifié' })
+  async issue(@Body() dto: IssueCertificateDto, @Request() req: any) {
+    return this.certificatesService.issueCertificate(dto, req.user);
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN, UserRole.ISSUER, UserRole.VERIFIER)
+  @ApiOperation({ summary: 'Lister les diplômes émis' })
+  async findAll(@Request() req: any) {
+    return this.certificatesService.findAll(req.user);
+  }
+
+  @Patch(':id/revoke')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.UNIV_ADMIN)
+  @ApiOperation({ summary: 'Révoquer un diplôme' })
+  async revoke(
+    @Param('id') id: string,
+    @Body() dto: RevokeCertificateDto,
+    @Request() req: any,
+  ) {
+    return this.certificatesService.revokeCertificate(id, dto, req.user);
+  }
+}

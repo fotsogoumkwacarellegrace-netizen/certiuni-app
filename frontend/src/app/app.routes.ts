@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { Routes } from '@angular/router';
 
@@ -92,3 +93,8 @@ export const routes: Routes = [
     redirectTo: 'public/landing',
   },
 ];
+=======
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [];
+>>>>>>> b1a23a150e9e3d129fa272d2dcf4436f4cfbca60

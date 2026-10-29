@@ -1,0 +1,41 @@
+﻿# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.esbuild/
+
+# Prisma generated client
+prisma/*.client/
+node_modules/.prisma/
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage/
+.nyc_output/
+
+# Docker
+.dockerignore
+
+# Misc
+*.tgz
+.yarn-integrity
